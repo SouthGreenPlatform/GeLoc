@@ -236,7 +236,15 @@ To make the best use of GeLoc, we recommend you download the latest Chrome versi
       <!-- The ideogram chromosome goes here. -->
     </div>
 
+	<div class="zoom_view">
+      <!-- The zoomed view goes here. -->
+	  	<canvas id="zoom" width="800" height="100">
+			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
+		</canvas>
+    </div>
+
 	<div id="chr_region" heigth="300px" style="display: none;">
+	<!-- The GFF info goes here. -->
     Selected region:
 		<div><span id="from"></span>  -  <span id="to"></span>
 		(extent: <span id="extent"></span> base pairs)
