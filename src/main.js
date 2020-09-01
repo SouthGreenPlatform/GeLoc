@@ -484,11 +484,62 @@ function writeSelectedRange() {
         }else{
 			//console.log(report);
 			const gffResult = document.getElementById('gffResult');
+			drawZoom(from, to, report);
 			gffResult.innerHTML = report;
 		}
 	});
 
   }
+
+function drawZoom(from, to, report){
+
+	var canvas = document.getElementById('zoom');
+	var ctx = canvas.getContext('2d');
+	
+	//taille du canvas
+	const zoomLength = 800;
+	//nb de bases dans le canvas
+	const seqLength = to - from;
+	console.log("seq length "+seqLength);
+	let gffLines = report.split('\n');
+
+	//clear
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	gffLines.forEach(line => {
+		var tab = line.split(/\t/);
+		if(tab[2] == "gene"){
+
+			console.log(line);
+			
+			//position on canvas
+			startGene = ((tab[3]-from) * 800) / seqLength;
+			wigthGene = ((tab[4]-tab[3]) * 800) / seqLength;
+
+			console.log("start gene " + startGene);
+			console.log("width gene " + wigthGene);
+
+			ctx.beginPath();
+			ctx.moveTo(0, 50);
+			ctx.lineTo(800, 50);
+			ctx.stroke();
+			
+			ctx.fillStyle="black";    // color of fill
+
+			//ctx.fillRect(x, y, width, height)
+			// Parameters	Type	Description
+			// x	number	The x-coordinate (in pixels), the upper-left corner of the rectangle in relation to the coordinates of the canvas.
+			// y	number	The y-coordinate (in pixels), of the upper-left corner of the rectangle in relation to the coordinates of the canvas.
+			// width	number	The width (in pixels), of the rectangle.
+			// height	number	The height (in pixels), of the rectangle.
+			  ctx.fillRect(startGene, 40, wigthGene, 20); // create rectangle  
+			  console.log(startGene + wigthGene );
+		}
+
+	});
+
+	
+}
 
 //Création de la div de resultats
 function createResultDiv(content) {
@@ -503,6 +554,8 @@ function createResultDiv(content) {
     div.appendChild(pre);
     body.appendChild(div); 
 }
+
+
 
 //Création de la div de resultats
 function createSelectChrom() {
