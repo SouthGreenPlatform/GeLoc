@@ -460,6 +460,10 @@ function onClickChr(){
 // Affiche des informations de la portion selectionnée
 ////////////////////////////////////////////////////////
 function writeSelectedRange() {
+
+
+	
+
     var r = ideogramChr.selectedRegion,
         from = r.from.toLocaleString(), // Adds thousands-separator
         to = r.to.toLocaleString(),
@@ -493,8 +497,19 @@ function writeSelectedRange() {
 
 function drawZoom(from, to, report){
 
+	console.log("draaaaaaaw");
+
 	var canvas = document.getElementById('zoom');
 	var ctx = canvas.getContext('2d');
+
+	//
+	let firstCDS = true;
+	let countGene = 0;
+	let x = 20;
+	let y = 25;
+	let yInit = 70;
+	let xFirstCDS = 0;
+	let startFirstCDS = 0;
 	
 	//taille du canvas
 	const zoomLength = 800;
@@ -508,7 +523,12 @@ function drawZoom(from, to, report){
 
 	gffLines.forEach(line => {
 		var tab = line.split(/\t/);
+
+		//Ligne gene
 		if(tab[2] == "gene"){
+
+			countGene++;
+			firstCDS = true;
 
 			console.log(line);
 			
@@ -516,29 +536,44 @@ function drawZoom(from, to, report){
 			startGene = ((tab[3]-from) * 800) / seqLength;
 			wigthGene = ((tab[4]-tab[3]) * 800) / seqLength;
 
-			console.log("start gene " + startGene);
-			console.log("width gene " + wigthGene);
+			//console.log("start gene " + startGene);
+			//console.log("width gene " + wigthGene);
 
+			//draw line
 			ctx.beginPath();
 			ctx.moveTo(0, 50);
 			ctx.lineTo(800, 50);
 			ctx.stroke();
-			
-			ctx.fillStyle="black";    // color of fill
 
-			//ctx.fillRect(x, y, width, height)
-			// Parameters	Type	Description
-			// x	number	The x-coordinate (in pixels), the upper-left corner of the rectangle in relation to the coordinates of the canvas.
-			// y	number	The y-coordinate (in pixels), of the upper-left corner of the rectangle in relation to the coordinates of the canvas.
-			// width	number	The width (in pixels), of the rectangle.
-			// height	number	The height (in pixels), of the rectangle.
-			  ctx.fillRect(startGene, 40, wigthGene, 20); // create rectangle  
-			  console.log(startGene + wigthGene );
+			//draw gene rect
+			ctx.fillStyle="black";    // color of fill
+			// x y width height	
+			ctx.fillRect(startGene, 40, wigthGene, 20); // create rectangle  
+			//console.log(startGene + wigthGene );
 		}
 
-	});
+		//ligne CDS
+		if(tab[2] == "CDS"){
+			let widthCDS = (tab[4] - tab[3]) / 10;
+			let yCDS = countGene * y + yInit;
 
-	
+			//draw first CDS
+			if (firstCDS){
+				//coordonnées hauteur du bloc
+				startFirstCDS = tab[3];
+				let xCDS = xFirstCDS + x;
+				ctx.strokeRect(xCDS, yCDS, widthCDS, 15); // create rectangle 
+				console.log("draw first CDS x="+xCDS+" y="+yCDS ); 
+				firstCDS = false;
+			
+			//Draw other CDS
+			}else{
+				let xCDS = (tab[3] - startFirstCDS) / 10 + x;
+				ctx.strokeRect(xCDS, yCDS, widthCDS, 15); // create rectangle  
+				console.log("draw CDS x="+xCDS+" y="+yCDS ); 
+			}
+		}
+	});
 }
 
 //Création de la div de resultats

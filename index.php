@@ -232,13 +232,13 @@ To make the best use of GeLoc, we recommend you download the latest Chrome versi
       <!-- The ideogram goes here. -->
     </div>
 		
-	<div class="ideo_container_chr">
+	<div class="ideo_container_chr" max-width="1000px">
       <!-- The ideogram chromosome goes here. -->
     </div>
 
-	<div class="zoom_view">
+	<div class="zoom_view" style="width:100%; max-height: 300px;max-width:1000px;overflow: scroll;">
       <!-- The zoomed view goes here. -->
-	  	<canvas id="zoom" width="800" height="100">
+	  	<canvas id="zoom" height="1000" width="1200">
 			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
 		</canvas>
     </div>
@@ -250,7 +250,7 @@ To make the best use of GeLoc, we recommend you download the latest Chrome versi
 		(extent: <span id="extent"></span> base pairs)
 		</div>
 		<div class='container'>
-		<pre id="gffResult">
+		<pre id="gffResult" style="width:100%; max-height: 300px;max-width:1000px;overflow: scroll;">
 		</pre>
 		</div>
 		
