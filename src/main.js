@@ -510,6 +510,9 @@ function drawZoom(from, to, report){
 	let yInit = 70;
 	let xFirstCDS = 0;
 	let startFirstCDS = 0;
+	let xCDS;
+	let yCDS;
+	let widthCDS;
 	
 	//taille du canvas
 	const zoomLength = 800;
@@ -554,22 +557,39 @@ function drawZoom(from, to, report){
 
 		//ligne CDS
 		if(tab[2] == "CDS"){
-			let widthCDS = (tab[4] - tab[3]) / 10;
-			let yCDS = countGene * y + yInit;
+			
+			let heightCDS = 15;
 
 			//draw first CDS
 			if (firstCDS){
+				//convert bp to pixel
+				widthCDS = (tab[4] - tab[3]) / 10;
+				yCDS = countGene * y + yInit;
 				//coordonnées hauteur du bloc
 				startFirstCDS = tab[3];
-				let xCDS = xFirstCDS + x;
-				ctx.strokeRect(xCDS, yCDS, widthCDS, 15); // create rectangle 
-				console.log("draw first CDS x="+xCDS+" y="+yCDS ); 
+				xCDS = xFirstCDS + x;
+				ctx.strokeRect(xCDS, yCDS, widthCDS, heightCDS); // create rectangle 
+				console.log("draw first CDS x="+xCDS+" y="+yCDS+" width="+widthCDS ); 
 				firstCDS = false;
 			
 			//Draw other CDS
 			}else{
-				let xCDS = (tab[3] - startFirstCDS) / 10 + x;
-				ctx.strokeRect(xCDS, yCDS, widthCDS, 15); // create rectangle  
+				//end of previous cds
+				let xStopPreviousCDS = xCDS + widthCDS;
+				//width of current cds
+				widthCDS = (tab[4] - tab[3]) / 10;
+				yCDS = countGene * y + yInit;
+				xCDS = (tab[3] - startFirstCDS) / 10 + x;
+				
+				//line to bloc
+				//console.log("drawline to bloc "+ xStopPreviousCDS+" "+ widthCDS);
+				ctx.beginPath();
+				ctx.moveTo(xStopPreviousCDS, yCDS + 8 );
+				ctx.lineTo(xCDS, yCDS + 8);
+				ctx.stroke();
+				
+				//bloc
+				ctx.strokeRect(xCDS, yCDS, widthCDS, heightCDS); // create rectangle  
 				console.log("draw CDS x="+xCDS+" y="+yCDS ); 
 			}
 		}
