@@ -173,12 +173,13 @@ echo "<script> load_ideogram()</script>";
 
 				<!-- where the lengend will take place -->
 				<br /><br />
-				Legend :
-				<br /><br />
-				<canvas id="legend">
-					Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
-				</canvas>
-				
+				<div id="legend_div" style="display: none">
+					Legend :
+					<br /><br />
+					<canvas id="legend">
+						Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
+					</canvas>
+				</div>
 				  
 				</div>
 			  </li>

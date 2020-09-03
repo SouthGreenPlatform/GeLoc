@@ -351,6 +351,9 @@ function removeLetters(){
 
 function drawLegend(){
 
+	//affiche la div
+	$('#legend_div').show();
+
 	var canvas = document.getElementById('legend');
 	var ctx = canvas.getContext('2d');
 
