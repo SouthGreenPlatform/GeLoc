@@ -500,8 +500,6 @@ function writeSelectedRange() {
 
 function drawZoom(from, to, report){
 
-	console.log("draaaaaaaw");
-
 	//display div
 	$('.zoom_view').show();
 
@@ -519,17 +517,18 @@ function drawZoom(from, to, report){
 	let xCDS;
 	let yCDS;
 	let widthCDS;
+	let startLine = 0;
+	let stopLine = 0;
 	
-	//taille du canvas
-	const zoomLength = 800;
 	//nb de bases dans le canvas
 	const seqLength = to - from;
 	console.log("seq length "+seqLength);
 	let gffLines = report.split('\n');
 
-	//clear
+	//clear avant de redessiner
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+	//parsing GFF file
 	gffLines.forEach(line => {
 		var tab = line.split(/\t/);
 
@@ -539,33 +538,23 @@ function drawZoom(from, to, report){
 			countGene++;
 			firstCDS = true;
 
-			console.log(line);
-			
 			//position on canvas
 			startGene = ((tab[3]-from) * 800) / seqLength;
 			wigthGene = ((tab[4]-tab[3]) * 800) / seqLength;
 
-			//console.log("start gene " + startGene);
-			//console.log("width gene " + wigthGene);
-
 			//draw line
-			ctx.beginPath();
-			ctx.moveTo(0, 50);
-			ctx.lineTo(800, 50);
-			ctx.stroke();
-
+			drawLine(ctx, x, 800+x, 42);
+			
 			//draw gene rect
 			ctx.fillStyle="black";    // color of fill
 			// x y width height	
-			ctx.fillRect(startGene, 40, wigthGene, 20); // create rectangle  
+			ctx.fillRect(startGene+x, 40, wigthGene, 20); // create rectangle  
 			//console.log(startGene + wigthGene );
 		}
 
-		//ligne CDS
+		//Traitement des CDS
 		if(tab[2] == "CDS"){
 			
-			let heightCDS = 15;
-
 			//draw first CDS
 			if (firstCDS){
 				//convert bp to pixel
@@ -574,33 +563,80 @@ function drawZoom(from, to, report){
 				//coordonnées hauteur du bloc
 				startFirstCDS = tab[3];
 				xCDS = xFirstCDS + x;
-				ctx.strokeRect(xCDS, yCDS, widthCDS, heightCDS); // create rectangle 
-				console.log("draw first CDS x="+xCDS+" y="+yCDS+" width="+widthCDS ); 
+
+				if(tab[6] == "+"){
+					drawArrow(ctx, xCDS, yCDS, widthCDS, "plus");
+					startLine = xCDS + widthCDS + 5;
+				}else{
+					drawArrow(ctx, xCDS, yCDS, widthCDS, "minus");
+					startLine = xCDS + widthCDS - 5;
+				}
 				firstCDS = false;
 			
 			//Draw other CDS
 			}else{
-				//end of previous cds
-				let xStopPreviousCDS = xCDS + widthCDS;
 				//width of current cds
 				widthCDS = (tab[4] - tab[3]) / 10;
 				yCDS = countGene * y + yInit;
 				xCDS = (tab[3] - startFirstCDS) / 10 + x;
-				
-				//line to bloc
-				//console.log("drawline to bloc "+ xStopPreviousCDS+" "+ widthCDS);
-				ctx.beginPath();
-				ctx.moveTo(xStopPreviousCDS, yCDS + 8 );
-				ctx.lineTo(xCDS, yCDS + 8);
-				ctx.stroke();
-				
-				//bloc
-				ctx.strokeRect(xCDS, yCDS, widthCDS, heightCDS); // create rectangle  
-				console.log("draw CDS x="+xCDS+" y="+yCDS ); 
+
+				if(tab[6] == "+"){
+					//line to bloc
+					stopLine = xCDS + 5;
+					drawLine(ctx, startLine, stopLine, yCDS );
+					//fleche +
+					drawArrow(ctx, xCDS, yCDS, widthCDS, "plus");
+					startLine = xCDS + widthCDS + 5;
+
+				}else{
+					//line to bloc
+					stopLine = xCDS - 5;
+					drawLine(ctx, startLine, stopLine, yCDS );
+					//fleche -
+					drawArrow(ctx, xCDS, yCDS, widthCDS, "minus");
+					startLine = xCDS + widthCDS - 5;
+				}
 			}
 		}
 	});
 }
+
+//Draw oriented CDS
+function drawArrow(ctx, x, y, width, orientation){
+	
+	if(orientation == "plus"){
+		ctx.beginPath();
+		ctx.moveTo(x, y );
+		ctx.lineTo(x+width, y);      //--------->
+		ctx.lineTo(x+width+5, y+8);  //           \
+		ctx.lineTo(x+width, y+15);   //           /
+		ctx.lineTo(x, y+15);         //<---------
+		ctx.lineTo(x+5, y+7); 		 // /
+		ctx.lineTo(x, y);		     // \  (retour point de départ)  
+		ctx.stroke();
+
+	}else{
+		ctx.beginPath();
+		ctx.moveTo(x, y );
+		ctx.lineTo(x+width, y);      //--------->
+		ctx.lineTo(x+width-5, y+8);  //         /
+		ctx.lineTo(x+width, y+15);   //         \
+		ctx.lineTo(x, y+15);         //<---------
+		ctx.lineTo(x-5, y+7); 		 // \
+		ctx.lineTo(x, y);		     // /  (retour point de départ)  
+					
+		ctx.stroke();
+	}	
+}
+
+//Draw line between CDS
+function drawLine(ctx, start, stop, heigth){
+	ctx.beginPath();
+	ctx.moveTo(start, heigth + 8 );
+	ctx.lineTo(stop, heigth + 8);
+	ctx.stroke();
+}
+
 
 //Création de la div de resultats
 function createResultDiv(content) {
