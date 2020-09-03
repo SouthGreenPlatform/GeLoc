@@ -502,6 +502,9 @@ function drawZoom(from, to, report){
 
 	console.log("draaaaaaaw");
 
+	//display div
+	$('.zoom_view').show();
+
 	var canvas = document.getElementById('zoom');
 	var ctx = canvas.getContext('2d');
 

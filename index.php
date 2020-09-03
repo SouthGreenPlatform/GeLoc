@@ -220,7 +220,7 @@ To make the best use of GeLoc, we recommend you download the latest Chrome versi
       <!-- The ideogram chromosome goes here. -->
     </div>
 
-	<div class="zoom_view" style="width:100%; max-height: 300px;max-width:1000px;overflow: scroll;">
+	<div class="zoom_view" style="display: none; width:100%; max-height: 300px;max-width:1000px;overflow: scroll;">
       <!-- The zoomed view goes here. -->
 	  	<canvas id="zoom" height="1000" width="1200">
 			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
