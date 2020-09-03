@@ -167,23 +167,6 @@ echo "<script> load_ideogram()</script>";
 				  </select>
 				  <br />
 				  
-				  <!--Clear-->
-				  <button class="btn btn-warning btn-small" onclick="location.reload(true);" id="clear">Clear</button>
-				  
-				  <!-- Update -->
-				  <button class="btn btn-primary" onclick="update();" id="reload">Update image</button>
-
-				  <!--Download image-->
-				  <a id="download" style="display: none;" class="btn btn-warning">Download as PNG</a>
-				  <script>
-				  $('#download').click(function(){ 
-					html2canvas(document.getElementById("page-content-wrapper")).then(function(canvas) {
-					  Canvas2Image.saveAsPNG(canvas, canvas.width, canvas.height);
-					});
-				  });
-				  </script>
-
-
 				<!-- where the select chrom will take place -->
 				<br /><br />
 				<div id="selectChromosome"></div>
