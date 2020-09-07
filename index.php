@@ -61,58 +61,6 @@
 
 <div id="loader" class="triple-spinner" style="display:none;"></div>
 
-  <?php
-//echo json_encode(file_get_contents($_POST["data"]));
-//echo $_POST["select"];
-
-  if(isset($_FILES["data"])){
-	$data = json_encode(file_get_contents($_FILES["data"]["tmp_name"]));
-	$ploidyPost = $_POST["select"];
-	echo "<script>
-	config.ploidy = $ploidyPost;
-	$(\"#selectorploidy\").val('$ploidyPost');
-	var datajs = {$data};
-	datajs = datajs.substring(0, datajs.length-1);
-	console.log(datajs);
-	load_post_file(datajs); 
-  </script>";
-  if(!empty($_FILES["annot"])){
-	$annot = json_encode(file_get_contents($_FILES["annot"]["tmp_name"]));
-	echo "<script> 
-	var annotjs = {$annot};
-	annotjs = annotjs.substring(0, annotjs.length-1);
-	console.log(annotjs);
-	annotationParser(annotjs); 
-//</script>";
-  }
-  echo "<script> load_ideogram()</script>";
-}
-elseif(isset($_POST["data"])){
-  $data = json_encode(file_get_contents($_POST["data"]));
-  $ploidyPost = $_POST["select"];
-  echo "<script>
-  config.ploidy = $ploidyPost;
-  $(\"#selectorploidy\").val('$ploidyPost');
-  var datajs = {$data};
-  datajs = datajs.substring(0, datajs.length-1);
-  $(\"#editorChr\").text(datajs);
-</script>";
-if(!empty($_POST["annot"])){
-  $annot = json_encode(file_get_contents($_POST["annot"]));
-  echo "<script>
-  var annotjs = {$annot};
-  annotjs = annotjs.substring(0, annotjs.length-1);
-  console.log(annotjs);
-  $(\"#editorAnnot\").text(annotjs);
-//</script>";
-}
-echo "<script> load_ideogram()</script>";
-}
-?>
-
-
-
-
 <!--SIDEBAR-->
 <div id="wrapper">
 		<div id="sidebar-wrapper">
@@ -140,41 +88,15 @@ echo "<script> load_ideogram()</script>";
 					<option value="Kitaake">Kitaake</option>
 					
 				  </select>
-				  
-				  <!--Accessions data-->
-				  
-				  <textarea style="display: none" id="editorAnnot" rows="5" class="form-control" placeholder="Insert values here" ></textarea>
-				  
-				  <!--Load accession file-->
-				  
-				  <!--<label for="fileInputD" class="control-label">Load custom data</label>-->
-				  <input style="display: none" class="btn" onchange="load_file2(this.value)" type="file" id="fileInputD">
-				  
-				  <!--Chromosomes data-->
-				  <label style="display: none" for="editorChr" class="col-lg-2 control-label">Chromosomes</label>
-				  <textarea style="display: none" id="editorChr" rows="5" class="form-control" placeholder="Insert values here"></textarea>
-				  
-				  <!--Load chromosome file-->
-				  <!--<label for="fileInputC" class="control-label">Load custom data</label>-->
-				  <input style="display: none" class="btn" onchange="load_file(this.value)" type="file" id="fileInputC">
-          
-				  <label style="display: none" for="selectAccession">Ploïdie</label>
-				  <select style="display: none" name="select" id="selectorploidy" class="form-control-sm" onchange="loadingon()">
-				    <option value="1" selected>1</option> 
-				    <option value="2">2</option> 
-					<option value="3">3</option>
-					<option value="4">4</option>
-				  </select>
-				  <br />
-				  
+
 				<!-- button show / hide global view -->
-				<br />
+				<br /><br />
 				<div style="display: none" id="show-hide">
 				<button type="button" class="btn btn-outline-dark" data-toggle="collapse" data-target="#page-content-wrapper" aria-expanded="false" aria-controls="collapseExample"> Show / hide global view</button>
 				</div>
 
 				<!-- where the lengend will take place -->
-				<br /><br />
+				<br />
 				<div id="legend_div" style="display: none">
 					Legend :
 					<br /><br />
