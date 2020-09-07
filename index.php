@@ -167,9 +167,11 @@ echo "<script> load_ideogram()</script>";
 				  </select>
 				  <br />
 				  
-				<!-- where the select chrom will take place -->
-				<br /><br />
-				<div id="selectChromosome"></div>
+				<!-- button show / hide global view -->
+				<br />
+				<div style="display: none" id="show-hide">
+				<button type="button" class="btn btn-outline-dark" data-toggle="collapse" data-target="#page-content-wrapper" aria-expanded="false" aria-controls="collapseExample"> Show / hide global view</button>
+				</div>
 
 				<!-- where the lengend will take place -->
 				<br /><br />
@@ -212,7 +214,7 @@ To make the best use of GeLoc, we recommend you download the latest Chrome versi
 	></img>
     </div>	
 
-	<div id="page-content-wrapper" class="ideo_container_global">
+	<div id="page-content-wrapper" class="ideo_container_global collapse show">
       <!-- The ideogram goes here. -->
     </div>
 		

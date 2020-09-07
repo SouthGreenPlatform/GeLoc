@@ -75,6 +75,10 @@ selectAccession.addEventListener("change", async function(){
 	clear();
 	//affiche le loader
 	document.getElementById("loader").style.display = "block";
+
+	//affiche la div si elle est cachée
+	$(".ideo_container_global").collapse('show');
+
 	config = initConfig();
 	config.annotationsPath='http://dev.visusnp.southgreen.fr/geloc/data/annotations/'+acc+'.json';
 	
@@ -404,8 +408,12 @@ function drawLegend(){
 function onClickChr(){
 	$(".ideo_container_global").find(".bands").each(function(index ){
 		$(this).on("click", function(){
-	//let selectChrom = document.getElementById('selectChrom');
-	//selectChrom.addEventListener("change", function(){
+
+			//efface la div globale
+			$(".ideo_container_global").collapse('hide');
+
+			//Affiche le bouton show / hide de la vue globale
+			$("#show-hide").show();
 
 			clickedChrom = index + 1 ;
 			//clickedChrom = selectChrom.value;
@@ -463,9 +471,6 @@ function onClickChr(){
 // Affiche des informations de la portion selectionnée
 ////////////////////////////////////////////////////////
 function writeSelectedRange() {
-
-
-	
 
     var r = ideogramChr.selectedRegion,
         from = r.from.toLocaleString(), // Adds thousands-separator
