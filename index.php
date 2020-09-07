@@ -63,63 +63,54 @@
 
 <!--SIDEBAR-->
 <div id="wrapper">
-		<div id="sidebar-wrapper">
-			<aside id="sidebar">
-				<ul id="sidemenu" class="sidebar-nav">
-					
-		  <!--HOME-->
-		  	<li>
+	<div id="sidebar-wrapper">
+		<aside id="sidebar">
+		<ul id="sidemenu" class="sidebar-nav">
+
+		<!--DATA-->
+	  	<li>
 			<a class="accordion-toggle collapsed toggle-switch" data-toggle="collapse" href="#submenu-1">
 				<span class="sidebar-icon"><i class="fa fa-dashboard"></i></span>
 				<span class="sidebar-title">Data</span>
-			  <b class="caret"></b>
+			  	<b class="caret"></b>
 			</a>
 			
+
 			<ul id="submenu-1" class="panel-collapse collapse show panel-switch" role="menu">
 			  
-			  <!-- select accessions-->
+			<!-- select accessions-->  
 			<li>
-				<div class="form-group">
-				  <label for="selectAccession">Accession</label>
-				  <!-- <select onchange="load_accession(this.value);" class="form-control-sm" id="selectAccession"> -->
-				  <select class="form-control-sm" id="selectAccession">
+
+				<label for="selectAccession">Accession</label>
+				<select class="form-control-sm" id="selectAccession">
 					<option value=""></option>
 					<option value="Nipponbare">Nipponbare</option>
 					<option value="Kitaake">Kitaake</option>
-					
-				  </select>
+			  	</select>
 
 				<!-- button show / hide global view -->
-				<br /><br />
 				<div style="display: none" id="show-hide">
-				<button type="button" class="btn btn-outline-dark" data-toggle="collapse" data-target="#page-content-wrapper" aria-expanded="false" aria-controls="collapseExample"> Show / hide global view</button>
+					<button type="button" class="btn btn-outline-dark" data-toggle="collapse" data-target="#page-content-wrapper" aria-expanded="false" aria-controls="collapseExample"> Show / hide global view</button>
 				</div>
 
 				<!-- where the lengend will take place -->
-				<br />
 				<div id="legend_div" style="display: none">
 					Legend :
-					<br /><br />
 					<canvas id="legend">
 						Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
 					</canvas>
 				</div>
-				  
-				</div>
-			  </li>
-						</ul>
-			
-			
-					</li>
-		  
-				</ul>
-			</aside>            
-		</div>
-	<!-- fin de la sidebar -->
+			</li>
+			</ul>
+			</li>	  
+		</ul>
+	</aside>            
+</div>
+<!-- fin de la sidebar -->
 	
 		
-	<!-- Message navigateur -->
-	<div class="alert alert-secondary alert-dismissible fade show" role="alert">
+<!-- Message navigateur -->
+<div class="alert alert-secondary alert-dismissible fade show" role="alert">
 Hello! 
 This Web site is optimized for viewing in Chrome.
 To make the best use of GeLoc, we recommend you download the latest Chrome versions.
@@ -128,50 +119,46 @@ To make the best use of GeLoc, we recommend you download the latest Chrome versi
 </button>
 </div>
 
-	<!-- Choose message -->
-	<div id="arrow_choose" class="container">
-	<img src="./public/img/arrow_choose.svg"
-	alt="<== Choose an accession to view"
-	width="500px"
-	></img>
-    </div>	
+<!-- Choose message -->
+<div id="arrow_choose" class="container">
+	<img src="./public/img/arrow_choose.svg" alt="<== Choose an accession to view" width="500px"></img>
+</div>	
 
-	<div id="page-content-wrapper" class="ideo_container_global collapse show">
-      <!-- The ideogram goes here. -->
-    </div>
+<div id="page-content-wrapper" class="ideo_container_global collapse show">
+	<!-- The ideogram goes here. -->
+</div>
 		
-	<div class="ideo_container_chr" max-width="1000px">
-      <!-- The ideogram chromosome goes here. -->
-    </div>
+<div class="ideo_container_chr" max-width="1000px">
+    <!-- The ideogram chromosome goes here. -->
+</div>
 
-	<div class="zoom_view" style="display: none; width:100%; max-height: 300px;max-width:1000px;overflow: scroll;">
-      <!-- The zoomed view goes here. -->
-	  	<canvas id="zoom" height="1000" width="1200">
-			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
-		</canvas>
-    </div>
+<div class="zoom_view" style="display: none; width:100%; max-height: 300px;max-width:1000px;overflow: scroll;">
+    <!-- The zoomed view goes here. -->
+	<canvas id="zoom" height="1000" width="1200">
+		Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
+	</canvas>
+</div>
 
-	<div id="chr_region" heigth="300px" style="display: none;">
-	<!-- The GFF info goes here. -->
-    Selected region:
-		<div><span id="from"></span>  -  <span id="to"></span>
+<div id="chr_region" heigth="300px" style="display: none;">
+<!-- The GFF info goes here. -->
+Selected region:
+	<div><span id="from"></span>  -  <span id="to"></span>
 		(extent: <span id="extent"></span> base pairs)
-		</div>
-		<div class='container'>
+	</div>
+	<div class='container'>
 		<pre id="gffResult" style="width:100%; max-height: 300px;max-width:1000px;overflow: scroll;">
 		</pre>
-		</div>
-		
-  	</div>
-
-	</div> 
-	<div class="tooltip_templates" id="tooltip_content">
-		<span>
-			<a href="https://banana-genome-hub.southgreen.fr/jbrowse_ma2/?loc=chr01:24139214..24142797">
-				view in banana jbrowse
-			</a>
-		</span>
 	</div>
+</div>
+
+
+<div class="tooltip_templates" id="tooltip_content">
+	<span>
+	<a href="https://banana-genome-hub.southgreen.fr/jbrowse_ma2/?loc=chr01:24139214..24142797">
+		view in banana jbrowse
+	</a>
+	</span>
+</div>
 	
 
 
