@@ -511,6 +511,9 @@ function drawZoom(from, to, report){
 	var canvas = document.getElementById('zoom');
 	var ctx = canvas.getContext('2d');
 
+	let elemLeft = canvas.offsetLeft;
+    let elemTop = canvas.offsetTop;
+
 	//
 	let firstCDS = true;
 	let countGene = 0;
@@ -524,6 +527,7 @@ function drawZoom(from, to, report){
 	let widthCDS;
 	let startLine = 0;
 	let stopLine = 0;
+	let elements = [];
 	
 	//nb de bases dans le canvas
 	const seqLength = to - from;
@@ -545,7 +549,7 @@ function drawZoom(from, to, report){
 
 			//position on canvas
 			startGene = ((tab[3]-from) * 800) / seqLength;
-			wigthGene = ((tab[4]-tab[3]) * 800) / seqLength;
+			widthGene = ((tab[4]-tab[3]) * 800) / seqLength;
 
 			//draw line
 			drawLine(ctx, x, 800+x, 42);
@@ -553,7 +557,7 @@ function drawZoom(from, to, report){
 			//draw gene rect
 			ctx.fillStyle="black";    // color of fill
 			// x y width height	
-			ctx.fillRect(startGene+x, 40, wigthGene, 20); // create rectangle  
+			ctx.fillRect(startGene+x, 40, widthGene, 20); // create rectangle  
 			//console.log(startGene + wigthGene );
 		}
 
@@ -569,6 +573,19 @@ function drawZoom(from, to, report){
 				startFirstCDS = tab[3];
 				xCDS = xFirstCDS + x;
 
+				//draw background = element clickable
+				ctx.fillStyle="lightgrey";
+				ctx.fillRect(xCDS-5, yCDS-2, 1200, 22);
+				elements.push({
+					colour: 'lightgrey',
+					width: 1200,
+					height: 22,
+					top: yCDS-2,
+					left: xCDS-5
+				});
+
+
+				//Draw plus or minus CDS
 				if(tab[6] == "+"){
 					drawArrow(ctx, xCDS, yCDS, widthCDS, "plus");
 					startLine = xCDS + widthCDS + 5;
@@ -604,7 +621,25 @@ function drawZoom(from, to, report){
 			}
 		}
 	});
+
+	canvas.addEventListener('click', function (event) {
+        var x = event.pageX - elemLeft,
+        y = event.pageY - elemTop;
+        // Collision detection between clicked offset and element.
+		console.log(elements);
+        elements.forEach(function (element) {
+			console.log("clic");
+            if (y > element.top && y < element.top + element.height
+                && x > element.left && x < element.left + element.width) {
+                console.log('clicked an element: y:' + y + ' x:' + x);
+            }
+        });
+    }, false);
 }
+
+
+
+
 
 //Draw oriented CDS
 function drawArrow(ctx, x, y, width, orientation){
