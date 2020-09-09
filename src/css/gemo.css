@@ -186,7 +186,7 @@
 /************* Ideogram **************/
 
 #_ideogram.labeledLeft {
-    width: 1400px; /*largeur agrandie pour afficher les chr horizontaux*/
+    width: 1000px; /*largeur agrandie pour afficher les chr horizontaux*/
     padding-left: 0px !important;
 }
 
