@@ -100,6 +100,11 @@
 						Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
 					</canvas>
 				</div>
+
+				<!-- gene card -->
+				<div id="gene_card">
+				Gene card
+				</div>
 			</li>
 			</ul>
 			</li>	  

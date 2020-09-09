@@ -511,8 +511,7 @@ function drawZoom(from, to, report){
 	var canvas = document.getElementById('zoom');
 	var ctx = canvas.getContext('2d');
 
-	let elemLeft = canvas.offsetLeft;
-    let elemTop = canvas.offsetTop;
+	
 
 	//
 	let firstCDS = true;
@@ -559,6 +558,22 @@ function drawZoom(from, to, report){
 			// x y width height	
 			ctx.fillRect(startGene+x, 40, widthGene, 20); // create rectangle  
 			//console.log(startGene + wigthGene );
+
+			//draw background = element clickable
+			ctx.fillStyle="white";
+			ctx.fillRect(xFirstCDS + x -5, countGene * y + yInit -2, 1200, 22);
+			//Save gene infos
+			elements.push({
+				chr: tab[0], 
+				start: tab[3],
+				stop: tab[4],
+				orientation: tab[6],
+				infos: tab[8],
+				width: 1200,
+				height: 22,
+				top: countGene * y + yInit -2,
+				left: xFirstCDS + x -5
+			});
 		}
 
 		//Traitement des CDS
@@ -572,18 +587,6 @@ function drawZoom(from, to, report){
 				//coordonnées hauteur du bloc
 				startFirstCDS = tab[3];
 				xCDS = xFirstCDS + x;
-
-				//draw background = element clickable
-				ctx.fillStyle="lightgrey";
-				ctx.fillRect(xCDS-5, yCDS-2, 1200, 22);
-				elements.push({
-					colour: 'lightgrey',
-					width: 1200,
-					height: 22,
-					top: yCDS-2,
-					left: xCDS-5
-				});
-
 
 				//Draw plus or minus CDS
 				if(tab[6] == "+"){
@@ -623,15 +626,21 @@ function drawZoom(from, to, report){
 	});
 
 	canvas.addEventListener('click', function (event) {
+		let elemLeft = canvas.offsetLeft;
+    	let elemTop = canvas.offsetTop;
         var x = event.pageX - elemLeft,
         y = event.pageY - elemTop;
+		console.log("clic x: "+x+" y: "+y );
         // Collision detection between clicked offset and element.
 		console.log(elements);
         elements.forEach(function (element) {
-			console.log("clic");
             if (y > element.top && y < element.top + element.height
                 && x > element.left && x < element.left + element.width) {
                 console.log('clicked an element: y:' + y + ' x:' + x);
+				
+				//display gene card
+				$('.gene_card').show();
+				$('#gene_card').text('Gene card '+ element.infos);
             }
         });
     }, false);
