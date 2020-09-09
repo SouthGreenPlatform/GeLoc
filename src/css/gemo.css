@@ -401,3 +401,21 @@ textarea.form-control {
   border-color: black;
   width: 200px;
 }
+
+#legend_div {
+  margin-top: 5px;
+  border:1px dotted black;
+  width: 95%;
+  background: white;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#gene_card {
+  margin-top: 5px;
+  border:1px dotted black;
+  width: 95%;
+  background: white;
+  padding-left: 5px;
+  padding-right: 5px;
+}
