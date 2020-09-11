@@ -100,6 +100,12 @@ while (<INFILE>) {
     if ($line=~/(Chr(\d+))\s+.*\s+(\d+)\s+(\d+)\s+(.*)/) {
         $length = $4 - $3;
 
+        #élimine les genes "other"
+        if ($5 eq "other"){
+            #print "other";
+            next;
+        }
+
         #chromosome courant
         if ($currentChr == $2){
             
