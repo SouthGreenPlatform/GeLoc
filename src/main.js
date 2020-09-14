@@ -562,6 +562,15 @@ function drawZoom(from, to, report){
 			//draw background = element clickable
 			ctx.fillStyle="white";
 			ctx.fillRect(xFirstCDS + x -5, countGene * y + yInit -2, 1200, 22);
+
+			var regexpClass = /Class=(\w*)/;
+			var geneClass = tab[8].match(regexpClass)[1];
+			var regexpId = /ID=(\w*)/;
+			var id = tab[8].match(regexpId)[1];
+			var regexpFamily = /Fam=(\w*)/;
+			var family = tab[8].match(regexpFamily)[1];
+
+
 			//Save gene infos
 			elements.push({
 				chr: tab[0], 
@@ -569,6 +578,9 @@ function drawZoom(from, to, report){
 				stop: tab[4],
 				orientation: tab[6],
 				infos: tab[8],
+				geneClass: geneClass,
+				id: id,
+				family: family,
 				width: 1200,
 				height: 22,
 				top: countGene * y + yInit -2,
@@ -626,6 +638,10 @@ function drawZoom(from, to, report){
 	});
 
 	canvas.addEventListener('click', function (event) {
+
+		//affiche la gene card
+		document.getElementById("gene_card").style.display = "block";
+		//position du canvas
 		let elemLeft = canvas.offsetLeft;
     	let elemTop = canvas.offsetTop;
         var x = event.pageX - elemLeft,
@@ -637,10 +653,11 @@ function drawZoom(from, to, report){
             if (y > element.top && y < element.top + element.height
                 && x > element.left && x < element.left + element.width) {
                 console.log('clicked an element: y:' + y + ' x:' + x);
+				console.log(element);
 				
 				//display gene card
 				$('.gene_card').show();
-				$('#gene_card').text('Gene card '+ element.infos);
+				$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop+"<br/>Family: "+element.family +"<br/>Class: "+element.geneClass);
             }
         });
     }, false);

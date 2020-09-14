@@ -102,7 +102,7 @@
 				</div>
 
 				<!-- gene card -->
-				<div id="gene_card">
+				<div id="gene_card" style="display: none">
 				Gene card
 				</div>
 			</li>
