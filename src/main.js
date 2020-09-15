@@ -12,6 +12,7 @@ var ideogram;
 var ideogramChr;
 //taille du triangle
 var annotHeight = 3.5;
+let gap = 0;
 
 //
 
@@ -545,13 +546,17 @@ function drawZoom(from, to, report){
 
 			countGene++;
 			firstCDS = true;
+			gap = 0;
 
 			//position on canvas
 			startGene = ((tab[3]-from) * 800) / seqLength;
 			widthGene = ((tab[4]-tab[3]) * 800) / seqLength;
 
 			//draw line
-			drawLine(ctx, x, 800+x, 42);
+			ctx.beginPath();
+			ctx.moveTo(x, 50 );
+			ctx.lineTo(800+x, 50);
+			ctx.stroke();
 			
 			//draw gene rect
 			ctx.fillStyle="black";    // color of fill
@@ -622,16 +627,16 @@ function drawZoom(from, to, report){
 					stopLine = xCDS + 5;
 					drawLine(ctx, startLine, stopLine, yCDS );
 					//fleche +
-					drawArrow(ctx, xCDS, yCDS, widthCDS, "plus");
-					startLine = xCDS + widthCDS + 5;
+					drawArrow(ctx, xCDS-gap, yCDS, widthCDS, "plus");
+					startLine = xCDS-gap + widthCDS + 5;
 
 				}else{
 					//line to bloc
 					stopLine = xCDS - 5;
 					drawLine(ctx, startLine, stopLine, yCDS );
 					//fleche -
-					drawArrow(ctx, xCDS, yCDS, widthCDS, "minus");
-					startLine = xCDS + widthCDS - 5;
+					drawArrow(ctx, xCDS-gap, yCDS, widthCDS, "minus");
+					startLine = xCDS-gap + widthCDS - 5;
 				}
 			}
 		}
@@ -703,10 +708,26 @@ function drawArrow(ctx, x, y, width, orientation){
 
 //Draw line between CDS
 function drawLine(ctx, start, stop, heigth){
-	ctx.beginPath();
-	ctx.moveTo(start, heigth + 8 );
-	ctx.lineTo(stop, heigth + 8);
-	ctx.stroke();
+
+	let lineWidth = stop - start;
+
+	if(lineWidth > 50){
+		ctx.beginPath();
+		ctx.setLineDash([2, 2]);
+		ctx.moveTo(start, heigth + 8 );
+		ctx.lineTo(start+50, heigth + 8);
+		ctx.stroke();
+		ctx.setLineDash([]);
+		gap = lineWidth - 50; 
+
+	}else{
+		ctx.beginPath();
+		ctx.moveTo(start, heigth + 8 );
+		ctx.lineTo(stop, heigth + 8);
+		ctx.stroke();
+		gap = 0;
+
+	}	
 }
 
 
