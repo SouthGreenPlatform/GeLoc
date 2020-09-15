@@ -419,3 +419,7 @@ textarea.form-control {
   padding-left: 5px;
   padding-right: 5px;
 }
+
+#selected_region {
+margin-left: 2em;
+}

@@ -416,6 +416,9 @@ function onClickChr(){
 			//Affiche le bouton show / hide de la vue globale
 			$("#show-hide").show();
 
+			//affiche selected region
+			document.getElementById("selected_region").style.display = "block";
+
 			clickedChrom = index + 1 ;
 			//clickedChrom = selectChrom.value;
 			if(clickedChrom<10){
@@ -507,12 +510,17 @@ function writeSelectedRange() {
 function drawZoom(from, to, report){
 
 	//display div
+	$('.zoom_global').show();
 	$('.zoom_view').show();
 
 	var canvas = document.getElementById('zoom');
 	var ctx = canvas.getContext('2d');
 
+	var canvasGlobal = document.getElementById('zoom_global');
+	var ctxGlobal = canvasGlobal.getContext('2d');
+
 	//clear before redraw
+	ctxGlobal.clearRect(0, 0, canvasGlobal.width, canvasGlobal.height);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	
@@ -522,7 +530,7 @@ function drawZoom(from, to, report){
 	let countGene = 0;
 	let x = 20;
 	let y = 50;
-	let yInit = 70;
+	let yInit = 10;
 	let xFirstCDS = 0;
 	let startFirstCDS = 0;
 	let xCDS;
@@ -556,15 +564,15 @@ function drawZoom(from, to, report){
 			widthGene = ((tab[4]-tab[3]) * 800) / seqLength;
 
 			//draw line
-			ctx.beginPath();
-			ctx.moveTo(x, y );
-			ctx.lineTo(800+x, y);
-			ctx.stroke();
+			ctxGlobal.beginPath();
+			ctxGlobal.moveTo(x, y );
+			ctxGlobal.lineTo(800+x, y);
+			ctxGlobal.stroke();
 			
 			//draw gene rect
-			ctx.fillStyle="black";    // color of fill
+			ctxGlobal.fillStyle="black";    // color of fill
 			// x y width height	
-			ctx.fillRect(startGene+x, 40, widthGene, 20); // create rectangle  
+			ctxGlobal.fillRect(startGene+x, 40, widthGene, 20); // create rectangle  
 			//console.log(startGene + wigthGene );
 
 			//draw background = element clickable

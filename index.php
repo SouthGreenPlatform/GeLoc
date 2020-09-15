@@ -137,21 +137,33 @@ To make the best use of GeLoc, we recommend you download the latest Chrome versi
     <!-- The ideogram chromosome goes here. -->
 </div>
 
-<div class="zoom_view" style="display: none; width:100%; max-height: 300px;max-width:1000px;overflow: scroll;">
+<!-- Selected region -->
+<div id="selected_region" style="display: none;">
+	Selected region:
+	<br/>
+	<span id="from"></span>  -  <span id="to"></span>
+	(extent: <span id="extent"></span> base pairs)
+</div>
+
+<div class="zoom_global" style="display: none; width:100%; overflow: scroll;">
     <!-- The zoomed view goes here. -->
-	<canvas id="zoom" height="1000" width="1200">
+	<canvas id="zoom_global" height="80" width="1000">
+		Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
+	</canvas>
+</div>
+
+<div class="zoom_view" style="display: none; width:100%; max-height:500px;max-width:1200px;overflow: scroll;">
+    <!-- The CDS view goes here. -->
+	<canvas id="zoom" height="1200" width="1200">
 		Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
 	</canvas>
 </div>
 
 <div id="chr_region" heigth="300px" style="display: none;">
 <!-- The GFF info goes here. -->
-Selected region:
-	<div><span id="from"></span>  -  <span id="to"></span>
-		(extent: <span id="extent"></span> base pairs)
-	</div>
+
 	<div class='container'>
-		<pre id="gffResult" style="width:100%; max-height: 300px;max-width:1000px;overflow: scroll;">
+		<pre id="gffResult" style="width:100%; max-height: 300px;max-width:1200px;overflow: scroll;">
 		</pre>
 	</div>
 </div>
