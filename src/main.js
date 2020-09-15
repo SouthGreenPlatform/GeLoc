@@ -512,13 +512,16 @@ function drawZoom(from, to, report){
 	var canvas = document.getElementById('zoom');
 	var ctx = canvas.getContext('2d');
 
+	//clear before redraw
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 	
 
 	//
 	let firstCDS = true;
 	let countGene = 0;
 	let x = 20;
-	let y = 25;
+	let y = 50;
 	let yInit = 70;
 	let xFirstCDS = 0;
 	let startFirstCDS = 0;
@@ -554,8 +557,8 @@ function drawZoom(from, to, report){
 
 			//draw line
 			ctx.beginPath();
-			ctx.moveTo(x, 50 );
-			ctx.lineTo(800+x, 50);
+			ctx.moveTo(x, y );
+			ctx.lineTo(800+x, y);
 			ctx.stroke();
 			
 			//draw gene rect
@@ -577,7 +580,7 @@ function drawZoom(from, to, report){
 
 
 			//Save gene infos
-			elements.push({
+			element = {
 				chr: tab[0], 
 				start: tab[3],
 				stop: tab[4],
@@ -590,7 +593,8 @@ function drawZoom(from, to, report){
 				height: 22,
 				top: countGene * y + yInit -2,
 				left: xFirstCDS + x -5
-			});
+			}
+			elements.push(element);
 		}
 
 		//Traitement des CDS
@@ -598,12 +602,18 @@ function drawZoom(from, to, report){
 			
 			//draw first CDS
 			if (firstCDS){
+				
 				//convert bp to pixel
 				widthCDS = (tab[4] - tab[3]) / 10;
 				yCDS = countGene * y + yInit;
 				//coordonnées hauteur du bloc
 				startFirstCDS = tab[3];
 				xCDS = xFirstCDS + x;
+
+				//draw gene infos
+				ctx.fillStyle="black";
+				ctx.font = '12px sans-serif';
+				ctx.fillText(element.id+" - "+element.family+" - "+element.geneClass, xCDS, yCDS-5);
 
 				//Draw plus or minus CDS
 				if(tab[6] == "+"){
