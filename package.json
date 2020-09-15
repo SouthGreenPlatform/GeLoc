@@ -1,0 +1,39 @@
+{
+  "name": "geloc",
+  "version": "1.0.0",
+  "description": "LRR genes location",
+  "main": "main.bundle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src -d public/build",
+    "watch": "babel src -d public/build --verbose --watch --source-maps",
+    "server": "nodemon --exec babel-node --watch server --inspect launch-server.js"
+  },
+  "author": "Marilyne Summo",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/node": "^7.10.5",
+    "@babel/polyfill": "^7.10.4",
+    "@gmod/tabix": "^1.4.6",
+    "babel-polyfill": "^6.26.0",
+    "core-js": "^3.6.5",
+    "express": "^4.17.1",
+    "ideogram": "^1.21.0",
+    "nodemon": "^2.0.4",
+    "regenerator-runtime": "^0.13.7",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.10.5",
+    "@babel/plugin-transform-async-to-generator": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/register": "^7.10.5",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-transform-async-generator-functions": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-latest": "^6.24.1",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
+  }
+}

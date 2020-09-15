@@ -642,10 +642,16 @@ function drawZoom(from, to, report){
 		//affiche la gene card
 		document.getElementById("gene_card").style.display = "block";
 		//position du canvas
-		let elemLeft = canvas.offsetLeft;
+/* 		let elemLeft = canvas.offsetLeft;
     	let elemTop = canvas.offsetTop;
         var x = event.pageX - elemLeft,
-        y = event.pageY - elemTop;
+        y = event.pageY - elemTop; */
+
+		//position du canvas, tient compte du scroll
+		var canoffset = $(canvas).offset();
+		var x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoffset.left);
+		var y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoffset.top) + 1;
+
 		console.log("clic x: "+x+" y: "+y );
         // Collision detection between clicked offset and element.
 		console.log(elements);
