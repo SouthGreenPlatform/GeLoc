@@ -511,19 +511,19 @@ function drawZoom(from, to, report){
 
 	//display div
 	$('.zoom_global').show();
-	$('.zoom_view').show();
+	$('.cds').show();
 
-	var canvas = document.getElementById('zoom');
+	//canvas CDS
+	var canvas = document.getElementById('cds');
 	var ctx = canvas.getContext('2d');
 
+	//canvas zoom
 	var canvasGlobal = document.getElementById('zoom_global');
 	var ctxGlobal = canvasGlobal.getContext('2d');
 
 	//clear before redraw
 	ctxGlobal.clearRect(0, 0, canvasGlobal.width, canvasGlobal.height);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-	
 
 	//
 	let firstCDS = true;
@@ -664,25 +664,16 @@ function drawZoom(from, to, report){
 
 		//affiche la gene card
 		document.getElementById("gene_card").style.display = "block";
-		//position du canvas
-/* 		let elemLeft = canvas.offsetLeft;
-    	let elemTop = canvas.offsetTop;
-        var x = event.pageX - elemLeft,
-        y = event.pageY - elemTop; */
 
 		//position du canvas, tient compte du scroll
 		var canoffset = $(canvas).offset();
 		var x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoffset.left);
 		var y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoffset.top) + 1;
 
-		console.log("clic x: "+x+" y: "+y );
         // Collision detection between clicked offset and element.
-		console.log(elements);
         elements.forEach(function (element) {
             if (y > element.top && y < element.top + element.height
                 && x > element.left && x < element.left + element.width) {
-                console.log('clicked an element: y:' + y + ' x:' + x);
-				console.log(element);
 				
 				//display gene card
 				$('.gene_card').show();

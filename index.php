@@ -152,9 +152,9 @@ To make the best use of GeLoc, we recommend you download the latest Chrome versi
 	</canvas>
 </div>
 
-<div class="zoom_view" style="display: none; width:100%; max-height:500px;max-width:1200px;overflow: scroll;">
+<div class="cds" style="display: none; width:100%; max-height:500px;max-width:1200px;overflow: scroll;">
     <!-- The CDS view goes here. -->
-	<canvas id="zoom" height="1200" width="1200">
+	<canvas id="cds" height="1200" width="1200">
 		Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
 	</canvas>
 </div>
