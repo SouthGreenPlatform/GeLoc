@@ -674,10 +674,61 @@ function drawZoom(from, to, report){
         elements.forEach(function (element) {
             if (y > element.top && y < element.top + element.height
                 && x > element.left && x < element.left + element.width) {
-				
-				//display gene card
-				$('.gene_card').show();
-				$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop+"<br/>Family: "+element.family +"<br/>Class: "+element.geneClass);
+
+				//search for synonymous ids
+				//download id file
+				var ID_MSU7 ="";
+				var ID_IRGSP ="";
+				var ID_NCBI ="";
+				var Aliases ="";
+				var ID_OsKitaake="";
+				fetch('http://dev.visusnp.southgreen.fr/geloc/data/ids/'+acc+'_IDs.txt')
+				.then(function(response) {
+					return response.text();
+				})
+				.then(function(ids) {
+					if(acc == "Nipponbare"){
+						let idsLines = ids.split('\n');
+						idsLines.forEach(line => {
+							var tab = line.split(/\t/);
+							if(element.id == tab[0]){
+								console.log(tab[0] +tab[1] +tab[2] +tab[3] +tab[4]);
+								ID_MSU7 = tab[1];
+								ID_IRGSP = tab[2];
+								ID_NCBI = tab[3];
+								Aliases = tab[4];
+							}
+						});
+						//display gene card
+						$('.gene_card').show();
+						$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id
+						+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
+						+"<br/>Family: "+element.family 
+						+"<br/>Class: "+element.geneClass
+						+"<br/>ID MSU7: "+ID_MSU7
+						+"<br/>ID IRGSP: "+ID_IRGSP
+						+"<br/>ID NCBI: "+ID_NCBI
+						+"<br/>Aliases: "+Aliases);
+
+					}else if(acc == "Kitaake"){
+						let idsLines = ids.split('\n');
+						idsLines.forEach(line => {
+							var tab = line.split(/\t/);
+							if(element.id == tab[0]){
+								ID_OsKitaake = tab[1];
+							}
+						});
+						//display gene card
+						$('.gene_card').show();
+						$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id
+						+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
+						+"<br/>Family: "+element.family 
+						+"<br/>Class: "+element.geneClass
+						+"<br/>ID MSU7: "+ID_OsKitaake);
+					}
+					
+					
+				});
             }
         });
     }, false);
