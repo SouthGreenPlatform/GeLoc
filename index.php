@@ -78,9 +78,17 @@
 
 			<ul id="submenu-1" class="panel-collapse collapse show panel-switch" role="menu">
 			  
-			<!-- select accessions-->  
+			
 			<li>
+				<!-- search-->  
+				<form class="form-inline">
+					<input id="keyword" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+					<button id="search" class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</button>
+				</form>
+				<div id="search_result" style="display: none">
+				</div>
 
+				<!-- select accessions-->  
 				<label for="selectAccession">Accession</label>
 				<select class="form-control-sm" id="selectAccession">
 					<option value=""></option>

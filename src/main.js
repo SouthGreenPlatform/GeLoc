@@ -36,7 +36,7 @@ var legend = [{
 
 //Config de la vue globale
 function initConfig(){
-	console.log("init config");
+	//console.log("init config");
 	let conf = { 
 		organism: "oryza-sativa",
 		//repertoire vers les données de chromosome bands
@@ -127,7 +127,7 @@ selectAccession.addEventListener("change", async function(){
 //Genère les bands pour chaque chromosome
 ////////////////////////////////////////////////////////////////
 function chromosomeTsvParser(data, conf){
-	console.log("parse chromosome");
+	//console.log("parse chromosome");
     chrBands=[];
 
 	//split le fichier par ligne de chromosome
@@ -236,7 +236,7 @@ function annotationParser(data, conf){
 		};
 		rangeSet.push(chromosome);
 	}
-	console.log(rangeSet);
+	//console.log(rangeSet);
 	return rangeSet;
 	////console.log(ligne.length+" "+ count);
 }
@@ -410,14 +410,7 @@ function onClickChr(){
 	$(".ideo_container_global").find(".bands").each(function(index ){
 		$(this).on("click", function(){
 
-			//efface la div globale
-			$(".ideo_container_global").collapse('hide');
-
-			//Affiche le bouton show / hide de la vue globale
-			$("#show-hide").show();
-
-			//affiche selected region
-			document.getElementById("selected_region").style.display = "block";
+			
 
 			clickedChrom = index + 1 ;
 			//clickedChrom = selectChrom.value;
@@ -426,49 +419,68 @@ function onClickChr(){
 				clickedChrom = parseInt(clickedChrom);
 			} 
 			console.log("draw chr "+ clickedChrom);
-			
-			//Pour copier l'objet sans interferences
-			//configChr = config;
-			configChr = jQuery.extend(true, {}, config);
-			configChr.orientation = "horizontal";
-			configChr.chromosome = clickedChrom.toString();
-			configChr.container = '.ideo_container_chr';
-			configChr.rotatable = false;
-           configChr.chrHeight = 800;
-           configChr.chromosomeScale = 'absolute';
-			configChr.brush = 'chr'+clickedChrom+':10000000-13000000';
-			//configChr.chrMargin: 50,
-			//configChr.chrWidth: 15,
-			configChr.onBrushMove = writeSelectedRange;
-    		configChr.onLoad = writeSelectedRange;
-			
 
-			//parse les valeurs de range set de densité pour ne recupérer que celles du chromosomes choisi
-			//let rangeSetChr = config.rangeSet;
-			let newRangeSetChr = [];
-			config.rangeSet.forEach(function(range){
-				//si chrom courant = on push dans la config
-				if(range['chr'] == clickedChrom){
-					//copie l'objet range du chromosome choisi
-					//change la valeur à 1
-					//Ce n'est pas la valeur du chromosome choisi
-					//mais le "premier" chromosome à être affiché.
-					newRange = jQuery.extend(true, {}, range);
-					newRange['chr']="1";
-					newRangeSetChr.push(newRange);
-				}
-			});
-			configChr.rangeSet = newRangeSetChr;
-			document.getElementById("chr_region").style.display = "block";
-			ideogramChr = new Ideogram(configChr);
-
-			console.log(config);
-			console.log(configChr);
+			//dessine le chromosome
+			drawChromosome(clickedChrom, 10000000, 15000000);
+			
+			//console.log(config);
+			//console.log(configChr);
 
 			setTimeout(removeLetters, 100);
 
 		});
 	});
+}
+
+//dessine le chromosome horizontal
+function drawChromosome(clickedChrom, start, stop){
+
+	//efface la div globale
+	$(".ideo_container_global").collapse('hide');
+
+	//Affiche le bouton show / hide de la vue globale
+	$("#show-hide").show();
+
+	//affiche selected region
+	document.getElementById("selected_region").style.display = "block";
+
+	//Pour copier l'objet sans interferences
+	//configChr = config;
+	configChr = jQuery.extend(true, {}, config);
+	configChr.orientation = "horizontal";
+	configChr.chromosome = clickedChrom.toString();
+	configChr.container = '.ideo_container_chr';
+	configChr.rotatable = false;
+    configChr.chrHeight = 800;
+    configChr.chromosomeScale = 'absolute';
+	//var stop = start + 10000000;
+	configChr.brush = 'chr'+clickedChrom+':'+start+'-'+stop;
+	//configChr.chrMargin: 50,
+	//configChr.chrWidth: 15,
+	configChr.onBrushMove = writeSelectedRange;
+    configChr.onLoad = writeSelectedRange;
+			
+
+	//parse les valeurs de range set de densité pour ne recupérer que celles du chromosomes choisi
+	//let rangeSetChr = config.rangeSet;
+	let newRangeSetChr = [];
+	config.rangeSet.forEach(function(range){
+		//si chrom courant = on push dans la config
+		if(range['chr'] == clickedChrom){
+			//copie l'objet range du chromosome choisi
+			//change la valeur à 1
+			//Ce n'est pas la valeur du chromosome choisi
+			//mais le "premier" chromosome à être affiché.
+			newRange = jQuery.extend(true, {}, range);
+			newRange['chr']="1";
+			newRangeSetChr.push(newRange);
+		}
+	});
+	configChr.rangeSet = newRangeSetChr;
+	document.getElementById("chr_region").style.display = "block";
+	ideogramChr = new Ideogram(configChr);
+
+
 }
 
 ////////////////////////////////////////////////////////
@@ -542,7 +554,7 @@ function drawZoom(from, to, report){
 	
 	//nb de bases dans le canvas
 	const seqLength = to - from;
-	console.log("seq length "+seqLength);
+	//console.log("seq length "+seqLength);
 	let gffLines = report.split('\n');
 
 	//clear avant de redessiner
@@ -856,11 +868,87 @@ function ploidyDescGenerator(haplotype,chrNumber){
     return ploidyDesc;
 }
 
+///// Recherche par mot clé /////
+document.getElementById("search").addEventListener("click", function(e) {
+	// mot clé
+	var keyword = document.getElementById("keyword").value;
+	var foundNip = false;
+	var resultIdNip = "<p>Results in Nipponbare:</p><br/>";
+	//cherche dans les fichiers d'identifiant et affiche la ligne correspondante
+
+	//charge les fichiers ids
+
+	fetch('http://dev.visusnp.southgreen.fr/geloc/data/ids/Nipponbare_IDs.txt')
+	.then(function(response) {
+		return response.text();
+	})
+	.then(function(ids) {
+		let idsLines = ids.split('\n');
+		idsLines.forEach(line => {
+			var tab = line.split(/\t/);
+			if(keyword == tab[0] || keyword == tab[1] || keyword == tab[2] || keyword == tab[3] || tab[4].match(keyword)){
+				console.log(line);
+				ID_MSU7 = tab[1];
+				ID_IRGSP = tab[2];
+				ID_NCBI = tab[3];
+				Aliases = tab[4];
+				foundNip = true;
+				resultIdNip += "<a class='resLink' href='#'>"+tab[0]+"</a><br/>";
+			}
+		});
+		if(!foundNip){
+			//affiche no result
+			$('#search_result').show();
+			$('#search_result').html("No result in Nipponbare for: "+keyword);
+		}else{
+			//affiche les resultat dans la div
+			$('#search_result').show();
+			$('#search_result').html(resultIdNip);
+		}
+	})
+	.then(function() {
+		//Clic sur l'identifiant affiche la zone
+		var resLinks = document.getElementsByClassName('resLink');
+		//console.log(resLinks);
+		for(var i = 0, len = resLinks.length; i < len; i++) {
+			resLinks[i].onclick = function () {
+
+				//affiche la vue globale
+				let selectAccession = document.getElementById("selectAccession");
+				selectAccession.value="Nipponbare";
+				triggerEvent(selectAccession, 'change');
+
+				//affiche la vue zoom sur le chromosome de l'id cliqué
+				var regexpChrom = /Chr(\d*)_(\d*)/;
+				var idChrom = this.innerText.match(regexpChrom)[1];
+				var position = this.innerText.match(regexpChrom)[2];
+				position = parseInt(position);
+				var stop = position + 1000000;
+
+				idChrom = parseInt(idChrom);
+				setTimeout(function(){ drawChromosome(idChrom, position, stop ); }, 1000);
+				
+			}
+		}
+	});
 
 
 
 
+	
+});
 
-
-
-
+//fonction pour declancher un event manuelement
+function triggerEvent(el, type) {
+    // IE9+ and other modern browsers
+    if ('createEvent' in document) {
+        var e = document.createEvent('HTMLEvents');
+        e.initEvent(type, false, true);
+        el.dispatchEvent(e);
+    } else {
+        // IE8
+        var e = document.createEventObject();
+        e.eventType = type;
+        el.fireEvent('on' + e.eventType, e);
+    }
+}
