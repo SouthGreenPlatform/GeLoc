@@ -868,16 +868,82 @@ function ploidyDescGenerator(haplotype,chrNumber){
     return ploidyDesc;
 }
 
+/////////////////////////////////
 ///// Recherche par mot clé /////
+/////////////////////////////////
 document.getElementById("search").addEventListener("click", function(e) {
-	// mot clé
 	var keyword = document.getElementById("keyword").value;
+	searchNip(keyword);
+	searchKit(keyword);
+	
+
+
+});
+
+//search Kitaake
+function searchKit(keyword){
+
+	var foundKit = false;
+	var resultIdKit = "<p>Results in Nipponbare:</p><br/>";
+	//charge le fichier ids Kitaake
+	fetch('http://dev.visusnp.southgreen.fr/geloc/data/ids/Kitaake_IDs.txt')
+	.then(function(response) {
+		return response.text();
+	})
+	.then(function(ids) {
+		let idsLines = ids.split('\n');
+		idsLines.forEach(line => {
+			var tab = line.split(/\t/);
+			if(keyword == tab[0] || tab[1].match(keyword)){
+				console.log(line);
+				ID_OsKitaake = tab[1];
+				foundKit = true;
+				resultIdKit += "<a class='resLink2' href='#'>"+tab[0]+"</a><br/>";
+			}
+		});
+		if(!foundKit){
+			//affiche no result
+			$('#search_result_2').show();
+			$('#search_result_2').html("No result in Kitaake");
+		}else{
+			//affiche les resultat dans la div
+			$('#search_result_2').show();
+			$('#search_result_2').html(resultIdKit);
+		}
+	})
+	.then(function() {
+		//Clic sur l'identifiant affiche la zone
+		var resLinks = document.getElementsByClassName('resLink2');
+		//console.log(resLinks);
+		for(var i = 0, len = resLinks.length; i < len; i++) {
+			resLinks[i].onclick = function () {
+
+				//affiche la vue globale
+				let selectAccession = document.getElementById("selectAccession");
+				selectAccession.value="Kitaake";
+				triggerEvent(selectAccession, 'change');
+
+				//affiche la vue zoom sur le chromosome de l'id cliqué
+				var regexpChrom = /kitaake_Chr(\d*)_(\d*)/;
+				var idChrom = this.innerText.match(regexpChrom)[1];
+				var position = this.innerText.match(regexpChrom)[2];
+				position = parseInt(position);
+				var stop = position + 1000000;
+
+				idChrom = parseInt(idChrom);
+				setTimeout(function(){ drawChromosome(idChrom, position, stop ); }, 1000);
+				
+			}
+		}
+	});
+}
+
+//search Nipponbare
+function searchNip(keyword){
+
 	var foundNip = false;
 	var resultIdNip = "<p>Results in Nipponbare:</p><br/>";
-	//cherche dans les fichiers d'identifiant et affiche la ligne correspondante
-
-	//charge les fichiers ids
-
+	//charge les fichiers ids Nipponbare
 	fetch('http://dev.visusnp.southgreen.fr/geloc/data/ids/Nipponbare_IDs.txt')
 	.then(function(response) {
 		return response.text();
@@ -893,22 +959,22 @@ document.getElementById("search").addEventListener("click", function(e) {
 				ID_NCBI = tab[3];
 				Aliases = tab[4];
 				foundNip = true;
-				resultIdNip += "<a class='resLink' href='#'>"+tab[0]+"</a><br/>";
+				resultIdNip += "<a class='resLink1' href='#'>"+tab[0]+"</a><br/>";
 			}
 		});
 		if(!foundNip){
 			//affiche no result
-			$('#search_result').show();
-			$('#search_result').html("No result in Nipponbare for: "+keyword);
+			$('#search_result_1').show();
+			$('#search_result_1').html("No result in Nipponbare");
 		}else{
 			//affiche les resultat dans la div
-			$('#search_result').show();
-			$('#search_result').html(resultIdNip);
+			$('#search_result_1').show();
+			$('#search_result_1').html(resultIdNip);
 		}
 	})
 	.then(function() {
 		//Clic sur l'identifiant affiche la zone
-		var resLinks = document.getElementsByClassName('resLink');
+		var resLinks = document.getElementsByClassName('resLink1');
 		//console.log(resLinks);
 		for(var i = 0, len = resLinks.length; i < len; i++) {
 			resLinks[i].onclick = function () {
@@ -931,12 +997,8 @@ document.getElementById("search").addEventListener("click", function(e) {
 			}
 		}
 	});
+}
 
-
-
-
-	
-});
 
 //fonction pour declancher un event manuelement
 function triggerEvent(el, type) {

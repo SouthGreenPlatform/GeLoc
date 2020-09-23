@@ -420,7 +420,7 @@ textarea.form-control {
   padding-right: 5px;
 }
 
-#search_result {
+#search_result_1 {
   margin-top: 5px;
   border:1px dotted black;
   width: 95%;
@@ -431,7 +431,24 @@ textarea.form-control {
   line-height: 15px !important;
 }
 
-#search_result a {
+#search_result_2 {
+  margin-top: 5px;
+  border:1px dotted black;
+  width: 95%;
+  background: white;
+  padding-top: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  line-height: 15px !important;
+}
+
+#search_result_1 a {
+    background: unset !important;
+    color: black !important;
+    
+}
+
+#search_result_2 a {
     background: unset !important;
     color: black !important;
     
