@@ -77,10 +77,10 @@
 			
 			<li>
 				<!-- search-->  
-				<form class="form-inline">
-					<input id="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by ID" aria-label="Search">
-					<button id="search" class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</button>
-				</form>
+				<div>
+					<input style="width:60%; display:inline-block;" id="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by ID" aria-label="Search">
+					<button style="display:inline-block;" id="search" class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</button>
+				<div>
 				<div id="search_result_1" style="display: none; max-height: 200px; overflow: scroll;">
 				</div>
 				<div id="search_result_2" style="display: none; max-height: 200px; overflow: scroll;">
