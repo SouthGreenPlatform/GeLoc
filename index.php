@@ -19,10 +19,6 @@
 <script src="https://cdn.jsdelivr.net/npm/ideogram@1.19.0/dist/js/ideogram.min.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/ideogram@1.21.0/dist/js/ideogram.min.js"></script>
   
-   <!--Tooltipster-->
-   <link rel="stylesheet" type="text/css" href="src/tooltipster/dist/css/tooltipster.bundle.min.css" />
-<script type="text/javascript" src="src/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
-
 <!--D3JS-->
 <script src="https://d3js.org/d3.v5.min.js"></script>
  
@@ -177,20 +173,6 @@ To make the best use of GeLoc, we recommend you download the latest Chrome versi
 		</pre>
 	</div>
 </div>
-
-
-<div class="tooltip_templates" id="tooltip_content">
-	<span>
-	<a href="https://banana-genome-hub.southgreen.fr/jbrowse_ma2/?loc=chr01:24139214..24142797">
-		view in banana jbrowse
-	</a>
-	</span>
-</div>
-	
-
-
-
-
 
 
 
