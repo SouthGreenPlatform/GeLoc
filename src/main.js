@@ -81,17 +81,17 @@ selectAccession.addEventListener("change", async function(){
 	$(".ideo_container_global").collapse('show');
 
 	config = initConfig();
-	config.annotationsPath='http://dev.visusnp.southgreen.fr/geloc/data/annotations/'+acc+'.json';
+	config.annotationsPath='./data/annotations/'+acc+'.json';
 	
 	//charge le fichier densité de l'accession choisie
-	let response = await fetch('http://dev.visusnp.southgreen.fr/geloc/data/density/ideo_'+acc+'.txt');
+	let response = await fetch('./data/density/ideo_'+acc+'.txt');
 	annotData = await response.text();
 	//Parse les données de densité
 	config.rangeSet = annotationParser(annotData, config);
     
 	//charge les données de chromosomes de l'accession choisie
 	//fichier tsv
- 	response = await fetch('http://dev.visusnp.southgreen.fr/geloc/data/chromosomes/'+acc+'.tsv');
+ 	response = await fetch('./data/chromosomes/'+acc+'.tsv');
 	chr_tsv = await response.text();
 	//parse les données et config les chrBands
 	chromosomeTsvParser(chr_tsv, config); 
@@ -629,7 +629,7 @@ function drawZoom(from, to, report){
 				var ID_NCBI ="";
 				var Aliases ="";
 				var ID_OsKitaake="";
-				fetch('http://dev.visusnp.southgreen.fr/geloc/data/ids/'+acc+'_IDs.txt')
+				fetch('./data/ids/'+acc+'_IDs.txt')
 				.then(function(response) {
 					return response.text();
 				})
@@ -821,7 +821,7 @@ function searchKit(keyword){
 	var foundKit = false;
 	var resultIdKit = "<p>Results in Nipponbare:</p><br/>";
 	//charge le fichier ids Kitaake
-	fetch('http://dev.visusnp.southgreen.fr/geloc/data/ids/Kitaake_IDs.txt')
+	fetch('./data/ids/Kitaake_IDs.txt')
 	.then(function(response) {
 		return response.text();
 	})
@@ -879,7 +879,7 @@ function searchNip(keyword){
 	var foundNip = false;
 	var resultIdNip = "<p>Results in Nipponbare:</p><br/>";
 	//charge les fichiers ids Nipponbare
-	fetch('http://dev.visusnp.southgreen.fr/geloc/data/ids/Nipponbare_IDs.txt')
+	fetch('./data/ids/Nipponbare_IDs.txt')
 	.then(function(response) {
 		return response.text();
 	})

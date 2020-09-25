@@ -21,7 +21,7 @@ io.on('connection', socket => {
 		from = from.replace(/ /g, "");
 		to = to.replace(/ /g, "");
 
-		const gffPath = '/opt/projects/VisuSNP/htdocs/geloc/data/gff';
+		const gffPath = './data/gff';
 
 		 const { exec } = require("child_process");
 		 console.log(`tabix ${gffPath}/LRR_${acc}.gff.gz Chr${chrnum}:${from}-${to}`);
