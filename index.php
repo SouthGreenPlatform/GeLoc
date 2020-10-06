@@ -76,6 +76,14 @@
 			  
 			
 			<li>
+				<!-- select accessions-->  
+				<label for="selectAccession">Accession</label>
+				<select class="form-control-sm" id="selectAccession">
+					<option value=""></option>
+					<option value="Nipponbare">Nipponbare</option>
+					<option value="Kitaake">Kitaake</option>
+			  	</select>
+				
 				<!-- search-->  
 				<div>
 					<input style="width:60%; display:inline-block;" id="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by ID" aria-label="Search">
@@ -85,14 +93,6 @@
 				</div>
 				<div id="search_result_2" style="display: none; max-height: 200px; overflow: scroll;">
 				</div>
-
-				<!-- select accessions-->  
-				<label for="selectAccession">Accession</label>
-				<select class="form-control-sm" id="selectAccession">
-					<option value=""></option>
-					<option value="Nipponbare">Nipponbare</option>
-					<option value="Kitaake">Kitaake</option>
-			  	</select>
 
 				<!-- button show / hide global view -->
 				<div style="display: none" id="show-hide">
