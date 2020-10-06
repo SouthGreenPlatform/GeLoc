@@ -652,7 +652,7 @@ function drawZoom(from, to, report){
 						+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
 						+"<br/>Family: "+element.family 
 						+"<br/>Class: "+element.geneClass
-						+"<br/>ID MSU7: "+ID_MSU7
+						+"<br/>ID Kitaake: "+ID_MSU7
 						+"<br/>ID IRGSP: "+ID_IRGSP
 						+"<br/>ID NCBI: "+ID_NCBI
 						+"<br/>Aliases: "+Aliases);
@@ -671,7 +671,7 @@ function drawZoom(from, to, report){
 						+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
 						+"<br/>Family: "+element.family 
 						+"<br/>Class: "+element.geneClass
-						+"<br/>ID MSU7: "+ID_OsKitaake);
+						+"<br/>ID Kitaake: "+ID_OsKitaake);
 					}
 					
 					
