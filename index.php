@@ -124,7 +124,7 @@
 <div class="alert alert-secondary alert-dismissible fade show" role="alert">
 Hello! 
 This Web site is optimized for viewing in Chrome.
-To make the best use of GeLoc, we recommend you download the latest Chrome versions.
+To make the best use of GeLoc, we recommend you to download the latest Chrome version.
 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
 </button>
