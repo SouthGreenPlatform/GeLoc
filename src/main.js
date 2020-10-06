@@ -13,6 +13,8 @@ var ideogramChr;
 //taille du triangle
 var annotHeight = 3.5;
 let gap = 0;
+//cds
+var elements = [];
 
 //
 
@@ -77,6 +79,13 @@ selectAccession.addEventListener("change", async function(){
 	//affiche le loader
 	document.getElementById("loader").style.display = "block";
 
+	//hide div to refresh
+	$('#selected_region').hide();
+	$('.ideo_container_chr').hide();
+	$('#gene_card').hide();
+	$('.zoom_global').hide();
+	$('.cds').hide();
+	
 	//affiche la div si elle est cachée
 	$(".ideo_container_global").collapse('show');
 
@@ -268,7 +277,7 @@ function clear(){
 		if(sca != null){
 		sca.parentNode.removeChild(sca);
 	}
-	//config = initConfig();
+	
 }
 
 
@@ -376,6 +385,9 @@ function drawChromosome(clickedChrom, start, stop){
 	//Affiche le bouton show / hide de la vue globale
 	$("#show-hide").show();
 
+	//affiche la div du chr
+	$('.ideo_container_chr').show();
+
 	//affiche selected region
 	document.getElementById("selected_region").style.display = "block";
 
@@ -412,6 +424,7 @@ function drawChromosome(clickedChrom, start, stop){
 		}
 	});
 	configChr.rangeSet = newRangeSetChr;
+	//affiche la div
 	document.getElementById("chr_region").style.display = "block";
 	ideogramChr = new Ideogram(configChr);
 
@@ -485,15 +498,14 @@ function drawZoom(from, to, report){
 	let widthCDS;
 	let startLine = 0;
 	let stopLine = 0;
-	let elements = [];
+
+	//reset CDS elements tab
+	elements = [];
 	
 	//nb de bases dans le canvas
 	const seqLength = to - from;
 	//console.log("seq length "+seqLength);
 	let gffLines = report.split('\n');
-
-	//clear avant de redessiner
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	//parsing GFF file
 	gffLines.forEach(line => {
@@ -607,80 +619,83 @@ function drawZoom(from, to, report){
 		}
 	});
 
-	canvas.addEventListener('click', function (event) {
 
-		//affiche la gene card
-		document.getElementById("gene_card").style.display = "block";
-
-		//position du canvas, tient compte du scroll
-		var canoffset = $(canvas).offset();
-		var x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoffset.left);
-		var y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoffset.top) + 1;
-
-        // Collision detection between clicked offset and element.
-        elements.forEach(function (element) {
-            if (y > element.top && y < element.top + element.height
-                && x > element.left && x < element.left + element.width) {
-
-				//search for synonymous ids
-				//download id file
-				var ID_MSU7 ="";
-				var ID_IRGSP ="";
-				var ID_NCBI ="";
-				var Aliases ="";
-				var ID_OsKitaake="";
-				fetch('./data/ids/'+acc+'_IDs.txt')
-				.then(function(response) {
-					return response.text();
-				})
-				.then(function(ids) {
-					if(acc == "Nipponbare"){
-						let idsLines = ids.split('\n');
-						idsLines.forEach(line => {
-							var tab = line.split(/\t/);
-							if(element.id == tab[0]){
-								console.log(tab[0] +tab[1] +tab[2] +tab[3] +tab[4]);
-								ID_MSU7 = tab[1];
-								ID_IRGSP = tab[2];
-								ID_NCBI = tab[3];
-								Aliases = tab[4];
-							}
-						});
-						//display gene card
-						$('.gene_card').show();
-						$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id
-						+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
-						+"<br/>Family: "+element.family 
-						+"<br/>Class: "+element.geneClass
-						+"<br/>ID Kitaake: "+ID_MSU7
-						+"<br/>ID IRGSP: "+ID_IRGSP
-						+"<br/>ID NCBI: "+ID_NCBI
-						+"<br/>Aliases: "+Aliases);
-
-					}else if(acc == "Kitaake"){
-						let idsLines = ids.split('\n');
-						idsLines.forEach(line => {
-							var tab = line.split(/\t/);
-							if(element.id == tab[0]){
-								ID_OsKitaake = tab[1];
-							}
-						});
-						//display gene card
-						$('.gene_card').show();
-						$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id
-						+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
-						+"<br/>Family: "+element.family 
-						+"<br/>Class: "+element.geneClass
-						+"<br/>ID Kitaake: "+ID_OsKitaake);
-					}
-					
-					
-				});
-            }
-        });
-    }, false);
 }
 
+//canvas CDS
+var canvas = document.getElementById('cds');
+var ctx = canvas.getContext('2d');
+
+//fonction click sur un gene / CDS
+canvas.addEventListener('click', function (event) {
+
+	
+
+	//position du canvas, tient compte du scroll
+	var canoffset = $(canvas).offset();
+	var x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoffset.left);
+	var y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoffset.top) + 1;
+
+	// Collision detection between clicked offset and element.
+	elements.forEach(function (element) {
+		if (y > element.top && y < element.top + element.height
+			&& x > element.left && x < element.left + element.width) {
+
+			//search for synonymous ids
+			//download id file
+			var ID_MSU7 ="";
+			var ID_IRGSP ="";
+			var ID_NCBI ="";
+			var Aliases ="";
+			var ID_OsKitaake="";
+			fetch('./data/ids/'+acc+'_IDs.txt')
+			.then(function(response) {
+				return response.text();
+			})
+			.then(function(ids) {
+				if(acc == "Nipponbare"){
+					let idsLines = ids.split('\n');
+					idsLines.forEach(line => {
+						var tab = line.split(/\t/);
+						if(element.id == tab[0]){
+							console.log(tab[0] +tab[1] +tab[2] +tab[3] +tab[4]);
+							ID_MSU7 = tab[1];
+							ID_IRGSP = tab[2];
+							ID_NCBI = tab[3];
+							Aliases = tab[4];
+						}
+					});
+					//affiche la gene card
+					document.getElementById("gene_card").style.display = "block";
+					$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id
+					+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
+					+"<br/>Family: "+element.family 
+					+"<br/>Class: "+element.geneClass
+					+"<br/>ID Kitaake: "+ID_MSU7
+					+"<br/>ID IRGSP: "+ID_IRGSP
+					+"<br/>ID NCBI: "+ID_NCBI
+					+"<br/>Aliases: "+Aliases);
+
+				}else if(acc == "Kitaake"){
+					let idsLines = ids.split('\n');
+					idsLines.forEach(line => {
+						var tab = line.split(/\t/);
+						if(element.id == tab[0]){
+							ID_OsKitaake = tab[1];
+						}
+					});
+					//affiche la gene card
+					document.getElementById("gene_card").style.display = "block";
+					$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id
+					+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
+					+"<br/>Family: "+element.family 
+					+"<br/>Class: "+element.geneClass
+					+"<br/>ID Kitaake: "+ID_OsKitaake);
+				}
+			});
+		}
+	});
+}, false);
 
 
 
