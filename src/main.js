@@ -629,8 +629,6 @@ var ctx = canvas.getContext('2d');
 //fonction click sur un gene / CDS
 canvas.addEventListener('click', function (event) {
 
-	
-
 	//position du canvas, tient compte du scroll
 	var canoffset = $(canvas).offset();
 	var x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoffset.left);
@@ -648,6 +646,7 @@ canvas.addEventListener('click', function (event) {
 			var ID_NCBI ="";
 			var Aliases ="";
 			var ID_OsKitaake="";
+			var orthologous="";
 			fetch('./data/ids/'+acc+'_IDs.txt')
 			.then(function(response) {
 				return response.text();
@@ -665,16 +664,36 @@ canvas.addEventListener('click', function (event) {
 							Aliases = tab[4];
 						}
 					});
-					//affiche la gene card
-					document.getElementById("gene_card").style.display = "block";
-					$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id
-					+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
-					+"<br/>Family: "+element.family 
-					+"<br/>Class: "+element.geneClass
-					+"<br/>ID Kitaake: "+ID_MSU7
-					+"<br/>ID IRGSP: "+ID_IRGSP
-					+"<br/>ID NCBI: "+ID_NCBI
-					+"<br/>Aliases: "+Aliases);
+
+					//fichier des orthologues
+					fetch('./data/ids/ortho.tab')
+					.then(function(response) {
+						return orthoTab = response.text();
+					})
+					.then(function(ortho) {
+						let orthoLines = ortho.split('\n');
+						orthoLines.forEach(line => {
+							var tab = line.split(/\t/);
+							if(element.id == tab[0]){
+								orthologous = tab[1];
+								
+							}
+						});
+
+						//affiche la gene card
+						document.getElementById("gene_card").style.display = "block";
+						$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id
+						+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
+						+"<br/>Family: "+element.family 
+						+"<br/>Class: "+element.geneClass
+						+"<br/>Kitaake orthologous: "+orthologous
+						+"<br/>ID Kitaake: "+ID_MSU7
+						+"<br/>ID IRGSP: "+ID_IRGSP
+						+"<br/>ID NCBI: "+ID_NCBI
+						+"<br/>Aliases: "+Aliases);
+					});
+					
+					
 
 				}else if(acc == "Kitaake"){
 					let idsLines = ids.split('\n');
@@ -684,13 +703,31 @@ canvas.addEventListener('click', function (event) {
 							ID_OsKitaake = tab[1];
 						}
 					});
+					//fichier des orthologues
+					fetch('./data/ids/ortho.tab')
+					.then(function(response) {
+						return orthoTab = response.text();
+					})
+					.then(function(ortho) {
+						let orthoLines = ortho.split('\n');
+						orthoLines.forEach(line => {
+							var tab = line.split(/\t/);
+							if(element.id == tab[1]){
+								orthologous = tab[0];
+								
+							}
+						});
+
 					//affiche la gene card
 					document.getElementById("gene_card").style.display = "block";
 					$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id
 					+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
 					+"<br/>Family: "+element.family 
 					+"<br/>Class: "+element.geneClass
+					+"<br/>Nipponbare orthologous: "+orthologous
 					+"<br/>ID Kitaake: "+ID_OsKitaake);
+					
+					});
 				}
 			});
 		}
