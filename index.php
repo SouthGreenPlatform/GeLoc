@@ -64,56 +64,94 @@
 		<ul id="sidemenu" class="sidebar-nav">
 
 		<!--DATA-->
-	  	<li>
+		<li>
 			<a class="accordion-toggle collapsed toggle-switch" data-toggle="collapse" href="#submenu-1">
 				<span class="sidebar-icon"><i class="fa fa-dashboard"></i></span>
-				<span class="sidebar-title">Data</span>
+				<span class="sidebar-title">Home</span>
+			  	<b class="caret"></b>
+			</a>
+			<ul id="submenu-1" class="panel-collapse collapse panel-switch" role="menu">
+			</ul>
+		</li>
+
+		<!--DATA-->
+	  	<li>
+			<a class="accordion-toggle collapsed toggle-switch" data-toggle="collapse" href="#submenu-2">
+				<span class="sidebar-icon"><i class="fa fa-dashboard"></i></span>
+				<span class="sidebar-title">Browse data</span>
 			  	<b class="caret"></b>
 			</a>
 			
 
-			<ul id="submenu-1" class="panel-collapse collapse show panel-switch" role="menu">
+			<ul id="submenu-2" class="panel-collapse collapse show panel-switch" role="menu">
 			  
-			
-			<li>
-				<!-- select accessions-->  
-				<label for="selectAccession">Accession</label>
-				<select class="form-control-sm" id="selectAccession">
-					<option value=""></option>
-					<option value="Nipponbare">Nipponbare</option>
-					<option value="Kitaake">Kitaake</option>
-			  	</select>
-				
-				<!-- search-->  
-				<div>
-					<input style="width:60%; display:inline-block;" id="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by ID" aria-label="Search">
-					<button style="display:inline-block;" id="search" class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</button>
-				<div>
-				<div id="search_result_1" style="display: none; max-height: 200px; overflow: scroll;">
-				</div>
-				<div id="search_result_2" style="display: none; max-height: 200px; overflow: scroll;">
-				</div>
+				<li>
+					<!-- select accessions-->  
+					<label for="selectAccession">Accession</label>
+					<select class="form-control-sm" id="selectAccession">
+						<option value=""></option>
+						<option value="Nipponbare">Nipponbare</option>
+						<option value="Kitaake">Kitaake</option>
+					</select>
+					
+					<!-- search-->  
+					<div>
+						<input style="width:60%; display:inline-block;" id="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by ID" aria-label="Search">
+						<button style="display:inline-block;" id="search" class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</button>
+					<div>
+					<div id="search_result_1" style="display: none; max-height: 200px; overflow: scroll;">
+					</div>
+					<div id="search_result_2" style="display: none; max-height: 200px; overflow: scroll;">
+					</div>
 
-				<!-- button show / hide global view -->
-				<div style="display: none" id="show-hide">
-					<button type="button" class="btn btn-outline-dark" data-toggle="collapse" data-target="#page-content-wrapper" aria-expanded="false" aria-controls="collapseExample"> Show / hide global view</button>
-				</div>
+					<!-- button show / hide global view -->
+					<div style="display: none" id="show-hide">
+						<button type="button" class="btn btn-outline-dark" data-toggle="collapse" data-target="#page-content-wrapper" aria-expanded="false" aria-controls="collapseExample"> Show / hide global view</button>
+					</div>
 
-				<!-- where the lengend will take place -->
-				<div id="legend_div" style="display: none">
-					Legend :
-					<canvas id="legend">
-						Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
-					</canvas>
-				</div>
+					<!-- where the lengend will take place -->
+					<div id="legend_div" style="display: none">
+						Legend :
+						<canvas id="legend">
+							Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
+						</canvas>
+					</div>
 
-				<!-- gene card -->
-				<div id="gene_card" style="display: none">
-				Gene card
-				</div>
-			</li>
+					<!-- gene card -->
+					<div id="gene_card" style="display: none">
+					Gene card
+					</div>
+				</li>
 			</ul>
-			</li>	  
+		</li>
+
+		<!-- download -->
+		<li>
+			<a class="accordion-toggle collapsed toggle-switch" data-toggle="collapse" href="#submenu-3">
+				<span class="sidebar-icon"><i class="fa fa-dashboard"></i></span>
+				<span class="sidebar-title">Download data</span>
+			  	<b class="caret"></b>
+			</a>
+			<ul id="submenu-3" class="panel-collapse collapse show panel-switch" role="menu">
+			<div id="download">
+				<p>Nipponbare</p>
+				<a href="./data/gff/LRR_Nipponbare.gff" download="LRR_Nipponbare.gff">LRR_Nipponbare.gff</a>
+				<a href="./data/ids/Nipponbare_IDs.txt" download="Nipponbare_IDs.txt">Nipponbare_IDs.txt</a>
+				<a href="./data/fasta/ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta" download="ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta">cDNA.fasta</a>
+				<a href="./data/fasta/ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta" download="ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta">PEP.fasta</a>
+				<br/>
+				<p>Kitaake</p>
+				<a href="./data/gff/LRR_Kitaake.gff" download="LRR_Kitaake.gff">LRR_Kitaake.gff</a>
+				<a href="./data/ids/Kitaake_IDs.txt" download="Kitaake_IDs.txt">Kitaake_IDs.txt</a>
+				<a href="./data/fasta/ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta" download="ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta">cDNA.fasta</a>
+				<a href="./data/fasta/ORYSJ_kitaake_LRRlocus_PEP_flt.fasta" download="ORYSJ_kitaake_LRRlocus_PEP_flt.fasta">PEP.fasta</a>
+				<br/>
+				<p>Orthologous</p>
+				<a href="./data/ids/ortho.tab" download="ortho.tab">Orthologous.tab</a>
+
+			</div>
+			</ul>
+		</li>  
 		</ul>
 	</aside>            
 </div>

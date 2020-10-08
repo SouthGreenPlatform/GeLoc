@@ -421,6 +421,21 @@ textarea.form-control {
   padding-right: 5px;
 }
 
+#download {
+  line-height: 25px;
+  margin-top: 5px;
+  border:1px dotted black;
+  width: 95%;
+  background: white !important;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#download > a {
+  background: white !important;
+  color: black !important;
+}
+
 #search_result_1 {
   margin-top: 5px;
   border:1px dotted black;
