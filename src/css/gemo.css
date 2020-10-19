@@ -397,7 +397,7 @@ textarea.form-control {
 
 
 /*Download as png button*/
-#download{
+#download {
   background : #005B59 !important;
   border-color: black;
   width: 200px;
@@ -432,9 +432,16 @@ textarea.form-control {
   padding-right: 5px;
 }
 
-#download > a {
+#download > p {
   background: white !important;
   color: black !important;
+  font-weight: bold;
+}
+
+#download > a {
+  background: white !important;
+  color: #005B59 !important;
+  font-weight: 500;
 }
 
 #search_result_1 {
