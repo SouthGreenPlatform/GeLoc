@@ -111,8 +111,7 @@
 
 					<!-- where the lengend will take place -->
 					<div id="legend_div" style="display: none">
-						Legend :
-						<canvas id="legend">
+						<canvas id="legend" height="130" width="250">
 							Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
 						</canvas>
 					</div>

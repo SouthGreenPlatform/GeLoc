@@ -306,30 +306,36 @@ function drawLegend(){
 	var canvas = document.getElementById('legend');
 	var ctx = canvas.getContext('2d');
 
+	ctx.font = '12px roboto';
+
+	ctx.fillText('Legend:', 10, 25);
+
 	ctx.fillStyle = "#CCCCCC";
-	ctx.fillText('RLK', 10, 30);
+	ctx.fillText('RLK', 10, 70);
 	ctx.beginPath();
-    ctx.moveTo(10, 0); // x y 
-    ctx.lineTo(20, 10);
-	ctx.lineTo(10, 20);
+    ctx.moveTo(10, 40); // x y 
+    ctx.lineTo(20, 50);
+	ctx.lineTo(10, 60);
     ctx.fill();
 
 	ctx.fillStyle = "#8D8D8D";
-	ctx.fillText('RLP', 40, 30);
+	ctx.fillText('RLP', 40, 70);
 	ctx.beginPath();
-    ctx.moveTo(40, 0); // x y 
-    ctx.lineTo(50, 10);
-	ctx.lineTo(40, 20);
+    ctx.moveTo(40, 40); // x y 
+    ctx.lineTo(50, 50);
+	ctx.lineTo(40, 60);
 	ctx.fill();
 	
 	ctx.fillStyle = "#494949";
-	ctx.fillText('NLR', 70, 30);
+	ctx.fillText('NLR', 70, 70);
 	ctx.beginPath();
-    ctx.moveTo(70, 0); // x y 
-    ctx.lineTo(80, 10);
-	ctx.lineTo(70, 20);	
+    ctx.moveTo(70, 40); // x y 
+    ctx.lineTo(80, 50);
+	ctx.lineTo(70, 60);	
 	ctx.fill();
 
+	ctx.fillStyle = "black";
+	ctx.fillText('Annotation count', 10, 93);
 	var gradient = ctx.createLinearGradient(0, 0, 200, 0);
 	gradient.addColorStop(0.16, '#7AA1D2');
 	gradient.addColorStop(0.32, '#7dc7d2');
@@ -339,11 +345,11 @@ function drawLegend(){
 	gradient.addColorStop(1, '#f4a769');
 
 	ctx.fillStyle = gradient;
-	ctx.fillRect(10, 50, 200, 50);
+	ctx.fillRect(10, 95, 200, 25);
 
 	ctx.fillStyle = "black";
-	ctx.fillText('0', 15, 75);
-	ctx.fillText('5+', 195, 75);
+	ctx.fillText('0', 15, 113);
+	ctx.fillText('5+', 190, 113);
 
 }
 
