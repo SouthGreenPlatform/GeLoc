@@ -21,19 +21,19 @@ var elements = [];
 //Définition des tracks
 var annotationTracks = [
 	{id: 'RLK', displayName: 'RLK', color: '#CCCCCC', shape: 'triangle'},
-	{id: 'NLR', displayName: 'NLR', color: '#8D8D8D', shape: 'triangle'},
-	{id: 'RLP', displayName: 'RLP', color: '#494949', shape: 'triangle'}
+	{id: 'RLP', displayName: 'RLP', color: '#8D8D8D', shape: 'triangle'},
+	{id: 'NLR', displayName: 'NLR', color: '#494949', shape: 'triangle'}
 ]; 
 
 //Legende
-var legend = [{
+/* var legend = [{
 	name: 'Annotations',
 	rows: [
 	  {name: 'RLK', color: '#CCCCCC', shape: 'triangle'},
 	  {name: 'NLR', color: '#8D8D8D', shape: 'triangle'},
 	  {name: 'RLP', color: '#494949', shape: 'triangle'}
 	]
-}];
+}]; */
 
 
 //Config de la vue globale
@@ -315,7 +315,7 @@ function drawLegend(){
     ctx.fill();
 
 	ctx.fillStyle = "#8D8D8D";
-	ctx.fillText('NLR', 40, 30);
+	ctx.fillText('RLP', 40, 30);
 	ctx.beginPath();
     ctx.moveTo(40, 0); // x y 
     ctx.lineTo(50, 10);
@@ -323,7 +323,7 @@ function drawLegend(){
 	ctx.fill();
 	
 	ctx.fillStyle = "#494949";
-	ctx.fillText('RLP', 70, 30);
+	ctx.fillText('NLR', 70, 30);
 	ctx.beginPath();
     ctx.moveTo(70, 0); // x y 
     ctx.lineTo(80, 10);

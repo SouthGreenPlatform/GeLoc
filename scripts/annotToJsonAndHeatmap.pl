@@ -28,8 +28,8 @@ my $currentChr = "0";
 
 my %track = ( 
 'RLK'     => 0,
-'NLR'     => 1,
-'RLP'     => 2,
+'RLP'     => 1,
+'NLR'     => 2,
 );
 
 my %chromLength; 
