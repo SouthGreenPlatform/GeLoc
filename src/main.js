@@ -14,7 +14,9 @@ var ideogramChr;
 var annotHeight = 3.5;
 let gap = 0;
 //cds
-var elements = [];
+var cdsElements = [];
+//table des positions stop
+var stopTab = [];
 
 //
 
@@ -473,6 +475,32 @@ function writeSelectedRange() {
 
   }
 
+//recupère les coordonnées des codons stop
+fetch('./data/annotations/Nip_stop_genomic_pos.txt')
+.then(function(response) {
+	return response.text();
+})
+.then(function(text) {
+	let lines = text.split('\n');
+	lines.forEach(line => {
+		stopTab.push(line);
+		//console.log(stopTab);
+	});
+});
+fetch('./data/annotations/Kit_stop_genomic_pos.txt')
+.then(function(response) {
+	return response.text();
+})
+.then(function(text) {
+	let lines = text.split('\n');
+	lines.forEach(line => {
+		stopTab.push(line);
+		//console.log(stopTab);
+	});
+});
+
+
+// Draw horizontal line with gene position
 function drawZoom(from, to, report){
 
 	//display div
@@ -506,7 +534,7 @@ function drawZoom(from, to, report){
 	let stopLine = 0;
 
 	//reset CDS elements tab
-	elements = [];
+	cdsElements = [];
 	
 	//nb de bases dans le canvas
 	const seqLength = to - from;
@@ -516,6 +544,7 @@ function drawZoom(from, to, report){
 	//parsing GFF file
 	gffLines.forEach(line => {
 		var tab = line.split(/\t/);
+		var geneGenomicCoord = tab[3];
 
 		//Ligne gene
 		if(tab[2] == "gene"){
@@ -551,7 +580,6 @@ function drawZoom(from, to, report){
 			var regexpFamily = /Fam=(\w*)/;
 			var family = tab[8].match(regexpFamily)[1];
 
-
 			//Save gene infos
 			element = {
 				chr: tab[0], 
@@ -567,61 +595,63 @@ function drawZoom(from, to, report){
 				top: countGene * y + yInit -2,
 				left: xFirstCDS + x -5
 			}
-			elements.push(element);
+			cdsElements.push(element);
+
+			//draw gene infos
+			ctx.fillStyle="black";
+			ctx.font = '12px sans-serif';
+			ctx.fillText(element.id+" - "+element.family+" - "+element.geneClass, x, countGene * y + yInit -5);
+
+			startFirstCDS = tab[3];
 		}
 
 		//Traitement des CDS
 		if(tab[2] == "CDS"){
+
+			//convert bp to pixel
+			startCDS = tab[3];
+			stopCDS = tab[4];
+			widthCDS = (tab[4] - tab[3]) / 10;
+			yCDS = countGene * y + yInit;
+			xCDS = (tab[3] - startFirstCDS) / 10 + x;
+
+			//variable pour les plus ou minus
+			if(tab[6] == "+"){
+				ecart = 5;
+				plusMinus = "plus";
+			}else{
+				ecart = -5;
+				plusMinus = "minus";
+			}
 			
 			//draw first CDS
 			if (firstCDS){
-				
-				//convert bp to pixel
-				widthCDS = (tab[4] - tab[3]) / 10;
-				yCDS = countGene * y + yInit;
-				//coordonnées hauteur du bloc
-				startFirstCDS = tab[3];
-				xCDS = xFirstCDS + x;
-
-				//draw gene infos
-				ctx.fillStyle="black";
-				ctx.font = '12px sans-serif';
-				ctx.fillText(element.id+" - "+element.family+" - "+element.geneClass, xCDS, yCDS-5);
-
 				//Draw plus or minus CDS
-				if(tab[6] == "+"){
-					drawArrow(ctx, xCDS, yCDS, widthCDS, "plus");
-					startLine = xCDS + widthCDS + 5;
-				}else{
-					drawArrow(ctx, xCDS, yCDS, widthCDS, "minus");
-					startLine = xCDS + widthCDS - 5;
-				}
+				drawArrow(ctx, xCDS, yCDS, widthCDS, plusMinus);
+				startLine = xCDS + widthCDS + ecart;
 				firstCDS = false;
 			
 			//Draw other CDS
 			}else{
-				//width of current cds
-				widthCDS = (tab[4] - tab[3]) / 10;
-				yCDS = countGene * y + yInit;
-				xCDS = (tab[3] - startFirstCDS) / 10 + x;
-
-				if(tab[6] == "+"){
-					//line to bloc
-					stopLine = xCDS + 5;
-					drawLine(ctx, startLine, stopLine, yCDS );
-					//fleche +
-					drawArrow(ctx, xCDS-gap, yCDS, widthCDS, "plus");
-					startLine = xCDS-gap + widthCDS + 5;
-
-				}else{
-					//line to bloc
-					stopLine = xCDS - 5;
-					drawLine(ctx, startLine, stopLine, yCDS );
-					//fleche -
-					drawArrow(ctx, xCDS-gap, yCDS, widthCDS, "minus");
-					startLine = xCDS-gap + widthCDS - 5;
-				}
+				//line to bloc
+				stopLine = xCDS + ecart;
+				drawLine(ctx, startLine, stopLine, yCDS );
+				//fleche + ou -
+				drawArrow(ctx, xCDS-gap, yCDS, widthCDS, plusMinus);
+				startLine = xCDS-gap + widthCDS + ecart;
 			}
+			
+			//draw stop if it is inside the current CDS
+			stopTab.forEach(line => {
+				var tab = line.split(/\t/);
+				if(tab[0] == element.id && tab[1] < stopCDS && tab[1] > startCDS){
+						
+					//stop position
+					var stopPos = tab[1];
+					var XstopPos = ((stopPos - startFirstCDS) / 10) + x ;
+					drawStop(ctx, XstopPos-gap+ecart, countGene * y + yInit )			
+				}
+			});
 		}
 	});
 
@@ -641,7 +671,7 @@ canvas.addEventListener('click', function (event) {
 	var y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoffset.top) + 1;
 
 	// Collision detection between clicked offset and element.
-	elements.forEach(function (element) {
+	cdsElements.forEach(function (element) {
 		if (y > element.top && y < element.top + element.height
 			&& x > element.left && x < element.left + element.width) {
 
@@ -793,6 +823,20 @@ function drawLine(ctx, start, stop, heigth){
 		gap = 0;
 
 	}	
+}
+
+//Draw stop
+function drawStop(ctx, x, y){
+
+	ctx.strokeStyle="red";
+	ctx.lineWidth = 2;
+	ctx.beginPath();
+	ctx.moveTo(x , y );
+	ctx.lineTo(x , y + 15);
+	ctx.stroke();
+	ctx.strokeStyle="black";
+	ctx.lineWidth = 1;						
+
 }
 
 
