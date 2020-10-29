@@ -649,7 +649,8 @@ function drawZoom(from, to, report){
 					//stop position
 					var stopPos = tab[1];
 					var XstopPos = ((stopPos - startFirstCDS) / 10) + x ;
-					drawStop(ctx, XstopPos-gap+ecart, countGene * y + yInit )			
+					drawStop(ctx, XstopPos-gap+ecart, countGene * y + yInit )	
+					drawStar(ctx, XstopPos-gap+ecart, countGene * y + yInit +7, 2, 4, 2);		
 				}
 			});
 		}
@@ -829,7 +830,7 @@ function drawLine(ctx, start, stop, heigth){
 function drawStop(ctx, x, y){
 
 	ctx.strokeStyle="red";
-	ctx.lineWidth = 2;
+	ctx.lineWidth = 1;
 	ctx.beginPath();
 	ctx.moveTo(x , y );
 	ctx.lineTo(x , y + 15);
@@ -837,6 +838,25 @@ function drawStop(ctx, x, y){
 	ctx.strokeStyle="black";
 	ctx.lineWidth = 1;						
 
+}
+
+// ctx, x, y, radius, nombre de pics, radius interne
+function drawStar(ctx, x, y, r, n, inset) {
+	console.log("draw "+ x +" "+ y );
+    ctx.save();
+	ctx.fillStyle="red";
+    ctx.beginPath();
+    ctx.translate(x, y);
+    ctx.moveTo(0,0-r);
+    for (var i = 0; i < n; i++) {
+        ctx.rotate(Math.PI / n);
+        ctx.lineTo(0, 0 - (r*inset));
+        ctx.rotate(Math.PI / n);
+        ctx.lineTo(0, 0 - r);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
 }
 
 
