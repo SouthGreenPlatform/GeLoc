@@ -13,10 +13,13 @@ var ideogramChr;
 //taille du triangle
 var annotHeight = 3.5;
 let gap = 0;
+let totalGap = 0;
 //cds
 var cdsElements = [];
 //table des positions stop
 var stopTab = [];
+//table des positions frameshift
+var fsTab = [];
 
 //
 
@@ -499,6 +502,31 @@ fetch('./data/annotations/Kit_stop_genomic_pos.txt')
 	});
 });
 
+//recupère les coordonnées des frameshift
+fetch('./data/annotations/frameshift_NIP.txt')
+.then(function(response) {
+	return response.text();
+})
+.then(function(text) {
+	let lines = text.split('\n');
+	lines.forEach(line => {
+		fsTab.push(line);
+		//console.log(fsTab);
+	});
+});
+fetch('./data/annotations/frameshift_KIT.txt')
+.then(function(response) {
+	return response.text();
+})
+.then(function(text) {
+	let lines = text.split('\n');
+	lines.forEach(line => {
+		fsTab.push(line);
+		//console.log(fsTab);
+	});
+});
+
+
 
 // Draw horizontal line with gene position
 function drawZoom(from, to, report){
@@ -552,6 +580,7 @@ function drawZoom(from, to, report){
 			countGene++;
 			firstCDS = true;
 			gap = 0;
+			totalGap =0;
 
 			//position on canvas
 			startGene = ((tab[3]-from) * 800) / seqLength;
@@ -613,7 +642,9 @@ function drawZoom(from, to, report){
 			stopCDS = tab[4];
 			widthCDS = (tab[4] - tab[3]) / 10;
 			yCDS = countGene * y + yInit;
-			xCDS = (tab[3] - startFirstCDS) / 10 + x;
+			//position du début du CDS
+			// largeur / 10 + x de départ - le gap si on a coupé dans l'intron
+			xCDS = (tab[3] - startFirstCDS) / 10 + x - gap;
 
 			//variable pour les plus ou minus
 			if(tab[6] == "+"){
@@ -636,6 +667,7 @@ function drawZoom(from, to, report){
 				//line to bloc
 				stopLine = xCDS + ecart;
 				drawLine(ctx, startLine, stopLine, yCDS );
+				
 				//fleche + ou -
 				drawArrow(ctx, xCDS-gap, yCDS, widthCDS, plusMinus);
 				startLine = xCDS-gap + widthCDS + ecart;
@@ -644,7 +676,7 @@ function drawZoom(from, to, report){
 			//draw stop if it is inside the current CDS
 			stopTab.forEach(line => {
 				var tab = line.split(/\t/);
-				if(tab[0] == element.id && tab[1] < stopCDS && tab[1] > startCDS){
+				if(tab[0] == element.id && tab[1] <= stopCDS && tab[1] >= startCDS){
 						
 					//stop position
 					var stopPos = tab[1];
@@ -652,6 +684,22 @@ function drawZoom(from, to, report){
 					drawStop(ctx, XstopPos-gap+ecart, countGene * y + yInit )	
 					drawStar(ctx, XstopPos-gap+ecart, countGene * y + yInit +7, 2, 4, 2);		
 				}
+			});
+
+			//draw frameshift if it is inside the current CDS
+			fsTab.forEach(line => {
+				
+				var regexpFS = /(.*);frameshift;(.*)/;
+				var idFS = line.match(regexpFS)[1];
+				var posFS = line.match(regexpFS)[2];
+
+ 				if(idFS == element.id && posFS <= stopCDS && posFS >= startCDS){
+						
+					//stop position
+					var xFsPos = ((posFS - startFirstCDS) / 10) + x ;
+					drawFrameshift(ctx, xFsPos - totalGap + ecart, countGene * y + yInit )	
+					//console.log("frameshift "+ posFS + " gap "+ gap+" totalGap "+totalGap);	
+				} 
 			});
 		}
 	});
@@ -815,6 +863,7 @@ function drawLine(ctx, start, stop, heigth){
 		ctx.stroke();
 		ctx.setLineDash([]);
 		gap = lineWidth - 50; 
+		totalGap = totalGap + gap;
 
 	}else{
 		ctx.beginPath();
@@ -837,12 +886,24 @@ function drawStop(ctx, x, y){
 	ctx.stroke();
 	ctx.strokeStyle="black";
 	ctx.lineWidth = 1;						
+}
 
+//Draw frameshift
+function drawFrameshift(ctx, x, y){
+
+	ctx.strokeStyle="orange";
+	ctx.lineWidth = 2;
+	ctx.beginPath();
+	ctx.moveTo(x , y );
+	ctx.lineTo(x , y + 15);
+	ctx.stroke();
+	ctx.strokeStyle="black";
+	ctx.lineWidth = 1;						
 }
 
 // ctx, x, y, radius, nombre de pics, radius interne
 function drawStar(ctx, x, y, r, n, inset) {
-	console.log("draw "+ x +" "+ y );
+	//console.log("draw "+ x +" "+ y );
     ctx.save();
 	ctx.fillStyle="red";
     ctx.beginPath();
