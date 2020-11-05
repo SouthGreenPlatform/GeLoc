@@ -20,6 +20,8 @@ var cdsElements = [];
 var stopTab = [];
 //table des positions frameshift
 var fsTab = [];
+//json des positions des domaines
+var domains;
 
 //
 
@@ -376,7 +378,7 @@ function onClickChr(){
 			console.log("draw chr "+ clickedChrom);
 
 			//dessine le chromosome
-			drawChromosome(clickedChrom, 10000000, 15000000);
+			drawChromosome(clickedChrom, 10000000, 13000000);
 			
 			//console.log(config);
 			//console.log(configChr);
@@ -522,11 +524,18 @@ fetch('./data/annotations/frameshift_KIT.txt')
 	let lines = text.split('\n');
 	lines.forEach(line => {
 		fsTab.push(line);
-		//console.log(fsTab);
 	});
 });
 
-
+//recupère les coordonnées des domaines
+fetch('./data/annotations/Nip_domains_genomic_pos.json')
+.then(function(response) {
+	return response.json();
+})
+.then((data) => {
+    // Work with JSON data here
+    domains = data;
+});
 
 // Draw horizontal line with gene position
 function drawZoom(from, to, report){
@@ -560,6 +569,7 @@ function drawZoom(from, to, report){
 	let widthCDS;
 	let startLine = 0;
 	let stopLine = 0;
+	let currentDom;
 
 	//reset CDS elements tab
 	cdsElements = [];
@@ -581,6 +591,7 @@ function drawZoom(from, to, report){
 			firstCDS = true;
 			gap = 0;
 			totalGap =0;
+			console.log("gap : "+gap+" totalgap : "+totalGap );
 
 			//position on canvas
 			startGene = ((tab[3]-from) * 800) / seqLength;
@@ -631,7 +642,7 @@ function drawZoom(from, to, report){
 			ctx.font = '12px sans-serif';
 			ctx.fillText(element.id+" - "+element.family+" - "+element.geneClass, x, countGene * y + yInit -5);
 
-			startFirstCDS = tab[3];
+			startFirstCDS = tab[3];			
 		}
 
 		//Traitement des CDS
@@ -644,7 +655,12 @@ function drawZoom(from, to, report){
 			yCDS = countGene * y + yInit;
 			//position du début du CDS
 			// largeur / 10 + x de départ - le gap si on a coupé dans l'intron
-			xCDS = (tab[3] - startFirstCDS) / 10 + x - gap;
+			xCDS = (tab[3] - startFirstCDS) / 10 + x - totalGap;
+
+			//identifiant cds
+			var regexpCDSID = /.*(cds_\d+);.*/;
+			var cdsid = tab[8].match(regexpCDSID)[1];
+			//console.log(cdsid);
 
 			//variable pour les plus ou minus
 			if(tab[6] == "+"){
@@ -658,20 +674,50 @@ function drawZoom(from, to, report){
 			//draw first CDS
 			if (firstCDS){
 				//Draw plus or minus CDS
-				drawArrow(ctx, xCDS, yCDS, widthCDS, plusMinus);
-				startLine = xCDS + widthCDS + ecart;
+				drawArrow(ctx, xCDS -10 , yCDS, 10, plusMinus);
+				drawCDS(ctx, xCDS, yCDS, widthCDS);
+				startLine = xCDS + widthCDS;
 				firstCDS = false;
 			
 			//Draw other CDS
 			}else{
 				//line to bloc
-				stopLine = xCDS + ecart;
+				stopLine = xCDS;
+				
+				//dessine la ligne et update le gap
 				drawLine(ctx, startLine, stopLine, yCDS );
 				
 				//fleche + ou -
-				drawArrow(ctx, xCDS-gap, yCDS, widthCDS, plusMinus);
-				startLine = xCDS-gap + widthCDS + ecart;
+				//enlève l'éventuel gap supplémentaire calculé en dessinant la ligne
+				drawCDS(ctx, xCDS-gap, yCDS, widthCDS);
+				startLine = xCDS-gap + widthCDS;
 			}
+
+			//draw domain if it is inside the current CDS
+			let currentGene = element.id;
+			let cdsDom = domains[currentGene][cdsid];
+			
+			if(cdsDom !== undefined){
+				//console.log("current Gene  : "+currentGene+ " cdsid " +cdsid+ " dom :  "+ JSON.stringify(cdsDom));
+				
+				//pour chaque type de domain
+				for(key in cdsDom){
+					//console.log(key);
+					let currentDom = cdsDom[key];
+					currentDom.forEach(dom => {
+						var domStart = dom.match(/(.*);(.*)/)[1];
+						var domStop = dom.match(/(.*);(.*)/)[2];
+						var domLength = (domStop - domStart) /10;
+						//console.log(domStart +" "+domStop);
+
+						//domain position in px
+						var xDomStart = ((domStart - startFirstCDS) / 10) + x- totalGap ;
+						//var xDomStop = ((domStop - startFirstCDS) / 10) + x- totalGap ;
+
+						drawDomain(ctx, key, xDomStart , countGene * y + yInit +1, domLength);
+					});
+				}
+			} 
 			
 			//draw stop if it is inside the current CDS
 			stopTab.forEach(line => {
@@ -681,8 +727,8 @@ function drawZoom(from, to, report){
 					//stop position
 					var stopPos = tab[1];
 					var XstopPos = ((stopPos - startFirstCDS) / 10) + x ;
-					drawStop(ctx, XstopPos-gap+ecart, countGene * y + yInit )	
-					drawStar(ctx, XstopPos-gap+ecart, countGene * y + yInit +7, 2, 4, 2);		
+					drawStop(ctx, XstopPos-totalGap, countGene * y + yInit )	
+					drawStar(ctx, XstopPos-totalGap, countGene * y + yInit +7, 2, 4, 2);		
 				}
 			});
 
@@ -697,10 +743,13 @@ function drawZoom(from, to, report){
 						
 					//stop position
 					var xFsPos = ((posFS - startFirstCDS) / 10) + x ;
-					drawFrameshift(ctx, xFsPos - totalGap + ecart, countGene * y + yInit )	
+					drawFrameshift(ctx, xFsPos - totalGap, countGene * y + yInit )	
 					//console.log("frameshift "+ posFS + " gap "+ gap+" totalGap "+totalGap);	
 				} 
 			});
+
+
+			
 		}
 	});
 
@@ -827,21 +876,19 @@ function drawArrow(ctx, x, y, width, orientation){
 	
 	if(orientation == "plus"){
 		ctx.beginPath();
-		ctx.moveTo(x, y );
+		ctx.moveTo(x-5, y );
 		ctx.lineTo(x+width, y);      //--------->
-		ctx.lineTo(x+width+5, y+8);  //           \
-		ctx.lineTo(x+width, y+15);   //           /
-		ctx.lineTo(x, y+15);         //<---------
-		ctx.lineTo(x+5, y+7); 		 // /
-		ctx.lineTo(x, y);		     // \  (retour point de départ)  
+		ctx.lineTo(x+width, y+15);   //          |
+		ctx.lineTo(x-5, y+15);       //<---------
+		ctx.lineTo(x, y+7); 		 // /
+		ctx.lineTo(x-5, y);		     // \  (retour point de départ)  
 		ctx.stroke();
 
 	}else{
 		ctx.beginPath();
 		ctx.moveTo(x, y );
 		ctx.lineTo(x+width, y);      //--------->
-		ctx.lineTo(x+width-5, y+8);  //         /
-		ctx.lineTo(x+width, y+15);   //         \
+		ctx.lineTo(x+width, y+15);   //         |
 		ctx.lineTo(x, y+15);         //<---------
 		ctx.lineTo(x-5, y+7); 		 // \
 		ctx.lineTo(x, y);		     // /  (retour point de départ)  
@@ -850,20 +897,31 @@ function drawArrow(ctx, x, y, width, orientation){
 	}	
 }
 
+//Draw oriented CDS
+function drawCDS(ctx, x, y, width){
+	
+	ctx.beginPath(); 
+	ctx.rect(x,y,width,15);
+  	ctx.stroke();
+}
+
+
 //Draw line between CDS
 function drawLine(ctx, start, stop, heigth){
 
 	let lineWidth = stop - start;
 
 	if(lineWidth > 50){
+		stop = start + 50;
 		ctx.beginPath();
 		ctx.setLineDash([2, 2]);
 		ctx.moveTo(start, heigth + 8 );
-		ctx.lineTo(start+50, heigth + 8);
+		ctx.lineTo(stop, heigth + 8);
 		ctx.stroke();
 		ctx.setLineDash([]);
 		gap = lineWidth - 50; 
 		totalGap = totalGap + gap;
+		
 
 	}else{
 		ctx.beginPath();
@@ -873,6 +931,7 @@ function drawLine(ctx, start, stop, heigth){
 		gap = 0;
 
 	}	
+	console.log("draw line from "+start+ " to "+stop );
 }
 
 //Draw stop
@@ -920,6 +979,33 @@ function drawStar(ctx, x, y, r, n, inset) {
     ctx.restore();
 }
 
+function drawDomain(ctx, key, x, y, width){
+	ctx.beginPath(); 
+	ctx.rect(x,y+2,width,9);
+
+	if(key == "LRR"){
+	  	ctx.fillStyle="LightSeaGreen";
+  	}else if(key == "BLAST"){
+	  	ctx.fillStyle="SkyBlue";
+	}else if(key == "TM"){
+	  	ctx.fillStyle="grey";
+	}else if(key == "NBARC"){
+	  	ctx.fillStyle="CornflowerBlue";
+	}else if(key == "Kinase"){
+	  	ctx.fillStyle="plum";
+	}else if(key == "Malectin"){
+	  	ctx.fillStyle="orange";
+	}else if(key == "Malectin_like"){
+	  	ctx.fillStyle="orange";
+	}else if(key == "Cys-Pair"){
+	  	ctx.fillStyle="yellow";
+	}else if(key == "PS"){
+	  	ctx.fillStyle="black";  
+  	}else{
+		ctx.fillStyle="WhiteSmoke";
+  	}
+  	ctx.fill();
+}
 
 //Création de la div de resultats
 function createResultDiv(content) {
