@@ -559,7 +559,7 @@ function drawZoom(from, to, report){
 	//
 	let firstCDS = true;
 	let countGene = 0;
-	let x = 20;
+	let x = 40;
 	let y = 50;
 	let yInit = 10;
 	let xFirstCDS = 0;
@@ -591,7 +591,7 @@ function drawZoom(from, to, report){
 			firstCDS = true;
 			gap = 0;
 			totalGap =0;
-			console.log("gap : "+gap+" totalgap : "+totalGap );
+			//console.log("gap : "+gap+" totalgap : "+totalGap );
 
 			//position on canvas
 			startGene = ((tab[3]-from) * 800) / seqLength;
@@ -674,7 +674,7 @@ function drawZoom(from, to, report){
 			//draw first CDS
 			if (firstCDS){
 				//Draw plus or minus CDS
-				drawArrow(ctx, xCDS -10 , yCDS, 10, plusMinus);
+				drawArrow(ctx, xCDS-20 , yCDS, 3, plusMinus, element.family);
 				drawCDS(ctx, xCDS, yCDS, widthCDS);
 				startLine = xCDS + widthCDS;
 				firstCDS = false;
@@ -872,29 +872,45 @@ canvas.addEventListener('click', function (event) {
 
 
 //Draw oriented CDS
-function drawArrow(ctx, x, y, width, orientation){
+function drawArrow(ctx, x, y, width, orientation, family){
+	ctx.save();
+
+	if(family == "RLK"){
+		ctx.fillStyle="#CCCCCC";
+		ctx.strokeStyle="#CCCCCC";
+	}else if(family == "NLR"){
+		ctx.fillStyle="#494949";
+		ctx.strokeStyle="#494949";
+	}else if(family == "RLP"){
+		ctx.fillStyle="#8D8D8D";
+		ctx.strokeStyle="#8D8D8D";
+	}
 	
 	if(orientation == "plus"){
 		ctx.beginPath();
-		ctx.moveTo(x-5, y );
+		ctx.moveTo(x, y );
 		ctx.lineTo(x+width, y);      //--------->
-		ctx.lineTo(x+width, y+15);   //          |
-		ctx.lineTo(x-5, y+15);       //<---------
-		ctx.lineTo(x, y+7); 		 // /
-		ctx.lineTo(x-5, y);		     // \  (retour point de départ)  
+		ctx.lineTo(x+width+5, y+7);	 //          \
+		ctx.lineTo(x+width, y+15);   //          /
+		ctx.lineTo(x, y+15);        //<---------
+		ctx.lineTo(x+5, y+7); 		 // /
+		ctx.lineTo(x, y);		     // \  (retour point de départ)  
 		ctx.stroke();
+		ctx.fill();
 
 	}else{
 		ctx.beginPath();
-		ctx.moveTo(x, y );
-		ctx.lineTo(x+width, y);      //--------->
-		ctx.lineTo(x+width, y+15);   //         |
-		ctx.lineTo(x, y+15);         //<---------
-		ctx.lineTo(x-5, y+7); 		 // \
-		ctx.lineTo(x, y);		     // /  (retour point de départ)  
-					
+		ctx.moveTo(x+5, y );
+		ctx.lineTo(x+5+width, y);      //--------->
+		ctx.lineTo(x+5+width-5, y+7);   //        /
+		ctx.lineTo(x+5+width, y+15);   //         \
+		ctx.lineTo(x+5, y+15);         //<---------
+		ctx.lineTo(x, y+7); 		 // \
+		ctx.lineTo(x+5, y);		     // /  (retour point de départ)  
+		ctx.fill();	
 		ctx.stroke();
 	}	
+	ctx.restore();
 }
 
 //Draw oriented CDS
@@ -931,7 +947,6 @@ function drawLine(ctx, start, stop, heigth){
 		gap = 0;
 
 	}	
-	console.log("draw line from "+start+ " to "+stop );
 }
 
 //Draw stop
