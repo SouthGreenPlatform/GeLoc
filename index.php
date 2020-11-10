@@ -134,19 +134,19 @@
 			<ul id="submenu-3" class="panel-collapse collapse show panel-switch" role="menu">
 			<div id="download">
 				<p>Nipponbare</p>
-				<a href="./data/gff/LRR_Nipponbare.gff" download="LRR_Nipponbare.gff">LRR_Nipponbare.gff</a>
-				<a href="./data/ids/Nipponbare_IDs.txt" download="Nipponbare_IDs.txt">Nipponbare_IDs.txt</a>
-				<a href="./data/fasta/ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta" download="ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta">cDNA.fasta</a>
-				<a href="./data/fasta/ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta" download="ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta">PEP.fasta</a>
+				<a href="./public/dl/LRR_Nipponbare.gff.zip" download="LRR_Nipponbare.gff.zip">LRR_Nipponbare.gff.zip</a>
+				<a href="./public/dl/Nipponbare_IDs.txt.zip" download="Nipponbare_IDs.txt.zip">Nipponbare_IDs.txt.zip</a>
+				<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip">cDNA.fasta.zip</a>
+				<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip">PEP.fasta.zip</a>
 				<br/>
 				<p>Kitaake</p>
-				<a href="./data/gff/LRR_Kitaake.gff" download="LRR_Kitaake.gff">LRR_Kitaake.gff</a>
-				<a href="./data/ids/Kitaake_IDs.txt" download="Kitaake_IDs.txt">Kitaake_IDs.txt</a>
-				<a href="./data/fasta/ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta" download="ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta">cDNA.fasta</a>
-				<a href="./data/fasta/ORYSJ_kitaake_LRRlocus_PEP_flt.fasta" download="ORYSJ_kitaake_LRRlocus_PEP_flt.fasta">PEP.fasta</a>
+				<a href="./public/dl/LRR_Kitaake.gff.zip" download="LRR_Kitaake.gff.zip">LRR_Kitaake.gff.zip</a>
+				<a href="./public/dl/Kitaake_IDs.txt.zip" download="Kitaake_IDs.txt.zip">Kitaake_IDs.txt.zip</a>
+				<a href="./public/dl/ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip">cDNA.fasta.zip</a>
+				<a href="./public/dl/ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip">PEP.fasta.zip</a>
 				<br/>
 				<p>Orthologous</p>
-				<a href="./data/ids/ortho.tab" download="ortho.tab">Orthologous.tab</a>
+				<a href="./public/dl/ortho.tab.zip" download="ortho.tab.zip">Orthologous.tab.zip</a>
 
 			</div>
 			</ul>
