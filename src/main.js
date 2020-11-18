@@ -659,7 +659,12 @@ function drawZoom(from, to, report){
 
 			//identifiant cds
 			var regexpCDSID = /.*(cds_\d+);.*/;
-			var cdsid = tab[8].match(regexpCDSID)[1];
+			if (tab[8].match(regexpCDSID)) {
+				cdsid = tab[8].match(regexpCDSID)[1];
+			}else{
+				cdsid = "";
+			}
+
 			//console.log(cdsid);
 
 			//variable pour les plus ou minus
@@ -694,30 +699,33 @@ function drawZoom(from, to, report){
 			}
 
 			//draw domain if it is inside the current CDS
-			let currentGene = element.id;
-			let cdsDom = domains[currentGene][cdsid];
-			
-			if(cdsDom !== undefined){
-				//console.log("current Gene  : "+currentGene+ " cdsid " +cdsid+ " dom :  "+ JSON.stringify(cdsDom));
+			if(cdsid != ""){
+				let currentGene = element.id;
+				let cdsDom = domains[currentGene][cdsid];
 				
-				//pour chaque type de domain
-				for(key in cdsDom){
-					//console.log(key);
-					let currentDom = cdsDom[key];
-					currentDom.forEach(dom => {
-						var domStart = dom.match(/(.*);(.*)/)[1];
-						var domStop = dom.match(/(.*);(.*)/)[2];
-						var domLength = (domStop - domStart) /10;
-						//console.log(domStart +" "+domStop);
+				if(cdsDom !== undefined){
+					//console.log("current Gene  : "+currentGene+ " cdsid " +cdsid+ " dom :  "+ JSON.stringify(cdsDom));
+					
+					//pour chaque type de domain
+					for(key in cdsDom){
+						//console.log(key);
+						let currentDom = cdsDom[key];
+						currentDom.forEach(dom => {
+							var domStart = dom.match(/(.*);(.*)/)[1];
+							var domStop = dom.match(/(.*);(.*)/)[2];
+							var domLength = (domStop - domStart) /10;
+							//console.log(domStart +" "+domStop);
 
-						//domain position in px
-						var xDomStart = ((domStart - startFirstCDS) / 10) + x- totalGap ;
-						//var xDomStop = ((domStop - startFirstCDS) / 10) + x- totalGap ;
+							//domain position in px
+							var xDomStart = ((domStart - startFirstCDS) / 10) + x- totalGap ;
+							//var xDomStop = ((domStop - startFirstCDS) / 10) + x- totalGap ;
 
-						drawDomain(ctx, key, xDomStart , countGene * y + yInit +1, domLength);
-					});
-				}
-			} 
+							drawDomain(ctx, key, xDomStart , countGene * y + yInit +1, domLength);
+						});
+					}
+				} 
+			}
+			
 			
 			//draw stop if it is inside the current CDS
 			stopTab.forEach(line => {
