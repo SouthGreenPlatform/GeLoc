@@ -42,6 +42,11 @@ var annotationTracks = [
 	]
 }]; */
 
+drawLegend();
+drawLegendDom();
+
+
+
 
 //Config de la vue globale
 function initConfig(){
@@ -129,7 +134,9 @@ selectAccession.addEventListener("change", async function(){
 	//createSelectChrom();
 
 	//LEGEND
-	drawLegend();
+
+	//affiche la div
+	$('#legend_button').show();
 
 	/////// à virer si je remet les tooltips
 	loadingoff();
@@ -301,21 +308,25 @@ function removeLetters(){
 
 
 
-//////////////////
-//LEGEND
-//////////////////
+//////////////////////
+//LEGEND chromosomes
+//////////////////////
 
 function drawLegend(){
 
-	//affiche la div
-	$('#legend_div').show();
+	var canvas = document.createElement('canvas');
+	canvas.id = 'legend';
+	canvas.width = 130;
+	canvas.height = 150;
 
-	var canvas = document.getElementById('legend');
 	var ctx = canvas.getContext('2d');
 
-	ctx.font = '12px roboto';
+	ctx.fillStyle="black";
+	ctx.font='bolder 12px Arial';
 
-	ctx.fillText('Legend:', 10, 25);
+	ctx.fillText('Chromosome view:', 10, 25);
+
+	ctx.font='12px Arial';
 
 	ctx.fillStyle = "#CCCCCC";
 	ctx.fillText('RLK', 10, 70);
@@ -343,7 +354,7 @@ function drawLegend(){
 
 	ctx.fillStyle = "black";
 	ctx.fillText('Annotation count', 10, 93);
-	var gradient = ctx.createLinearGradient(0, 0, 200, 0);
+	var gradient = ctx.createLinearGradient(0, 0, 100, 0);
 	gradient.addColorStop(0.16, '#7AA1D2');
 	gradient.addColorStop(0.32, '#7dc7d2');
 	gradient.addColorStop(0.48, '#bce2ca');
@@ -352,11 +363,66 @@ function drawLegend(){
 	gradient.addColorStop(1, '#f4a769');
 
 	ctx.fillStyle = gradient;
-	ctx.fillRect(10, 95, 200, 25);
+	ctx.fillRect(10, 95, 100, 25);
 
 	ctx.fillStyle = "black";
 	ctx.fillText('0', 15, 113);
-	ctx.fillText('5+', 190, 113);
+	ctx.fillText('5+', 90, 113);
+
+	document.getElementById('legend_div').appendChild(canvas); 
+
+
+}
+
+//////////////////////
+//LEGEND domaines
+//////////////////////
+function drawLegendDom(){
+
+	var canvas = document.createElement('canvas');
+	canvas.id = 'legend_dom';
+	canvas.width = 200;
+	canvas.height = 150;
+
+	var ctx = canvas.getContext('2d');
+	ctx.fillStyle="black";
+	ctx.font='bolder 12px Arial';
+
+	ctx.fillText('Gene view: ', 10, 25);
+
+	ctx.font='12px Arial';
+	
+	ctx.fillText('LRR:', 10, 45);
+	drawDomain(ctx, "LRR", 60, 35, 10);
+	ctx.fillText('BLAST:', 10, 65);
+	drawDomain(ctx, "BLAST", 60, 55, 10);
+	ctx.fillText('TM:', 10, 85);
+	drawDomain(ctx, "TM", 60, 75, 10);
+	ctx.fillText('NBARC:', 10, 105);
+	drawDomain(ctx, "NBARC", 60, 95, 10);
+	ctx.fillText('Kinase:', 10, 125);
+	drawDomain(ctx, "Kinase", 60, 115, 10);
+	ctx.fillText('Malectin:', 75, 45);
+	drawDomain(ctx, "Malectin", 155, 35, 10);
+	ctx.fillText('Malectin like:', 75, 65);
+	drawDomain(ctx, "Malectin_like", 155, 55, 10);
+	ctx.fillText('Cys-Pair:', 75, 85);
+	drawDomain(ctx, "Cys-Pair", 155, 75, 10);
+	ctx.fillText('PS:', 75, 105);
+	drawDomain(ctx, "PS", 155, 95, 10);
+	ctx.fillText('other:', 75, 125);
+	drawDomain(ctx, "", 155, 115, 10);
+
+	ctx.fillText('Stop:', 10, 145);
+	drawStop(ctx, 65, 132 )	
+	drawStar(ctx, 65, 139, 2, 4, 2);	
+
+	ctx.fillText('Frameshift:', 75, 145);
+	drawFrameshift(ctx, 160, 132 )	
+
+
+	document.getElementById('legend_div').appendChild(canvas); 
+
 
 }
 
@@ -379,7 +445,7 @@ function onClickChr(){
 
 			//dessine le chromosome
 			drawChromosome(clickedChrom, 10000000, 13000000);
-			
+
 			//console.log(config);
 			//console.log(configChr);
 
@@ -1003,6 +1069,8 @@ function drawStar(ctx, x, y, r, n, inset) {
 }
 
 function drawDomain(ctx, key, x, y, width){
+
+	ctx.save();
 	ctx.beginPath(); 
 	ctx.rect(x,y+2,width,9);
 
@@ -1025,9 +1093,10 @@ function drawDomain(ctx, key, x, y, width){
 	}else if(key == "PS"){
 	  	ctx.fillStyle="black";  
   	}else{
-		ctx.fillStyle="WhiteSmoke";
+		ctx.fillStyle="Gainsboro";
   	}
   	ctx.fill();
+	ctx.restore();
 }
 
 //Création de la div de resultats

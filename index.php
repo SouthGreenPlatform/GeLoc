@@ -109,13 +109,6 @@
 						<button type="button" class="btn btn-outline-dark" data-toggle="collapse" data-target="#page-content-wrapper" aria-expanded="false" aria-controls="collapseExample"> Show / hide global view</button>
 					</div>
 
-					<!-- where the lengend will take place -->
-					<div id="legend_div" style="display: none">
-						<canvas id="legend" height="130" width="250">
-							Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
-						</canvas>
-					</div>
-
 					<!-- gene card -->
 					<div id="gene_card" style="display: none">
 					Gene card
@@ -155,7 +148,16 @@
 	</aside>            
 </div>
 <!-- fin de la sidebar -->
-	
+
+<!-- legende flottante -->
+<div id=floating_legend>
+	<button type="button" class="btn btn-dark btn-sm" style="display: none" id="legend_button" data-toggle="collapse" data-target="#legend_div" aria-expanded="false" aria-controls="legend_div">	
+    Legend
+  	</button>
+	<div class="collapse" id="legend_div" >
+	</div>
+</div>
+<!-- fin legende flottante -->
 		
 <!-- Message navigateur -->
 <div class="alert alert-secondary alert-dismissible fade show" role="alert">
