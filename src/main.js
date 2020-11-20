@@ -895,7 +895,7 @@ canvas.addEventListener('click', function (event) {
 						+"<br/>Family: "+element.family 
 						+"<br/>Class: "+element.geneClass
 						+"<br/>Kitaake orthologous: "+orthologous
-						+"<br/>ID Kitaake: "+ID_MSU7
+						+"<br/>ID: "+ID_MSU7
 						+"<br/>ID IRGSP: "+ID_IRGSP
 						+"<br/>ID NCBI: "+ID_NCBI
 						+"<br/>Aliases: "+Aliases);
