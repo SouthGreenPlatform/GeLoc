@@ -195,6 +195,10 @@ To make the best use of GeLoc, we recommend you to download the latest Chrome ve
 	<canvas id="zoom_global" height="80" width="1000">
 		Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
 	</canvas>
+	<canvas id="zoom_selected" height="80" width="1000">
+
+	</canvas>
+
 </div>
 
 <div class="cds" style="display: none; width:100%; max-height:500px;max-width:1200px;overflow: scroll;">

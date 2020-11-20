@@ -444,7 +444,7 @@ function onClickChr(){
 			console.log("draw chr "+ clickedChrom);
 
 			//dessine le chromosome
-			drawChromosome(clickedChrom, 10000000, 13000000);
+			drawChromosome(clickedChrom, 10000000, 12000000);
 
 			//console.log(config);
 			//console.log(configChr);
@@ -504,7 +504,7 @@ function drawChromosome(clickedChrom, start, stop){
 	});
 	configChr.rangeSet = newRangeSetChr;
 	//affiche la div
-	document.getElementById("chr_region").style.display = "block";
+	//document.getElementById("chr_region").style.display = "block";
 	ideogramChr = new Ideogram(configChr);
 
 
@@ -696,10 +696,18 @@ function drawZoom(from, to, report){
 				geneClass: geneClass,
 				id: id,
 				family: family,
+
+				//global gene view infos
+				genePosX: startGene+x,
+				genePosY: 40,
+				geneWidth: widthGene,
+				geneHeigth: 20,
+
+				//CDS view infos
 				width: 1200,
 				height: 22,
-				top: countGene * y + yInit -2,
-				left: xFirstCDS + x -5
+				top: countGene * y + yInit -2, //first CDS position top
+				left: xFirstCDS + x -5         //first CDS position left
 			}
 			cdsElements.push(element);
 
@@ -833,6 +841,44 @@ function drawZoom(from, to, report){
 //canvas CDS
 var canvas = document.getElementById('cds');
 var ctx = canvas.getContext('2d');
+
+//fonction click sur un gene / CDS
+canvas.addEventListener('mousemove', function (event) {
+
+	
+
+	//position du canvas, tient compte du scroll
+	var canoffset = $(canvas).offset();
+	var x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoffset.left);
+	var y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoffset.top) + 1;
+
+	var canvasSelected = document.getElementById('zoom_selected');
+	var ctxSelected = canvasSelected.getContext('2d');
+
+	ctxSelected.clearRect(0, 0, canvasSelected.width, canvasSelected.height);
+
+	// Collision detection between clicked offset and element.
+	cdsElements.forEach(function (element) {
+		if (y > element.top -20 && y < element.top + element.height
+			&& x > element.left && x < element.left + element.width) {
+
+			//dessine un cadre autour du gene dans la vue globale
+			ctxSelected.save();
+
+			//clear before redraw
+			ctxSelected.clearRect(0, 0, canvasSelected.width, canvasSelected.height);
+
+			//draw gene rect
+			ctxSelected.strokeStyle="yellow";
+			ctxSelected.lineWidth = 2;
+			// x y width height	
+			ctxSelected.strokeRect(element.genePosX -1, 39, element.geneWidth +2, 22); // create rectangle  
+			ctxSelected.restore();
+		}
+	});
+
+	
+});
 
 //fonction click sur un gene / CDS
 canvas.addEventListener('click', function (event) {

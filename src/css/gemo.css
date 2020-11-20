@@ -490,3 +490,15 @@ textarea.form-control {
 #selected_region {
 margin-left: 2em;
 }
+
+.zoom_global {
+    width: 800px;
+    height: 100px;
+    position: relative;
+}
+
+
+#zoom_selected { position: absolute;
+z-index: 2 }
+#zoom_global { position: absolute;
+z-index: 1 }
