@@ -431,6 +431,12 @@ textarea.form-control {
   padding-right: 5px;
 }
 
+#gene_card a {
+  background: unset !important;
+  color: black !important;
+  
+}
+
 #download {
   line-height: 25px;
   margin-top: 5px;

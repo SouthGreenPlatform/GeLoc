@@ -940,11 +940,36 @@ canvas.addEventListener('click', function (event) {
 						+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
 						+"<br/>Family: "+element.family 
 						+"<br/>Class: "+element.geneClass
-						+"<br/>Kitaake orthologous: "+orthologous
+						//+"<br/>Kitaake orthologous: "+orthologous
+						+"<br/>Kitaake orthologous: <a class='resLink3' href='#'>"+orthologous+"</a><br/>"
 						+"<br/>ID: "+ID_MSU7
 						+"<br/>ID IRGSP: "+ID_IRGSP
 						+"<br/>ID NCBI: "+ID_NCBI
 						+"<br/>Aliases: "+Aliases);
+					})
+					.then(function() {
+						//Clic sur l'identifiant affiche la zone
+						var resLinks = document.getElementsByClassName('resLink3');
+						for(var i = 0, len = resLinks.length; i < len; i++) {
+							resLinks[i].onclick = function () {
+				
+								//affiche la vue globale
+								let selectAccession = document.getElementById("selectAccession");
+								selectAccession.value="Kitaake";
+								triggerEvent(selectAccession, 'change');
+				
+								//affiche la vue zoom sur le chromosome de l'id cliqué
+								var regexpChrom = /kitaake_Chr(\d*)_(\d*)/;
+								var idChrom = this.innerText.match(regexpChrom)[1];
+								var position = this.innerText.match(regexpChrom)[2];
+								position = parseInt(position);
+								var stop = position + 1000000;
+				
+								idChrom = parseInt(idChrom);
+								setTimeout(function(){ drawChromosome(idChrom, position, stop ); }, 1000);
+								
+							}
+						}
 					});
 					
 					
@@ -978,9 +1003,35 @@ canvas.addEventListener('click', function (event) {
 					+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
 					+"<br/>Family: "+element.family 
 					+"<br/>Class: "+element.geneClass
-					+"<br/>Nipponbare orthologous: "+orthologous
+					//+"<br/>Nipponbare orthologous: "+orthologous
+					+"<br/>Nipponbare orthologous: <a class='resLink4' href='#'>"+orthologous+"</a><br/>"
 					+"<br/>ID Kitaake: "+ID_OsKitaake);
 					
+					})
+					.then(function() {
+						//Clic sur l'identifiant affiche la zone
+						var resLinks = document.getElementsByClassName('resLink4');
+						//console.log(resLinks);
+						for(var i = 0, len = resLinks.length; i < len; i++) {
+							resLinks[i].onclick = function () {
+				
+								//affiche la vue globale
+								let selectAccession = document.getElementById("selectAccession");
+								selectAccession.value="Nipponbare";
+								triggerEvent(selectAccession, 'change');
+				
+								//affiche la vue zoom sur le chromosome de l'id cliqué
+								var regexpChrom = /Chr(\d*)_(\d*)/;
+								var idChrom = this.innerText.match(regexpChrom)[1];
+								var position = this.innerText.match(regexpChrom)[2];
+								position = parseInt(position);
+								var stop = position + 1000000;
+				
+								idChrom = parseInt(idChrom);
+								setTimeout(function(){ drawChromosome(idChrom, position, stop ); }, 1000);
+								
+							}
+						}
 					});
 				}
 			});
