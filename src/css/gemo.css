@@ -434,6 +434,8 @@ textarea.form-control {
 #gene_card a {
   background: unset !important;
   color: black !important;
+  text-indent: 0px;
+  display: contents !important;
   
 }
 

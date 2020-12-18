@@ -898,6 +898,8 @@ canvas.addEventListener('click', function (event) {
 			var ID_MSU7 ="";
 			var ID_IRGSP ="";
 			var ID_NCBI ="";
+			var NCBI_num ="";
+			var urlListe ="";
 			var Aliases ="";
 			var ID_OsKitaake="";
 			var orthologous="";
@@ -936,16 +938,30 @@ canvas.addEventListener('click', function (event) {
 
 						//affiche la gene card
 						document.getElementById("gene_card").style.display = "block";
-						$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id
-						+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
+						var htmlstring = "<p class='font-weight-bold'>Gene card "+element.id
+						+"</p><a target='_blank' href=\"https://rice-genome-hub.southgreen.fr/oryza_sativa_japonica_nipponbare?loc="+element.chr+":"+element.start+".."+element.stop+"\"><button type=\"button\" class=\"btn btn-sm btn-outline-dark\">View on JBrowse </button></a>"
+						+"</p>Position: "+element.chr+":"+element.start+"-"+element.stop
 						+"<br/>Family: "+element.family 
 						+"<br/>Class: "+element.geneClass
-						//+"<br/>Kitaake orthologous: "+orthologous
-						+"<br/>Kitaake orthologous: <a class='resLink3' href='#'>"+orthologous+"</a><br/>"
-						+"<br/>ID: "+ID_MSU7
-						+"<br/>ID IRGSP: "+ID_IRGSP
-						+"<br/>ID NCBI: "+ID_NCBI
-						+"<br/>Aliases: "+Aliases);
+						+"<br/>Kitaake orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
+						+"<br/>ID: <a target='_blank' href=\"http://rice.plantbiology.msu.edu/cgi-bin/ORF_infopage.cgi?orf="+ID_MSU7+"\">"+ID_MSU7+"</a>"
+						+"<br/>ID IRGSP: <a target='_blank' href=\"https://rapdb.dna.affrc.go.jp/viewer/gbrowse_details/irgsp1?name="+ID_IRGSP+"\">"+ID_IRGSP+"</a>"
+						+"<br/>ID NCBI:";
+						if(ID_NCBI == "None"){
+							htmlstring += "None";
+							
+						}else{
+							//split NCBI
+							var tabNCBI=ID_NCBI.split(",");
+							//pour chaque split regexp, add url to html string
+							tabNCBI.forEach(element => {
+								var regexpNCBI = /LOC(\d*)/;
+								NCBI_num = element.match(regexpNCBI)[1];
+								htmlstring += " <a target='_blank' href=\"https://www.ncbi.nlm.nih.gov/gene/"+NCBI_num+"\">"+element+"</a>"
+							});
+						}
+						htmlstring+= "<br/>Aliases: "+Aliases;
+						$('#gene_card').html(htmlstring);
 					})
 					.then(function() {
 						//Clic sur l'identifiant affiche la zone
@@ -1000,11 +1016,12 @@ canvas.addEventListener('click', function (event) {
 					//affiche la gene card
 					document.getElementById("gene_card").style.display = "block";
 					$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id
+					+"</p><a target='_blank' href=\" https://rice-genome-hub.southgreen.fr/oryza_sativa_japonica_kitaake?loc="+element.chr+":"+element.start+".."+element.stop+"\"><button type=\"button\" class=\"btn btn-sm btn-outline-dark\">View on JBrowse </button></a>"
 					+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
 					+"<br/>Family: "+element.family 
 					+"<br/>Class: "+element.geneClass
 					//+"<br/>Nipponbare orthologous: "+orthologous
-					+"<br/>Nipponbare orthologous: <a class='resLink4' href='#'>"+orthologous+"</a><br/>"
+					+"<br/>Nipponbare orthologous: <a class='resLink4' href='#'>"+orthologous+"</a>"
 					+"<br/>ID Kitaake: "+ID_OsKitaake);
 					
 					})
