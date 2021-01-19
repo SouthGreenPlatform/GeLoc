@@ -105,7 +105,7 @@ selectAccession.addEventListener("change", async function(){
 	config.annotationsPath='./data/annotations/'+acc+'.json';
 	
 	//charge le fichier densité de l'accession choisie
-	let response = await fetch('./data/density/ideo_'+acc+'.txt');
+	let response = await fetch('./data/density/density_'+acc+'.txt');
 	annotData = await response.text();
 	//Parse les données de densité
 	config.rangeSet = annotationParser(annotData, config);
