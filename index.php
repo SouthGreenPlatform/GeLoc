@@ -127,19 +127,21 @@
 			<ul id="submenu-3" class="panel-collapse collapse show panel-switch" role="menu">
 			<div id="download">
 				<p>Nipponbare</p>
-				<a href="./public/dl/LRR_Nipponbare.gff.zip" download="LRR_Nipponbare.gff.zip">LRR_Nipponbare.gff.zip</a>
+				<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_flt.gff.zip" download="ORYSJ_nipponbare_LRRlocus_flt.gff.zip">ORYSJ_nipponbare_LRRlocus_flt.gff.zip</a>
 				<a href="./public/dl/Nipponbare_IDs.txt.zip" download="Nipponbare_IDs.txt.zip">Nipponbare_IDs.txt.zip</a>
-				<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip">cDNA.fasta.zip</a>
-				<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip">PEP.fasta.zip</a>
+				<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip">ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip</a>
+				<a href="./public/dl/OSJnip_canonic_cDNA.fasta.zip" download="OSJnip_canonic_cDNA.fasta.zip">OSJnip_canonic_cDNA.fasta.zip</a>
+				<a href="./public/dl/OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip" download="OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip">OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip</a>
+				<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip">ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip</a>
 				<br/>
 				<p>Kitaake</p>
-				<a href="./public/dl/LRR_Kitaake.gff.zip" download="LRR_Kitaake.gff.zip">LRR_Kitaake.gff.zip</a>
+				<a href="./public/dl/ORYSJ_kitaake_LRRlocus_flt.gff.zip" download="ORYSJ_kitaake_LRRlocus_flt.gff.zip">ORYSJ_kitaake_LRRlocus_flt.gff.zip</a>
 				<a href="./public/dl/Kitaake_IDs.txt.zip" download="Kitaake_IDs.txt.zip">Kitaake_IDs.txt.zip</a>
-				<a href="./public/dl/ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip">cDNA.fasta.zip</a>
-				<a href="./public/dl/ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip">PEP.fasta.zip</a>
+				<a href="./public/dl/ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip">ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip</a>
+				<a href="./public/dl/ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip">ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip</a>
 				<br/>
 				<p>Orthologous</p>
-				<a href="./public/dl/ortho.tab.zip" download="ortho.tab.zip">Orthologous.tab.zip</a>
+				<a href="./public/dl/Nip_Kit_ortho.txt.zip" download="Nip_Kit_ortho.txt.zip">Nip_Kit_ortho.txt.zip</a>
 
 			</div>
 			</ul>

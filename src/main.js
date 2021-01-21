@@ -102,7 +102,7 @@ selectAccession.addEventListener("change", async function(){
 	$(".ideo_container_global").collapse('show');
 
 	config = initConfig();
-	config.annotationsPath='./data/annotations/'+acc+'.json';
+	config.annotationsPath='./data/annotations/annot_'+acc+'.json';
 	
 	//charge le fichier densité de l'accession choisie
 	let response = await fetch('./data/density/density_'+acc+'.txt');
@@ -594,7 +594,7 @@ fetch('./data/annotations/frameshift_KIT.txt')
 });
 
 //recupère les coordonnées des domaines
-fetch('./data/annotations/Nip_domains_genomic_pos.json')
+fetch('./data/annotations/domains.json')
 .then(function(response) {
 	return response.json();
 })
@@ -775,8 +775,11 @@ function drawZoom(from, to, report){
 			//draw domain if it is inside the current CDS
 			if(cdsid != ""){
 				let currentGene = element.id;
-				let cdsDom = domains[currentGene][cdsid];
 				
+				if(domains[currentGene] !== undefined){
+					cdsDom = domains[currentGene][cdsid];
+				}
+
 				if(cdsDom !== undefined){
 					//console.log("current Gene  : "+currentGene+ " cdsid " +cdsid+ " dom :  "+ JSON.stringify(cdsDom));
 					
@@ -816,18 +819,22 @@ function drawZoom(from, to, report){
 
 			//draw frameshift if it is inside the current CDS
 			fsTab.forEach(line => {
+				if(line.length >0){
+					//console.log(line);
 				
-				var regexpFS = /(.*);frameshift;(.*)/;
-				var idFS = line.match(regexpFS)[1];
-				var posFS = line.match(regexpFS)[2];
+					var regexpFS = /(.*);frameshift;(.*)/;
+					var idFS = line.match(regexpFS)[1];
+					var posFS = line.match(regexpFS)[2];
 
- 				if(idFS == element.id && posFS <= stopCDS && posFS >= startCDS){
-						
-					//stop position
-					var xFsPos = ((posFS - startFirstCDS) / 10) + x ;
-					drawFrameshift(ctx, xFsPos - totalGap, countGene * y + yInit )	
-					//console.log("frameshift "+ posFS + " gap "+ gap+" totalGap "+totalGap);	
-				} 
+					if(idFS == element.id && posFS <= stopCDS && posFS >= startCDS){
+							
+						//stop position
+						var xFsPos = ((posFS - startFirstCDS) / 10) + x ;
+						drawFrameshift(ctx, xFsPos - totalGap, countGene * y + yInit )	
+						//console.log("frameshift "+ posFS + " gap "+ gap+" totalGap "+totalGap);	
+					} 
+				}
+				
 			});
 
 
@@ -922,7 +929,7 @@ canvas.addEventListener('click', function (event) {
 					});
 
 					//fichier des orthologues
-					fetch('./data/ids/ortho.tab')
+					fetch('./data/ids/Nip_Kit_ortho.txt')
 					.then(function(response) {
 						return orthoTab = response.text();
 					})
@@ -930,7 +937,7 @@ canvas.addEventListener('click', function (event) {
 						let orthoLines = ortho.split('\n');
 						orthoLines.forEach(line => {
 							var tab = line.split(/\t/);
-							if(element.id == tab[0]){
+							if(element.id == tab[0].trim()){ //trim pour enlever les eventuels espaces ou retour chariot
 								orthologous = tab[1];
 								
 							}
@@ -975,7 +982,7 @@ canvas.addEventListener('click', function (event) {
 								triggerEvent(selectAccession, 'change');
 				
 								//affiche la vue zoom sur le chromosome de l'id cliqué
-								var regexpChrom = /kitaake_Chr(\d*)_(\d*)/;
+								var regexpChrom = /Chr(\d*)_(\d*)/;
 								var idChrom = this.innerText.match(regexpChrom)[1];
 								var position = this.innerText.match(regexpChrom)[2];
 								position = parseInt(position);
@@ -998,8 +1005,9 @@ canvas.addEventListener('click', function (event) {
 							ID_OsKitaake = tab[1];
 						}
 					});
+
 					//fichier des orthologues
-					fetch('./data/ids/ortho.tab')
+					fetch('./data/ids/Nip_Kit_ortho.txt')
 					.then(function(response) {
 						return orthoTab = response.text();
 					})
@@ -1007,11 +1015,11 @@ canvas.addEventListener('click', function (event) {
 						let orthoLines = ortho.split('\n');
 						orthoLines.forEach(line => {
 							var tab = line.split(/\t/);
-							if(element.id == tab[1]){
+							if(element.id == tab[1].trim()){ //trim pour enlever les eventuels espaces ou retour chariot
 								orthologous = tab[0];
-								
 							}
 						});
+						console.log(orthologous);
 
 					//affiche la gene card
 					document.getElementById("gene_card").style.display = "block";
