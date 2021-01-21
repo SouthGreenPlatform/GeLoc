@@ -63,15 +63,15 @@
 		<aside id="sidebar">
 		<ul id="sidemenu" class="sidebar-nav">
 
-		<!--DATA-->
-		<li>
+		<!--HOME-->
+		<li id="homebutton">
 			<a class="accordion-toggle collapsed toggle-switch" data-toggle="collapse" href="#submenu-1">
 				<span class="sidebar-icon"><i class="fa fa-dashboard"></i></span>
 				<span class="sidebar-title">Home</span>
 			  	<b class="caret"></b>
 			</a>
-			<ul id="submenu-1" class="panel-collapse collapse panel-switch" role="menu">
-			</ul>
+			<!-- <ul id="submenu-1" class="panel-collapse collapse panel-switch" role="menu">
+			</ul> -->
 		</li>
 
 		<!--DATA-->
@@ -125,25 +125,7 @@
 			  	<b class="caret"></b>
 			</a>
 			<ul id="submenu-3" class="panel-collapse collapse show panel-switch" role="menu">
-			<div id="download">
-				<p>Nipponbare</p>
-				<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_flt.gff.zip" download="ORYSJ_nipponbare_LRRlocus_flt.gff.zip">ORYSJ_nipponbare_LRRlocus_flt.gff.zip</a>
-				<a href="./public/dl/Nipponbare_IDs.txt.zip" download="Nipponbare_IDs.txt.zip">Nipponbare_IDs.txt.zip</a>
-				<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip">ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip</a>
-				<a href="./public/dl/OSJnip_canonic_cDNA.fasta.zip" download="OSJnip_canonic_cDNA.fasta.zip">OSJnip_canonic_cDNA.fasta.zip</a>
-				<a href="./public/dl/OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip" download="OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip">OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip</a>
-				<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip">ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip</a>
-				<br/>
-				<p>Kitaake</p>
-				<a href="./public/dl/ORYSJ_kitaake_LRRlocus_flt.gff.zip" download="ORYSJ_kitaake_LRRlocus_flt.gff.zip">ORYSJ_kitaake_LRRlocus_flt.gff.zip</a>
-				<a href="./public/dl/Kitaake_IDs.txt.zip" download="Kitaake_IDs.txt.zip">Kitaake_IDs.txt.zip</a>
-				<a href="./public/dl/ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip">ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip</a>
-				<a href="./public/dl/ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip">ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip</a>
-				<br/>
-				<p>Orthologous</p>
-				<a href="./public/dl/Nip_Kit_ortho.txt.zip" download="Nip_Kit_ortho.txt.zip">Nip_Kit_ortho.txt.zip</a>
-
-			</div>
+			
 			</ul>
 		</li>  
 		</ul>
@@ -171,10 +153,35 @@ To make the best use of GeLoc, we recommend you to download the latest Chrome ve
 </button>
 </div>
 
-<!-- Choose message -->
-<div id="arrow_choose" class="container">
-	<img src="./public/img/arrow_choose.svg" alt="<== Choose an accession to view" width="500px"></img>
-</div>	
+<!-- Home -->
+<div id="home" class="container">
+	<!-- Choose message -->
+	<div id="arrow_choose" class="container">
+		<img src="./public/img/arrow_choose.svg" alt="<== Choose an accession to view" width="500px"></img>
+	</div>	
+
+	<div id="download">
+		<p>Nipponbare</p>
+		<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_flt.gff.zip" download="ORYSJ_nipponbare_LRRlocus_flt.gff.zip">ORYSJ_nipponbare_LRRlocus_flt.gff.zip</a><br/>
+		<a href="./public/dl/Nipponbare_IDs.txt.zip" download="Nipponbare_IDs.txt.zip">Nipponbare_IDs.txt.zip</a><br/>
+		<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip">ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip</a><br/>
+		<a href="./public/dl/OSJnip_canonic_cDNA.fasta.zip" download="OSJnip_canonic_cDNA.fasta.zip">OSJnip_canonic_cDNA.fasta.zip</a><br/>
+		<a href="./public/dl/OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip" download="OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip">OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip</a><br/>
+		<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip">ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip</a><br/>
+		<br/>
+		<p>Kitaake</p>
+		<a href="./public/dl/ORYSJ_kitaake_LRRlocus_flt.gff.zip" download="ORYSJ_kitaake_LRRlocus_flt.gff.zip">ORYSJ_kitaake_LRRlocus_flt.gff.zip</a><br/>
+		<a href="./public/dl/Kitaake_IDs.txt.zip" download="Kitaake_IDs.txt.zip">Kitaake_IDs.txt.zip</a><br/>
+		<a href="./public/dl/ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip">ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip</a><br/>
+		<a href="./public/dl/ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip">ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip</a><br/>
+		<br/>
+		<p>Orthologous</p>
+		<a href="./public/dl/Nip_Kit_ortho.txt.zip" download="Nip_Kit_ortho.txt.zip">Nip_Kit_ortho.txt.zip</a><br/>
+
+	</div>
+
+</div>
+
 
 <div id="page-content-wrapper" class="ideo_container_global collapse show">
 	<!-- The ideogram goes here. -->

@@ -119,7 +119,7 @@ selectAccession.addEventListener("change", async function(){
 	//config.dataDir = "./data/bands/native/"+acc+"/";
 	
 	//supprimer la div de l'image "choose accession"
-	document.getElementById("arrow_choose").style.display = "none";
+	document.getElementById("home").style.display = "none";
 
 	//Charge ideogram
 	ideogram = new Ideogram(config);
@@ -1285,6 +1285,17 @@ function ploidyDescGenerator(haplotype,chrNumber){
     }
     return ploidyDesc;
 }
+
+////////////////
+///// HOME /////
+////////////////
+document.getElementById("homebutton").addEventListener("click", function(e) {
+	//affiche la page d'accueil
+	document.getElementById("home").style.display = "block";
+	
+
+
+});
 
 /////////////////////////////////
 ///// Recherche par mot clé /////
