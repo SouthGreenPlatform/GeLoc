@@ -158,7 +158,7 @@ To make the best use of GeLoc, we recommend you to download the latest Chrome ve
 <!-- Home -->
 <div id="home" class="container">
 
-
+	<!-- download -->
 	<div id="download">
 		<h3>Download</h3><br/>
 		
@@ -202,6 +202,35 @@ caracterised by an "X" character.
 		<a href="./public/dl/Nip_Kit_ortho.txt.zip" download="Nip_Kit_ortho.txt.zip">Nip_Kit_ortho.txt.zip</a><br/>
 
 	</div>
+
+	<!-- feedback -->
+	<div id="feedback">
+		<h3>Feedback</h3><br/>
+
+		<form>
+		<div class="form-group">
+			<label for="exampleFormControlInput1">Email address</label>
+			<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+		</div>
+		<div class="form-group">
+			<label for="exampleFormControlSelect1">How was your experience on our website ?</label>
+			<select class="form-control" id="exampleFormControlSelect1">
+			<option>Great</option>
+			<option>Good</option>
+			<option>Ok</option>
+			<option>Bad</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label for="exampleFormControlTextarea1">Tell us what you think</label>
+			<textarea class="form-control" id="emailcontent" rows="3"></textarea>
+		</div>
+		<button id="submitfeedback" type="submit" class="btn btn-primary">Submit</button>
+	</form>
+</div>
+
+
+
 
 </div>
 

@@ -460,6 +460,16 @@ textarea.form-control {
   font-weight: 500;
 }
 
+#feedback {
+  line-height: 25px;
+  margin-top: 5px;
+  border:1px dotted black;
+  width: 95%;
+  background: white !important;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 #search_result_1 {
   margin-top: 5px;
   border:1px dotted black;

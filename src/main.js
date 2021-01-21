@@ -1295,6 +1295,8 @@ document.getElementById("homebutton").addEventListener("click", function(e) {
 	//affiche la page d'accueil
 	//document.getElementById("home").style.display = "block";
 	$('#home').show();
+	$('#download').show();
+	$('#feedback').show();
 	$('#DataViz').hide();
 
 	//remet le selcteur d'acc vide
@@ -1312,11 +1314,44 @@ document.getElementById("downloadbutton").addEventListener("click", function(e) 
 	
 	$('#home').show();
 	$('#download').show();
+	$('#feedback').hide();
 
 	//remet le selcteur d'acc vide
 	$('#selectAccession')[0].value="";
 
 });
+
+
+///////////////////////////
+///// BOUTON FEEDBACK /////
+///////////////////////////
+document.getElementById("feedbackbutton").addEventListener("click", function(e) {
+	
+	$('#DataViz').hide();
+	$('#home').show();
+	$('#download').hide();
+	$('#feedback').show();
+
+});
+
+document.getElementById("submitfeedback").addEventListener("click", function(e) {
+	
+	let data = document.getElementById('emailcontent').value;
+
+	//envoie l'email via node
+	socket.emit('feedback', data, function(err, log){
+		if(err){
+			console.log(err);
+		}else{
+			console.log(log);
+		}
+	});
+
+});
+
+
+
+
 
 /////////////////////////////////
 ///// Recherche par mot clé /////
