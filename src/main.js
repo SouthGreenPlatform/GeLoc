@@ -137,6 +137,8 @@ selectAccession.addEventListener("change", async function(){
 
 	//affiche la div
 	$('#legend_button').show();
+	$("#DataViz").show();
+	$("#show-hide").show();
 
 	/////// à virer si je remet les tooltips
 	loadingoff();
@@ -1286,14 +1288,33 @@ function ploidyDescGenerator(haplotype,chrNumber){
     return ploidyDesc;
 }
 
-////////////////
-///// HOME /////
-////////////////
+///////////////////////
+///// BOUTON HOME /////
+///////////////////////
 document.getElementById("homebutton").addEventListener("click", function(e) {
 	//affiche la page d'accueil
-	document.getElementById("home").style.display = "block";
-	
+	//document.getElementById("home").style.display = "block";
+	$('#home').show();
+	$('#DataViz').hide();
 
+	//remet le selcteur d'acc vide
+	$('#selectAccession')[0].value="";
+
+});
+
+///////////////////////////
+///// BOUTON DOWNLOAD /////
+///////////////////////////
+document.getElementById("downloadbutton").addEventListener("click", function(e) {
+	//affiche la page d'accueil
+	//document.getElementById("home").style.display = "block";
+	$('#DataViz').hide();
+	
+	$('#home').show();
+	$('#download').show();
+
+	//remet le selcteur d'acc vide
+	$('#selectAccession')[0].value="";
 
 });
 

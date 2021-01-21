@@ -104,10 +104,7 @@
 					<div id="search_result_2" style="display: none; max-height: 200px; overflow: scroll;">
 					</div>
 
-					<!-- button show / hide global view -->
-					<div style="display: none" id="show-hide">
-						<button type="button" class="btn btn-outline-dark" data-toggle="collapse" data-target="#page-content-wrapper" aria-expanded="false" aria-controls="collapseExample"> Show / hide global view</button>
-					</div>
+					
 
 					<!-- gene card -->
 					<div id="gene_card" style="display: none">
@@ -118,16 +115,21 @@
 		</li>
 
 		<!-- download -->
-		<li>
+		<li id="downloadbutton">
 			<a class="accordion-toggle collapsed toggle-switch" data-toggle="collapse" href="#submenu-3">
 				<span class="sidebar-icon"><i class="fa fa-dashboard"></i></span>
 				<span class="sidebar-title">Download data</span>
 			  	<b class="caret"></b>
 			</a>
-			<ul id="submenu-3" class="panel-collapse collapse show panel-switch" role="menu">
-			
-			</ul>
 		</li>  
+		<!-- feedback -->
+		<li id="feedbackbutton">
+			<a class="accordion-toggle collapsed toggle-switch" data-toggle="collapse" href="#submenu-4">
+				<span class="sidebar-icon"><i class="fa fa-dashboard"></i></span>
+				<span class="sidebar-title">Send feedback</span>
+			  	<b class="caret"></b>
+			</a>
+		</li> 
 		</ul>
 	</aside>            
 </div>
@@ -155,13 +157,34 @@ To make the best use of GeLoc, we recommend you to download the latest Chrome ve
 
 <!-- Home -->
 <div id="home" class="container">
-	<!-- Choose message -->
-	<div id="arrow_choose" class="container">
-		<img src="./public/img/arrow_choose.svg" alt="<== Choose an accession to view" width="500px"></img>
-	</div>	
+
 
 	<div id="download">
-		<p>Nipponbare</p>
+		<h3>Download</h3><br/>
+		
+		Description of fasta files :
+
+		<p><strong>Files "Peptides" and "CDS":</strong></p> 
+		<p>These files contain amino acid and nuclotide sequences for LRR-CR genes.
+For genes experiencing frameshift, the one or two bases that cause the frameshift are avoided in order
+to have nucleotide sequence that can be translated.
+</p>
+
+<p><strong>Files "cDNA":</strong></p>
+<p>These files contain nucleotide sequences for the complete LRR-CR genes without intron.
+In the case of genes experiencing frameshift, the sequences cannot be translated in comprehensive protein
+sequences. For all other genes, the files "CDS" and "cDNA" retrieve the same nucleotide seqences.
+</p>
+
+<p><strong>Files "cDNA_wFrameshift": </strong></p>
+<p>These files contain nucleotide sequences of non-canonical genes. In the case
+of genes experiencing frameshift, the sequence is completed with one or two "!" characters at the position
+of the frameshift in order to conserve the right reading frame (also used by V. Ranwez et al. for the
+MACSE programs). The translation of these sequences will create amino acid sequences with frameshift
+caracterised by an "X" character.
+</p>
+
+		<p><strong>Nipponbare</strong></p>
 		<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_flt.gff.zip" download="ORYSJ_nipponbare_LRRlocus_flt.gff.zip">ORYSJ_nipponbare_LRRlocus_flt.gff.zip</a><br/>
 		<a href="./public/dl/Nipponbare_IDs.txt.zip" download="Nipponbare_IDs.txt.zip">Nipponbare_IDs.txt.zip</a><br/>
 		<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip">ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip</a><br/>
@@ -169,62 +192,70 @@ To make the best use of GeLoc, we recommend you to download the latest Chrome ve
 		<a href="./public/dl/OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip" download="OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip">OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip</a><br/>
 		<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip">ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip</a><br/>
 		<br/>
-		<p>Kitaake</p>
+		<p><strong>Kitaake</strong></p>
 		<a href="./public/dl/ORYSJ_kitaake_LRRlocus_flt.gff.zip" download="ORYSJ_kitaake_LRRlocus_flt.gff.zip">ORYSJ_kitaake_LRRlocus_flt.gff.zip</a><br/>
 		<a href="./public/dl/Kitaake_IDs.txt.zip" download="Kitaake_IDs.txt.zip">Kitaake_IDs.txt.zip</a><br/>
 		<a href="./public/dl/ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip">ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip</a><br/>
 		<a href="./public/dl/ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip">ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip</a><br/>
 		<br/>
-		<p>Orthologous</p>
+		<p><strong>Orthologous</strong></p>
 		<a href="./public/dl/Nip_Kit_ortho.txt.zip" download="Nip_Kit_ortho.txt.zip">Nip_Kit_ortho.txt.zip</a><br/>
 
 	</div>
 
 </div>
 
-
-<div id="page-content-wrapper" class="ideo_container_global collapse show">
-	<!-- The ideogram goes here. -->
-</div>
-		
-<div class="ideo_container_chr" max-width="1000px">
-    <!-- The ideogram chromosome goes here. -->
-</div>
-
-<!-- Selected region -->
-<div id="selected_region" style="display: none;">
-	Selected region:
-	<br/>
-	<span id="from"></span>  -  <span id="to"></span>
-	(extent: <span id="extent"></span> base pairs)
-</div>
-
-<div class="zoom_global" style="display: none; width:100%; overflow: scroll;">
-    <!-- The zoomed view goes here. -->
-	<canvas id="zoom_global" height="80" width="1000">
-		Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
-	</canvas>
-	<canvas id="zoom_selected" height="80" width="1000">
-
-	</canvas>
-
-</div>
-
-<div class="cds" style="display: none; width:100%; max-height:500px;max-width:1200px;overflow: scroll;">
-    <!-- The CDS view goes here. -->
-	<canvas id="cds" height="1200" width="1200">
-		Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
-	</canvas>
-</div>
-
-<div id="chr_region" heigth="300px" style="display: none;">
-<!-- The GFF info goes here. -->
-
-	<div class='container'>
-		<pre id="gffResult" style="width:100%; max-height: 300px;max-width:1200px;overflow: scroll;">
-		</pre>
+<!-- Div DataViz globale -->
+<div id="DataViz" style="display: none">
+	<!-- button show / hide global view -->
+	<div style="display: none" id="show-hide">
+		<button type="button" class="btn btn-outline-dark" data-toggle="collapse" data-target="#page-content-wrapper" aria-expanded="false" aria-controls="collapseExample"> Show / hide all chromosomes</button>
 	</div>
+	<div id="page-content-wrapper" class="ideo_container_global collapse show">
+		<!-- The ideogram goes here. -->
+	</div>
+			
+	<div class="ideo_container_chr" max-width="1000px">
+		<!-- The ideogram chromosome goes here. -->
+	</div>
+
+	<!-- Selected region -->
+	<div id="selected_region" style="display: none;">
+		Selected region:
+		<br/>
+		<span id="from"></span>  -  <span id="to"></span>
+		(extent: <span id="extent"></span> base pairs)
+	</div>
+
+	<div class="zoom_global" style="display: none; width:100%; overflow: scroll;">
+		<!-- The zoomed view goes here. -->
+		<canvas id="zoom_global" height="80" width="1000">
+			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
+		</canvas>
+		<canvas id="zoom_selected" height="80" width="1000">
+
+		</canvas>
+
+	</div>
+
+	<div class="cds" style="display: none; width:100%; max-height:500px;max-width:1200px;overflow: scroll;">
+		<!-- The CDS view goes here. -->
+		<canvas id="cds" height="1200" width="1200">
+			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
+		</canvas>
+	</div>
+
+	<div id="chr_region" heigth="300px" style="display: none;">
+	<!-- The GFF info goes here. -->
+
+		<div class='container'>
+			<pre id="gffResult" style="width:100%; max-height: 300px;max-width:1200px;overflow: scroll;">
+			</pre>
+		</div>
+	</div>
+
 </div>
+
 
 
 
