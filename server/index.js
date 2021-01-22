@@ -49,12 +49,12 @@ io.on('connection', socket => {
 	});
 
 
-	socket.on('feedback', (data, callback) => {
+	socket.on('feedback', (email, xp, data, callback) => {
 		const message = {
 		from: 'b33b5a51e1-569833@inbox.mailtrap.io', // Sender address
 		to: 'b33b5a51e1-569833@inbox.mailtrap.io',         // List of recipients
 		subject: 'Geloc feedback', // Subject line
-		text: data // Plain text body
+		text: email+"\n"+xp+"\n"+data // Plain text body
 		};
 		transport.sendMail(message, function(err, info) {
 			if (err) {
@@ -63,7 +63,7 @@ io.on('connection', socket => {
 			console.log(info);
 			}
 		});
-		callback(null, 'email send');
+		callback(null, message.text);
 	});
 	
 

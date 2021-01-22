@@ -185,18 +185,19 @@ caracterised by an "X" character.
 </p>
 
 		<p><strong>Nipponbare</strong></p>
-		<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_flt.gff.zip" download="ORYSJ_nipponbare_LRRlocus_flt.gff.zip">ORYSJ_nipponbare_LRRlocus_flt.gff.zip</a><br/>
 		<a href="./public/dl/Nipponbare_IDs.txt.zip" download="Nipponbare_IDs.txt.zip">Nipponbare_IDs.txt.zip</a><br/>
-		<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip">ORYSJ_nipponbare_LRRlocus_cDNA_flt.fasta.zip</a><br/>
-		<a href="./public/dl/OSJnip_canonic_cDNA.fasta.zip" download="OSJnip_canonic_cDNA.fasta.zip">OSJnip_canonic_cDNA.fasta.zip</a><br/>
-		<a href="./public/dl/OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip" download="OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip">OSJnip_noncanonic_cDNA_wFrameshift.fasta.zip</a><br/>
-		<a href="./public/dl/ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip">ORYSJ_nipponbare_LRRlocus_PEP_flt.fasta.zip</a><br/>
+		<a href="./public/dl/ORYSJ_nipponbare_LRR-CR__01-19-2021.gff.zip" download="ORYSJ_nipponbare_LRR-CR__01-19-2021.gff.zip">ORYSJ_nipponbare_LRR-CR__01-19-2021.gff.zip</a><br/>
+		<a href="./public/dl/OSJnip_LRR-CR_cDNA__01-19-2021.fasta.zip" download="OSJnip_LRR-CR_cDNA__01-19-2021.fasta.zip">OSJnip_LRR-CR_cDNA__01-19-2021.fasta.zip</a><br/>
+		<a href="./public/dl/OSJnip_LRR-CR_CDS__01-19-2021.fasta.zip" download="OSJnip_LRR-CR_CDS__01-19-2021.fasta.zip">OSJnip_LRR-CR_CDS__01-19-2021.fasta.zip</a><br/>
+		<a href="./public/dl/OSJnip_LRR-CR_PEP__01-19-2021.fasta.zip" download="OSJnip_LRR-CR_PEP__01-19-2021.fasta.zip">OSJnip_LRR-CR_PEP__01-19-2021.fasta.zip</a><br/>
+		<a href="./public/dl/OSJnip_noncanonic_cDNA_wFrameshift__01-19-2021.fasta.zip" download="OSJnip_noncanonic_cDNA_wFrameshift__01-19-2021.fasta.zip">OSJnip_noncanonic_cDNA_wFrameshift__01-19-2021.fasta.zip</a><br/>
 		<br/>
 		<p><strong>Kitaake</strong></p>
-		<a href="./public/dl/ORYSJ_kitaake_LRRlocus_flt.gff.zip" download="ORYSJ_kitaake_LRRlocus_flt.gff.zip">ORYSJ_kitaake_LRRlocus_flt.gff.zip</a><br/>
 		<a href="./public/dl/Kitaake_IDs.txt.zip" download="Kitaake_IDs.txt.zip">Kitaake_IDs.txt.zip</a><br/>
-		<a href="./public/dl/ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip">ORYSJ_kitaake_LRRlocus_cDNA_flt.fasta.zip</a><br/>
-		<a href="./public/dl/ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip" download="ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip">ORYSJ_kitaake_LRRlocus_PEP_flt.fasta.zip</a><br/>
+		<a href="./public/dl/ORYSJ_kitaake_LRR-CR__01-19-2021.gff.zip" download="ORYSJ_kitaake_LRR-CR__01-19-2021.gff.zip">ORYSJ_kitaake_LRR-CR__01-19-2021.gff.zip</a><br/>
+		<a href="./public/dl/OSJkit_LRR-CR_cDNA__01-19-2021.fasta.zip" download="OSJkit_LRR-CR_cDNA__01-19-2021.fasta.zip">OSJkit_LRR-CR_cDNA__01-19-2021.fasta.zip</a><br/>
+		<a href="./public/dl/OSJkit_LRR-CR_CDS__01-19-2021.fasta.zip" download="OSJkit_LRR-CR_CDS__01-19-2021.fasta.zip">OSJkit_LRR-CR_CDS__01-19-2021.fasta.zip</a><br/>
+		<a href="./public/dl/OSJkit_noncanonic_cDNA_wFrameshift__01-19-2021.fasta.zip" download="OSJkit_noncanonic_cDNA_wFrameshift__01-19-2021.fasta.zip">OSJkit_noncanonic_cDNA_wFrameshift__01-19-2021.fasta.zip</a><br/>
 		<br/>
 		<p><strong>Orthologous</strong></p>
 		<a href="./public/dl/Nip_Kit_ortho.txt.zip" download="Nip_Kit_ortho.txt.zip">Nip_Kit_ortho.txt.zip</a><br/>
@@ -210,11 +211,11 @@ caracterised by an "X" character.
 		<form>
 		<div class="form-group">
 			<label for="exampleFormControlInput1">Email address</label>
-			<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+			<input type="email" class="form-control" id="email" placeholder="name@example.com">
 		</div>
 		<div class="form-group">
 			<label for="exampleFormControlSelect1">How was your experience on our website ?</label>
-			<select class="form-control" id="exampleFormControlSelect1">
+			<select class="form-control" id="xp">
 			<option>Great</option>
 			<option>Good</option>
 			<option>Ok</option>
@@ -223,9 +224,10 @@ caracterised by an "X" character.
 		</div>
 		<div class="form-group">
 			<label for="exampleFormControlTextarea1">Tell us what you think</label>
-			<textarea class="form-control" id="emailcontent" rows="3"></textarea>
+			<textarea class="form-control" id="feedbackmessage" rows="3"></textarea>
 		</div>
-		<button id="submitfeedback" type="submit" class="btn btn-primary">Submit</button>
+		<button id="submitfeedback" type="submit" class="btn btn-outline-dark">Submit</button>
+		<button id="submitfeedbackok" style="display: none" class="btn btn-outline-success" disabled>Thank you :)</button>
 	</form>
 </div>
 

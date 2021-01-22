@@ -1336,14 +1336,18 @@ document.getElementById("feedbackbutton").addEventListener("click", function(e) 
 
 document.getElementById("submitfeedback").addEventListener("click", function(e) {
 	
-	let data = document.getElementById('emailcontent').value;
+	let data = document.getElementById('feedbackmessage').value;
+	let email = document.getElementById('email').value;
+	let xp = document.getElementById('xp').value;
 
 	//envoie l'email via node
-	socket.emit('feedback', data, function(err, log){
+	socket.emit('feedback', email, xp, data, function(err, log){
 		if(err){
 			console.log(err);
 		}else{
 			console.log(log);
+			$('#submitfeedback').hide();
+			$('#submitfeedbackok').show();
 		}
 	});
 
