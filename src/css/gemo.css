@@ -416,6 +416,7 @@ textarea.form-control {
   position: fixed;
   right: 0;
   bottom: 2%;
+  /*top: 75%;*/
   /*width: 8em;*/
   z-index: 1;
   margin-top: -2.5em;

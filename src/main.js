@@ -100,6 +100,7 @@ selectAccession.addEventListener("change", async function(){
 	
 	//affiche la div si elle est cachée
 	$(".ideo_container_global").collapse('show');
+	$('#floating_legend').show();
 
 	config = initConfig();
 	config.annotationsPath='./data/annotations/annot_'+acc+'.json';
@@ -1298,6 +1299,7 @@ document.getElementById("homebutton").addEventListener("click", function(e) {
 	$('#download').show();
 	$('#feedback').show();
 	$('#DataViz').hide();
+	$('#floating_legend').hide();
 
 	//remet le selcteur d'acc vide
 	$('#selectAccession')[0].value="";
@@ -1315,6 +1317,7 @@ document.getElementById("downloadbutton").addEventListener("click", function(e) 
 	$('#home').show();
 	$('#download').show();
 	$('#feedback').hide();
+	$('#floating_legend').hide();
 
 	//remet le selcteur d'acc vide
 	$('#selectAccession')[0].value="";
@@ -1330,7 +1333,11 @@ document.getElementById("feedbackbutton").addEventListener("click", function(e) 
 	$('#DataViz').hide();
 	$('#home').show();
 	$('#download').hide();
+	$('#floating_legend').hide();
 	$('#feedback').show();
+
+	//remet le selcteur d'acc vide
+	$('#selectAccession')[0].value="";
 
 });
 
