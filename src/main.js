@@ -320,7 +320,7 @@ function drawLegend(){
 	var canvas = document.createElement('canvas');
 	canvas.id = 'legend';
 	canvas.width = 130;
-	canvas.height = 150;
+	canvas.height = 160;
 
 	var ctx = canvas.getContext('2d');
 
@@ -385,7 +385,7 @@ function drawLegendDom(){
 	var canvas = document.createElement('canvas');
 	canvas.id = 'legend_dom';
 	canvas.width = 200;
-	canvas.height = 150;
+	canvas.height = 160;
 
 	var ctx = canvas.getContext('2d');
 	ctx.fillStyle="black";
@@ -397,8 +397,8 @@ function drawLegendDom(){
 	
 	ctx.fillText('LRR:', 10, 45);
 	drawDomain(ctx, "LRR", 60, 35, 10);
-	ctx.fillText('BLAST:', 10, 65);
-	drawDomain(ctx, "BLAST", 60, 55, 10);
+	ctx.fillText('LRR BLAST:', 10, 65);
+	drawDomain(ctx, "BLAST", 85, 55, 10);
 	ctx.fillText('TM:', 10, 85);
 	drawDomain(ctx, "TM", 60, 75, 10);
 	ctx.fillText('NBARC:', 10, 105);
@@ -418,7 +418,7 @@ function drawLegendDom(){
 
 	ctx.fillText('Stop:', 10, 145);
 	drawStop(ctx, 65, 132 )	
-	drawStar(ctx, 65, 139, 2, 4, 2);	
+	drawStar(ctx, 65, 139, 2, 5, 2);	
 
 	ctx.fillText('Frameshift:', 75, 145);
 	drawFrameshift(ctx, 160, 132 )	
@@ -816,7 +816,7 @@ function drawZoom(from, to, report){
 					var stopPos = tab[1];
 					var XstopPos = ((stopPos - startFirstCDS) / 10) + x ;
 					drawStop(ctx, XstopPos-totalGap, countGene * y + yInit )	
-					drawStar(ctx, XstopPos-totalGap, countGene * y + yInit +7, 2, 4, 2);		
+					drawStar(ctx, XstopPos-totalGap, countGene * y + yInit +7, 2, 5, 2);		
 				}
 			});
 
@@ -1155,7 +1155,7 @@ function drawStop(ctx, x, y){
 	ctx.lineWidth = 1;
 	ctx.beginPath();
 	ctx.moveTo(x , y );
-	ctx.lineTo(x , y + 15);
+	ctx.lineTo(x , y + 15 +2);
 	ctx.stroke();
 	ctx.strokeStyle="black";
 	ctx.lineWidth = 1;						
@@ -1168,8 +1168,15 @@ function drawFrameshift(ctx, x, y){
 	ctx.lineWidth = 2;
 	ctx.beginPath();
 	ctx.moveTo(x , y );
-	ctx.lineTo(x , y + 15);
+	ctx.lineTo(x , y + 15 +2);
 	ctx.stroke();
+	//fleche
+	ctx.beginPath();
+	ctx.moveTo(x-2 , y +22 );
+	ctx.lineTo(x , y + 17);
+	ctx.lineTo(x+2 , y + 22);
+	ctx.stroke();
+
 	ctx.strokeStyle="black";
 	ctx.lineWidth = 1;						
 }
@@ -1180,13 +1187,14 @@ function drawStar(ctx, x, y, r, n, inset) {
     ctx.save();
 	ctx.fillStyle="red";
     ctx.beginPath();
-    ctx.translate(x, y);
+    ctx.translate(x, y+12);
     ctx.moveTo(0,0-r);
     for (var i = 0; i < n; i++) {
-        ctx.rotate(Math.PI / n);
+        //ctx.rotate(Math.PI / n); mettre le rotate après le lineTo pour inverser l'étoile
         ctx.lineTo(0, 0 - (r*inset));
         ctx.rotate(Math.PI / n);
-        ctx.lineTo(0, 0 - r);
+		ctx.lineTo(0, 0 - r);
+		ctx.rotate(Math.PI / n);
     }
     ctx.closePath();
     ctx.fill();
