@@ -954,7 +954,7 @@ canvas.addEventListener('click', function (event) {
 						+"<br/>Family: "+element.family 
 						+"<br/>Class: "+element.geneClass
 						+"<br/>Kitaake orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
-						+"<br/>ID: <a target='_blank' href=\"http://rice.plantbiology.msu.edu/cgi-bin/ORF_infopage.cgi?orf="+ID_MSU7+"\">"+ID_MSU7+"</a>"
+						+"<br/>ID MSU: <a target='_blank' href=\"http://rice.plantbiology.msu.edu/cgi-bin/ORF_infopage.cgi?orf="+ID_MSU7+"\">"+ID_MSU7+"</a>"
 						+"<br/>ID IRGSP: <a target='_blank' href=\"https://rapdb.dna.affrc.go.jp/viewer/gbrowse_details/irgsp1?name="+ID_IRGSP+"\">"+ID_IRGSP+"</a>"
 						+"<br/>ID NCBI:";
 						if(ID_NCBI == "None"){
