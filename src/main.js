@@ -396,32 +396,32 @@ function drawLegendDom(){
 	ctx.font='12px Arial';
 	
 	ctx.fillText('LRR:', 10, 45);
-	drawDomain(ctx, "LRR", 60, 35, 10);
+	drawDomain(ctx, "LRR", 85, 35, 10);
 	ctx.fillText('LRR BLAST:', 10, 65);
 	drawDomain(ctx, "BLAST", 85, 55, 10);
 	ctx.fillText('TM:', 10, 85);
-	drawDomain(ctx, "TM", 60, 75, 10);
+	drawDomain(ctx, "TM", 85, 75, 10);
 	ctx.fillText('NBARC:', 10, 105);
-	drawDomain(ctx, "NBARC", 60, 95, 10);
+	drawDomain(ctx, "NBARC", 85, 95, 10);
 	ctx.fillText('Kinase:', 10, 125);
-	drawDomain(ctx, "Kinase", 60, 115, 10);
-	ctx.fillText('Malectin:', 75, 45);
-	drawDomain(ctx, "Malectin", 155, 35, 10);
-	ctx.fillText('Malectin like:', 75, 65);
-	drawDomain(ctx, "Malectin_like", 155, 55, 10);
-	ctx.fillText('Cys-Pair:', 75, 85);
-	drawDomain(ctx, "Cys-Pair", 155, 75, 10);
-	ctx.fillText('PS:', 75, 105);
-	drawDomain(ctx, "PS", 155, 95, 10);
-	ctx.fillText('other:', 75, 125);
-	drawDomain(ctx, "", 155, 115, 10);
+	drawDomain(ctx, "Kinase", 85, 115, 10);
+	ctx.fillText('Malectin:', 100, 45);
+	drawDomain(ctx, "Malectin", 175, 35, 10);
+	ctx.fillText('Malectin like:', 100, 65);
+	drawDomain(ctx, "Malectin_like", 175, 55, 10);
+	ctx.fillText('Cys-Pair:', 100, 85);
+	drawDomain(ctx, "Cys-Pair", 175, 75, 10);
+	ctx.fillText('PS:', 100, 105);
+	drawDomain(ctx, "PS", 175, 95, 10);
+	ctx.fillText('other:', 100, 125);
+	drawDomain(ctx, "", 175, 115, 10);
 
 	ctx.fillText('Stop:', 10, 145);
-	drawStop(ctx, 65, 132 )	
-	drawStar(ctx, 65, 139, 2, 5, 2);	
+	drawStop(ctx, 90, 132 )	
+	drawStar(ctx, 90, 139, 2, 5, 2);	
 
-	ctx.fillText('Frameshift:', 75, 145);
-	drawFrameshift(ctx, 160, 132 )	
+	ctx.fillText('Frameshift:', 100, 145);
+	drawFrameshift(ctx, 180, 132 )	
 
 
 	document.getElementById('legend_div').appendChild(canvas); 
