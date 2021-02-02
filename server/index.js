@@ -1,7 +1,6 @@
 const express = require('express');
 const SocketServer = require('socket.io');
 const http = require('http');
-const nodemailer = require('nodemailer');
 
 // création des serveurs express et socket.io
 const app = express(),
@@ -9,15 +8,20 @@ const app = express(),
 	io = new SocketServer(server),
 	port = 4242;
 
-	
-var transport = nodemailer.createTransport({
-	host: "smtp.mailtrap.io",
-	port: 2525,
-	auth: {
-	  user: "40cc28f99c600a",
-	  pass: "5a6b0b19f5622b"
-	}
-});
+
+const sendmail = require('sendmail')({
+	logger: {
+	  debug: console.log,
+	  info: console.info,
+	  warn: console.warn,
+	  error: console.error
+	},
+	silent: false,
+	devHost: 'localhost', // Default: localhost
+	smtpPort: 25, // Default: 25
+	smtpHost: 'smtp.cirad.fr' // Default: -1 - extra smtp host after resolveMX
+  })
+
 
 io.on('connection', socket => {
 	console.log( `Nouveau visiteur : ${socket.id}` );
@@ -50,20 +54,18 @@ io.on('connection', socket => {
 
 
 	socket.on('feedback', (email, xp, data, callback) => {
-		const message = {
-		from: 'b33b5a51e1-569833@inbox.mailtrap.io', // Sender address
-		to: 'b33b5a51e1-569833@inbox.mailtrap.io',         // List of recipients
-		subject: 'Geloc feedback', // Subject line
-		text: email+"\n"+xp+"\n"+data // Plain text body
-		};
-		transport.sendMail(message, function(err, info) {
-			if (err) {
-			console.log(err)
-			} else {
-			console.log(info);
-			}
+		
+		sendmail({
+			from: 'marilyne.summo@cirad.fr',
+			to: 'marilyne.summo@cirad.fr ',
+			subject: 'GeLoc feedback',
+			html: 'message from: '+email+'<br/>'+xp+'<br/>Message:<br/>'+data,
+		  }, function(err, reply) {
+			console.log(err && err.stack);
+			console.dir(reply);
+			callback(null, data);
 		});
-		callback(null, message.text);
+		
 	});
 	
 

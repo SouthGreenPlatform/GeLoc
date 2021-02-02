@@ -21,6 +21,7 @@
     "nodemailer": "^6.4.17",
     "nodemon": "^2.0.4",
     "regenerator-runtime": "^0.13.7",
+    "sendmail": "^1.6.1",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
