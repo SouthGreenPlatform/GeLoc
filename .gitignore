@@ -5,6 +5,9 @@ public/build/
 # Dependency directories
 node_modules/
 
+# Data directories
+data*
+
 # Optional npm cache directory
 .npm
 
