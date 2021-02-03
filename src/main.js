@@ -128,8 +128,7 @@ selectAccession.addEventListener("change", async function(){
 	//apparition du bouton download
 	$('#download').fadeIn()
 
-	//cache le lettres
-	setTimeout(removeLetters, 100);
+	
 
 	//affiche la selection de chromosome
 	//createSelectChrom();
@@ -143,6 +142,9 @@ selectAccession.addEventListener("change", async function(){
 
 	/////// à virer si je remet les tooltips
 	loadingoff();
+
+	//cache le lettres
+	setTimeout(removeLetters, 100);
 
 	//ajoute listener click chromosome
 	setTimeout(onClickChr, 100);
