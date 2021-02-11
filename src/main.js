@@ -15,7 +15,7 @@ var annotHeight = 3.5;
 let gap = 0;
 let totalGap = 0;
 //cds
-var cdsElements = [];
+var genesElements = [];
 //table des positions stop
 var stopTab = [];
 //table des positions frameshift
@@ -144,6 +144,7 @@ selectAccession.addEventListener("change", async function(){
 	loadingoff();
 
 	//cache le lettres
+	setTimeout(removeLetters, 100);
 	setTimeout(removeLetters, 100);
 
 	//ajoute listener click chromosome
@@ -491,7 +492,6 @@ function drawChromosome(clickedChrom, start, stop){
 	configChr.onBrushMove = writeSelectedRange;
     configChr.onLoad = writeSelectedRange;
 			
-
 	//parse les valeurs de range set de densité pour ne recupérer que celles du chromosomes choisi
 	//let rangeSetChr = config.rangeSet;
 	let newRangeSetChr = [];
@@ -511,8 +511,6 @@ function drawChromosome(clickedChrom, start, stop){
 	//affiche la div
 	//document.getElementById("chr_region").style.display = "block";
 	ideogramChr = new Ideogram(configChr);
-
-
 }
 
 ////////////////////////////////////////////////////////
@@ -522,7 +520,8 @@ function writeSelectedRange() {
 
     var r = ideogramChr.selectedRegion,
         from = r.from.toLocaleString(), // Adds thousands-separator
-        to = r.to.toLocaleString(),
+		to = r.to.toLocaleString(),
+		gffReport = "",
 		extent = r.extent.toLocaleString();
 		chrnum = ideogramChr.config.chromosome;
 	
@@ -544,8 +543,13 @@ function writeSelectedRange() {
         }else{
 			//console.log(report);
 			const gffResult = document.getElementById('gffResult');
-			drawZoom(from, to, report);
+			
+			//drawZoom(from, to, report);
+			
+			//update to draw in reading sense
 			gffResult.innerHTML = report;
+			gffHash = parseGff(report);
+			drawZoom2(from, to, gffHash);
 		}
 	});
 
@@ -608,7 +612,265 @@ fetch('./data/annotations/domains.json')
     domains = data;
 });
 
-// Draw horizontal line with gene position
+$('#readingSense').change(function() {
+	console.log($('#readingSense').is(':checked')+" redraw");
+	drawZoom(from, to, gffResult.innerHTML);
+}); 
+
+// Draw zoom view and CDS view
+function drawZoom2(from, to, gffHash){
+
+	//display div
+	$('.zoom_global').show();
+	$('.cds').show();
+
+	//canvas CDS
+	var canvas = document.getElementById('cds');
+	var ctx = canvas.getContext('2d');
+
+	//canvas zoom
+	var canvasGlobal = document.getElementById('zoom_global');
+	var ctxGlobal = canvasGlobal.getContext('2d');
+
+	//clear before redraw
+	ctxGlobal.clearRect(0, 0, canvasGlobal.width, canvasGlobal.height);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	//
+	let firstCDS = true;
+	let countGene = 0;
+	let x = 40;
+	let y = 50;
+	let yInit = 10;
+	let xFirstCDS = 0;
+	let startFirstCDS = 0;
+	let xCDS;
+	let yCDS;
+	let widthCDS;
+	let startLine = 0;
+	let stopLine = 0;
+	let currentDom;
+
+	//reset CDS elements tab
+	genesElements = [];
+	
+	//nb de bases dans le canvas
+	const seqLength = to - from;
+
+
+	for (var key in gffHash) {
+		var currentGene = gffHash[key];
+		var tab = currentGene;
+		
+		countGene++;
+		firstCDS = true;
+		gap = 0;
+		totalGap =0;
+
+		//position on canvas
+		startGene = ((tab[3]-from) * 800) / seqLength;
+		widthGene = ((tab[4]-tab[3]) * 800) / seqLength;
+
+		//draw line
+		ctxGlobal.beginPath();
+		ctxGlobal.moveTo(x, y );
+		ctxGlobal.lineTo(800+x, y);
+		ctxGlobal.stroke();
+			
+		//draw gene rect
+		ctxGlobal.fillStyle="black";    // color of fill
+		// x y width height	
+		ctxGlobal.fillRect(startGene+x, 40, widthGene, 20); // create rectangle  
+
+		//draw background = element clickable sur le canvas cds
+		ctx.fillStyle="white";
+		ctx.fillRect(xFirstCDS + x -5, countGene * y + yInit -2, 1200, 22);
+
+		var regexpClass = /Class=(\w*)/;
+		var geneClass = tab[8].match(regexpClass)[1];
+		var regexpId = /ID=(\w*)/;
+		var id = tab[8].match(regexpId)[1];
+		var regexpFamily = /Fam=(\w*)/;
+		var family = tab[8].match(regexpFamily)[1];
+
+		//Save gene infos
+		element = {
+			chr: tab[0], 
+			start: tab[3],
+			stop: tab[4],
+			orientation: tab[6],
+			infos: tab[8],
+			geneClass: geneClass,
+			id: id,
+			family: family,
+
+			//global gene view infos
+			genePosX: startGene+x,
+			genePosY: 40,
+			geneWidth: widthGene,
+			geneHeigth: 20,
+
+			//CDS view infos
+			width: 1200,
+			height: 22,
+			top: countGene * y + yInit -2, //first CDS position top
+			left: xFirstCDS + x -5         //first CDS position left
+		}
+		genesElements.push(element);
+
+		//draw gene infos
+		ctx.fillStyle="black";
+		ctx.font = '12px sans-serif';
+		ctx.fillText(element.id+" - "+element.family+" - "+element.geneClass, x, countGene * y + yInit -5);
+
+		//position genomic premier cds
+		startFirstCDS = tab[3];			
+
+		//Traitement des CDS
+		if($('#readingSense').is(':checked')){
+			drawPlusMinus(tab['cds'], countGene, element);
+		}else{
+			drawPlusMinus(tab['cds'], countGene, element);
+			//drawReadingSense(tab['cds']);
+		}
+	}
+}
+
+//draw cds in original sense
+function drawPlusMinus(tab, countGene, element){
+	let firstCDS=true;
+	let x = 40;
+	let y = 50;
+	let yInit = 10;
+	let xFirstCDS = 0;
+	let xCDS;
+	let yCDS;
+	let widthCDS;
+	//canvas CDS
+	var canvas = document.getElementById('cds');
+	var ctx = canvas.getContext('2d');
+
+	tab.forEach((cds) => {
+		console.log("cds"+cds);
+		
+
+		//convert bp to pixel
+		startCDS = cds[3];
+		stopCDS = cds[4];
+		widthCDS = (cds[4] - cds[3]) / 10;
+		yCDS = countGene * y + yInit;
+		//position du début du CDS
+		// largeur / 10 + x de départ - le gap si on a coupé dans l'intron
+		xCDS = (cds[3] - element.start) / 10 + x - totalGap;
+
+		//identifiant cds
+		var regexpCDSID = /.*(cds_\d+);.*/;
+		if (cds[8].match(regexpCDSID)) {
+			cdsid = cds[8].match(regexpCDSID)[1];
+		}else{
+			cdsid = "";
+		}
+
+		//console.log("plusminus"+cds[6]);
+
+		//variable pour les plus ou minus
+		if(cds[6] == "+"){
+			ecart = 5;
+			plusMinus = "plus";
+		}else{
+			ecart = -5;
+			plusMinus = "minus";
+		}
+		
+		//draw first CDS
+		if (firstCDS){
+			//Draw plus or minus CDS
+			drawArrow(ctx, xCDS-20 , yCDS, 3, plusMinus, element.family);
+			drawCDS(ctx, xCDS, yCDS, widthCDS);
+			startLine = xCDS + widthCDS;
+			firstCDS = false;
+		
+		//Draw other CDS
+		}else{
+			//line to bloc
+			stopLine = xCDS;
+			
+			//dessine la ligne et update le gap
+			drawLine(ctx, startLine, stopLine, yCDS );
+			
+			//fleche + ou -
+			//enlève l'éventuel gap supplémentaire calculé en dessinant la ligne
+			drawCDS(ctx, xCDS-gap, yCDS, widthCDS);
+			startLine = xCDS-gap + widthCDS;
+		}
+
+		//draw domain if it is inside the current CDS
+		if(cdsid != ""){
+			let currentGene = element.id;
+			
+			if(domains[currentGene] !== undefined){
+				cdsDom = domains[currentGene][cdsid];
+			}
+
+			if(cdsDom !== undefined){
+				//console.log("current Gene  : "+currentGene+ " cdsid " +cdsid+ " dom :  "+ JSON.stringify(cdsDom));
+				
+				//pour chaque type de domain
+				for(key in cdsDom){
+					//console.log(key);
+					let currentDom = cdsDom[key];
+					currentDom.forEach(dom => {
+						var domStart = dom.match(/(.*);(.*)/)[1];
+						var domStop = dom.match(/(.*);(.*)/)[2];
+						var domLength = (domStop - domStart) /10;
+						//console.log(domStart +" "+domStop);
+
+						//domain position in px
+						var xDomStart = ((domStart - element.start) / 10) + x- totalGap ;
+						//var xDomStop = ((domStop - startFirstCDS) / 10) + x- totalGap ;
+
+						drawDomain(ctx, key, xDomStart , countGene * y + yInit +1, domLength);
+					});
+				}
+			} 
+		}
+		
+		
+		//draw stop if it is inside the current CDS
+		stopTab.forEach(line => {
+			var tab = line.split(/\t/);
+			if(tab[0] == element.id && tab[1] <= stopCDS && tab[1] >= startCDS){
+					
+				//stop position
+				var stopPos = tab[1];
+				var XstopPos = ((stopPos - element.start) / 10) + x ;
+				drawStop(ctx, XstopPos-totalGap, countGene * y + yInit )	
+				drawStar(ctx, XstopPos-totalGap, countGene * y + yInit +7, 2, 5, 2);		
+			}
+		});
+
+		//draw frameshift if it is inside the current CDS
+		fsTab.forEach(line => {
+			if(line.length >0){
+				//console.log(line);
+			
+				var regexpFS = /(.*);frameshift;(.*)/;
+				var idFS = line.match(regexpFS)[1];
+				var posFS = line.match(regexpFS)[2];
+
+				if(idFS == element.id && posFS <= stopCDS && posFS >= startCDS){
+						
+					//stop position
+					var xFsPos = ((posFS - element.start) / 10) + x ;
+					drawFrameshift(ctx, xFsPos - totalGap, countGene * y + yInit )	
+					//console.log("frameshift "+ posFS + " gap "+ gap+" totalGap "+totalGap);	
+				} 
+			}
+		});	
+	});
+}
+
+// Draw zoom view and CDS view
 function drawZoom(from, to, report){
 
 	//display div
@@ -643,7 +905,7 @@ function drawZoom(from, to, report){
 	let currentDom;
 
 	//reset CDS elements tab
-	cdsElements = [];
+	genesElements = [];
 	
 	//nb de bases dans le canvas
 	const seqLength = to - from;
@@ -714,7 +976,7 @@ function drawZoom(from, to, report){
 				top: countGene * y + yInit -2, //first CDS position top
 				left: xFirstCDS + x -5         //first CDS position left
 			}
-			cdsElements.push(element);
+			genesElements.push(element);
 
 			//draw gene infos
 			ctx.fillStyle="black";
@@ -753,6 +1015,10 @@ function drawZoom(from, to, report){
 			}else{
 				ecart = -5;
 				plusMinus = "minus";
+
+				//calcul des positions px pour l'affichage reading sense
+				
+
 			}
 			
 			//draw first CDS
@@ -839,16 +1105,38 @@ function drawZoom(from, to, report){
 						//console.log("frameshift "+ posFS + " gap "+ gap+" totalGap "+totalGap);	
 					} 
 				}
-				
-			});
-
-
-			
+			});	
 		}
 	});
-
-
 }
+
+
+
+//parsing GFF to hash
+function parseGff(report){
+	let gffLines = report.split('\n');
+	var gffHash = {};
+	geneNumber =0;
+
+	//parsing GFF file
+	gffLines.forEach(line => {
+		var tab = line.split(/\t/);
+
+		//Ligne gene
+		if(tab[2] == "gene"){
+			geneNumber++;
+			gffHash[geneNumber]=tab;
+			gffHash[geneNumber]['cds']=[];
+		}
+		//Ligne gene
+		if(tab[2] == "CDS"){
+			gffHash[geneNumber]['cds'].push(tab);
+		}
+	});
+	//console.log(gffHash);
+	return gffHash;
+}
+
 
 //canvas CDS
 var canvas = document.getElementById('cds');
@@ -870,7 +1158,7 @@ canvas.addEventListener('mousemove', function (event) {
 	ctxSelected.clearRect(0, 0, canvasSelected.width, canvasSelected.height);
 
 	// Collision detection between clicked offset and element.
-	cdsElements.forEach(function (element) {
+	genesElements.forEach(function (element) {
 		if (y > element.top -20 && y < element.top + element.height
 			&& x > element.left && x < element.left + element.width) {
 
@@ -892,6 +1180,7 @@ canvas.addEventListener('mousemove', function (event) {
 	
 });
 
+
 //fonction click sur un gene / CDS
 canvas.addEventListener('click', function (event) {
 
@@ -901,7 +1190,7 @@ canvas.addEventListener('click', function (event) {
 	var y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoffset.top) + 1;
 
 	// Collision detection between clicked offset and element.
-	cdsElements.forEach(function (element) {
+	genesElements.forEach(function (element) {
 		if (y > element.top && y < element.top + element.height
 			&& x > element.left && x < element.left + element.width) {
 
@@ -1074,6 +1363,7 @@ canvas.addEventListener('click', function (event) {
 
 //Draw oriented CDS
 function drawArrow(ctx, x, y, width, orientation, family){
+	console.log("draw arrow "+x+" "+y+" "+width+" "+orientation+" "+family);
 	ctx.save();
 
 	if(family == "RLK"){

@@ -505,6 +505,11 @@ textarea.form-control {
     
 }
 
+#switch {
+  line-height: 20px;
+  
+}
+
 #selected_region {
 margin-left: 2em;
 }

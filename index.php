@@ -92,9 +92,15 @@
 						<option value=""></option>
 						<option value="Nipponbare">Nipponbare</option>
 						<option value="Kitaake">Kitaake</option>
+
 					</select>
+					<div id="switch" class="custom-control custom-switch">
+						<input type="checkbox" class="custom-control-input" id="readingSense" checked>
+						<label class="custom-control-label" for="readingSense">Show genes in reading sense</label>
+					</div>
 					
 					<!-- search-->  
+					<br/>
 					<div>
 						<input style="width:60%; display:inline-block;" id="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by ID" aria-label="Search">
 						<button style="display:inline-block;" id="search" class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</button>
@@ -276,7 +282,7 @@ caracterised by an "X" character.
 		</canvas>
 	</div>
 
-	<div id="chr_region" heigth="300px" style="display: none;">
+	<div id="chr_region" heigth="300px">
 	<!-- The GFF info goes here. -->
 
 		<div class='container'>
