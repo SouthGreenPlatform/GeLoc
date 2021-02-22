@@ -614,7 +614,8 @@ fetch('./data/annotations/domains.json')
 
 $('#readingSense').change(function() {
 	console.log($('#readingSense').is(':checked')+" redraw");
-	drawZoom(from, to, gffResult.innerHTML);
+	//drawZoom2(from, to, gffHash);
+	writeSelectedRange();
 }); 
 
 // Draw zoom view and CDS view
@@ -727,13 +728,158 @@ function drawZoom2(from, to, gffHash){
 		startFirstCDS = tab[3];			
 
 		//Traitement des CDS
-		if($('#readingSense').is(':checked')){
-			drawPlusMinus(tab['cds'], countGene, element);
+		//console.log(element.orientation);
+		if($('#readingSense').is(':checked') && element.orientation == "-"){
+			//drawPlusMinus(tab['cds'], countGene, element);
+			console.log("draw reading sense");
+			drawReadingSense(tab['cds'], countGene, element);
 		}else{
-			drawPlusMinus(tab['cds'], countGene, element);
-			//drawReadingSense(tab['cds']);
+			console.log("draw plus minus");
+			drawPlusMinus(tab['cds'], countGene, element);	
 		}
 	}
+}
+
+//draw cds in original sense
+function drawReadingSense(tab, countGene, element){
+	let firstCDS=true;
+	let x = 40;
+	let y = 50;
+	let yInit = 10;
+	let xFirstCDS = x;
+	let xCDS;
+	let yCDS;
+	let widthCDS;
+	let widthLine;
+	let stopCDS =0;
+	let currentPosition = 0;
+	//canvas CDS
+	var canvas = document.getElementById('cds');
+	var ctx = canvas.getContext('2d');
+
+	//retourne l'ordre des cds
+	tab.reverse();
+
+	tab.forEach((cds) => {
+		
+		//convert bp to pixel
+		startCDS = cds[3]; //bp
+		stopCDS = cds[4];  //bp
+		widthCDS = (cds[4] - cds[3]) / 10; //px
+		//console.log(widthCDS);
+		yCDS = countGene * y + yInit; //px
+		//widthLine = currentPosition + cds[4] /10 - totalGap - element.geneWidth;
+		//console.log("widthLine "+widthLine);
+
+		//position du début du CDS dessiné en sens inverse
+		// stop / 10 + x de départ - le gap si on a coupé dans l'intron - largeur du gene 
+		//xCDS = (stopCDS - element.start) / 10 + x - totalGap; //px
+		//xCDS = (startCDS - element.start) / 10 + x - totalGap; //px
+		// 		position en partant du début du gene /10
+		//xCDS = (startCDS - element.start) / 10 + x - totalGap +(startCDS - element.start) / 10; //px
+		xCDS = Math.abs(stopCDS - element.stop) / 10 + x - totalGap; //px
+		console.log(totalGap);
+
+		//identifiant cds
+		var regexpCDSID = /.*(cds_\d+);.*/;
+		if (cds[8].match(regexpCDSID)) {
+			cdsid = cds[8].match(regexpCDSID)[1];
+		}else{
+			cdsid = "";
+		}
+
+		//variable pour les plus ou minus
+		if(cds[6] == "+"){
+			plusMinus = "plus";
+		}else{
+			plusMinus = "minus";
+		}
+		
+		//draw first CDS
+		if (firstCDS){
+			//Draw plus or minus CDS
+			xCDS = x;
+			drawArrow(ctx, xFirstCDS-20 , yCDS, 3, plusMinus, element.family);
+			console.log("first xCDS "+ xCDS+" widthCDS "+widthCDS);
+			drawCDS(ctx, xCDS, yCDS, widthCDS);
+			startLine = xCDS + widthCDS;
+			firstCDS = false;
+			currentPosition = startLine;
+		
+		//Draw other CDS
+		}else{
+
+			//line to bloc
+			stopLine = xCDS;
+			//stopLine = startLine + cds[4] / 10 - totalGap - element.geneWidth;
+			
+			//dessine la ligne et update le gap
+			drawLine(ctx, startLine, stopLine, yCDS );
+			currentPosition = stopLine - gap; //pas totalgap
+			
+			//fleche + ou -
+			//enlève l'éventuel gap supplémentaire calculé en dessinant la ligne
+			drawCDS(ctx, currentPosition, yCDS, widthCDS);
+			console.log("other xCDS "+ xCDS+" widthCDS "+widthCDS);
+			startLine = currentPosition + widthCDS;
+			currentPosition = startLine;
+		}
+ 
+		//draw domain if it is inside the current CDS
+		if(cdsid != ""){
+			let currentGene = element.id;
+			
+			if(domains[currentGene] !== undefined){
+				cdsDom = domains[currentGene][cdsid];
+			}
+
+			if(cdsDom !== undefined){
+				//pour chaque type de domain
+				for(key in cdsDom){
+					let currentDom = cdsDom[key];
+					currentDom.forEach(dom => {
+						var domStart = dom.match(/(.*);(.*)/)[1];
+						var domStop = dom.match(/(.*);(.*)/)[2];
+						var domLength = (domStop - domStart) /10;
+						//domain position in px
+						//var xDomStart = ((domStart - element.start) / 10) + x- totalGap ;
+						var xDomStart = (Math.abs(domStop - element.stop) / 10) + x- totalGap ;
+						drawDomain(ctx, key, xDomStart , countGene * y + yInit +1, domLength);
+					});
+				}
+			} 
+		}
+		
+		
+		//draw stop if it is inside the current CDS
+		stopTab.forEach(line => {
+			var tab = line.split(/\t/);
+			if(tab[0] == element.id && tab[1] <= stopCDS && tab[1] >= startCDS){
+					
+				//stop position
+				var stopPos = tab[1];
+				var XstopPos = (Math.abs(stopPos - element.stop) / 10) + x ;
+				drawStop(ctx, XstopPos-totalGap, countGene * y + yInit )	
+				drawStar(ctx, XstopPos-totalGap, countGene * y + yInit +7, 2, 5, 2);		
+			}
+		});
+
+		//draw frameshift if it is inside the current CDS
+		fsTab.forEach(line => {
+			if(line.length >0){
+				var regexpFS = /(.*);frameshift;(.*)/;
+				var idFS = line.match(regexpFS)[1];
+				var posFS = line.match(regexpFS)[2];
+
+				if(idFS == element.id && posFS <= stopCDS && posFS >= startCDS){
+						
+					//stop position
+					var xFsPos = (Math.abs(posFS - element.stop) / 10) + x ;
+					drawFrameshift(ctx, xFsPos - totalGap, countGene * y + yInit )	
+				} 
+			}
+		});
+	});
 }
 
 //draw cds in original sense
@@ -751,7 +897,7 @@ function drawPlusMinus(tab, countGene, element){
 	var ctx = canvas.getContext('2d');
 
 	tab.forEach((cds) => {
-		console.log("cds"+cds);
+		//console.log("cds"+cds);
 		
 
 		//convert bp to pixel
@@ -771,14 +917,10 @@ function drawPlusMinus(tab, countGene, element){
 			cdsid = "";
 		}
 
-		//console.log("plusminus"+cds[6]);
-
 		//variable pour les plus ou minus
 		if(cds[6] == "+"){
-			ecart = 5;
 			plusMinus = "plus";
 		}else{
-			ecart = -5;
 			plusMinus = "minus";
 		}
 		
@@ -813,22 +955,15 @@ function drawPlusMinus(tab, countGene, element){
 			}
 
 			if(cdsDom !== undefined){
-				//console.log("current Gene  : "+currentGene+ " cdsid " +cdsid+ " dom :  "+ JSON.stringify(cdsDom));
-				
 				//pour chaque type de domain
 				for(key in cdsDom){
-					//console.log(key);
 					let currentDom = cdsDom[key];
 					currentDom.forEach(dom => {
 						var domStart = dom.match(/(.*);(.*)/)[1];
 						var domStop = dom.match(/(.*);(.*)/)[2];
 						var domLength = (domStop - domStart) /10;
-						//console.log(domStart +" "+domStop);
-
 						//domain position in px
 						var xDomStart = ((domStart - element.start) / 10) + x- totalGap ;
-						//var xDomStop = ((domStop - startFirstCDS) / 10) + x- totalGap ;
-
 						drawDomain(ctx, key, xDomStart , countGene * y + yInit +1, domLength);
 					});
 				}
@@ -852,8 +987,6 @@ function drawPlusMinus(tab, countGene, element){
 		//draw frameshift if it is inside the current CDS
 		fsTab.forEach(line => {
 			if(line.length >0){
-				//console.log(line);
-			
 				var regexpFS = /(.*);frameshift;(.*)/;
 				var idFS = line.match(regexpFS)[1];
 				var posFS = line.match(regexpFS)[2];
@@ -863,7 +996,6 @@ function drawPlusMinus(tab, countGene, element){
 					//stop position
 					var xFsPos = ((posFS - element.start) / 10) + x ;
 					drawFrameshift(ctx, xFsPos - totalGap, countGene * y + yInit )	
-					//console.log("frameshift "+ posFS + " gap "+ gap+" totalGap "+totalGap);	
 				} 
 			}
 		});	
@@ -1010,10 +1142,8 @@ function drawZoom(from, to, report){
 
 			//variable pour les plus ou minus
 			if(tab[6] == "+"){
-				ecart = 5;
 				plusMinus = "plus";
 			}else{
-				ecart = -5;
 				plusMinus = "minus";
 
 				//calcul des positions px pour l'affichage reading sense
@@ -1214,7 +1344,7 @@ canvas.addEventListener('click', function (event) {
 					idsLines.forEach(line => {
 						var tab = line.split(/\t/);
 						if(element.id == tab[0]){
-							console.log(tab[0] +tab[1] +tab[2] +tab[3] +tab[4]);
+							//console.log(tab[0] +tab[1] +tab[2] +tab[3] +tab[4]);
 							ID_MSU7 = tab[1];
 							ID_IRGSP = tab[2];
 							ID_NCBI = tab[3];
@@ -1313,7 +1443,7 @@ canvas.addEventListener('click', function (event) {
 								orthologous = tab[0];
 							}
 						});
-						console.log(orthologous);
+						//console.log(orthologous);
 
 					//affiche la gene card
 					document.getElementById("gene_card").style.display = "block";
@@ -1363,7 +1493,7 @@ canvas.addEventListener('click', function (event) {
 
 //Draw oriented CDS
 function drawArrow(ctx, x, y, width, orientation, family){
-	console.log("draw arrow "+x+" "+y+" "+width+" "+orientation+" "+family);
+	//console.log("draw arrow "+x+" "+y+" "+width+" "+orientation+" "+family);
 	ctx.save();
 
 	if(family == "RLK"){
@@ -1691,7 +1821,7 @@ function searchKit(keyword){
 		idsLines.forEach(line => {
 			var tab = line.split(/\t/);
 			if(keyword == tab[0] || tab[1].match(keyword)){
-				console.log(line);
+				//console.log(line);
 				ID_OsKitaake = tab[1];
 				foundKit = true;
 				resultIdKit += "<a class='resLink2' href='#'>"+tab[0]+"</a><br/>";
@@ -1749,7 +1879,7 @@ function searchNip(keyword){
 		idsLines.forEach(line => {
 			var tab = line.split(/\t/);
 			if(keyword == tab[0] || keyword == tab[1] || keyword == tab[2] || keyword == tab[3] || tab[4].match(keyword)){
-				console.log(line);
+				//console.log(line);
 				ID_MSU7 = tab[1];
 				ID_IRGSP = tab[2];
 				ID_NCBI = tab[3];
