@@ -447,7 +447,7 @@ function onClickChr(){
 				clickedChrom = "0"+clickedChrom;
 				clickedChrom = parseInt(clickedChrom);
 			} 
-			console.log("draw chr "+ clickedChrom);
+			//console.log("draw chr "+ clickedChrom);
 
 			//dessine le chromosome
 			drawChromosome(clickedChrom, 10000000, 12000000);
@@ -613,7 +613,7 @@ fetch('./data/annotations/domains.json')
 });
 
 $('#readingSense').change(function() {
-	console.log($('#readingSense').is(':checked')+" redraw");
+	//console.log($('#readingSense').is(':checked')+" redraw");
 	//drawZoom2(from, to, gffHash);
 	writeSelectedRange();
 }); 
@@ -731,10 +731,10 @@ function drawZoom2(from, to, gffHash){
 		//console.log(element.orientation);
 		if($('#readingSense').is(':checked') && element.orientation == "-"){
 			//drawPlusMinus(tab['cds'], countGene, element);
-			console.log("draw reading sense");
+			//console.log("draw reading sense");
 			drawReadingSense(tab['cds'], countGene, element);
 		}else{
-			console.log("draw plus minus");
+			//console.log("draw plus minus");
 			drawPlusMinus(tab['cds'], countGene, element);	
 		}
 	}
@@ -768,17 +768,10 @@ function drawReadingSense(tab, countGene, element){
 		widthCDS = (cds[4] - cds[3]) / 10; //px
 		//console.log(widthCDS);
 		yCDS = countGene * y + yInit; //px
-		//widthLine = currentPosition + cds[4] /10 - totalGap - element.geneWidth;
-		//console.log("widthLine "+widthLine);
 
 		//position du début du CDS dessiné en sens inverse
-		// stop / 10 + x de départ - le gap si on a coupé dans l'intron - largeur du gene 
-		//xCDS = (stopCDS - element.start) / 10 + x - totalGap; //px
-		//xCDS = (startCDS - element.start) / 10 + x - totalGap; //px
-		// 		position en partant du début du gene /10
-		//xCDS = (startCDS - element.start) / 10 + x - totalGap +(startCDS - element.start) / 10; //px
 		xCDS = Math.abs(stopCDS - element.stop) / 10 + x - totalGap; //px
-		console.log(totalGap);
+		//console.log(totalGap);
 
 		//identifiant cds
 		var regexpCDSID = /.*(cds_\d+);.*/;
@@ -799,8 +792,9 @@ function drawReadingSense(tab, countGene, element){
 		if (firstCDS){
 			//Draw plus or minus CDS
 			xCDS = x;
-			drawArrow(ctx, xFirstCDS-20 , yCDS, 3, plusMinus, element.family);
-			console.log("first xCDS "+ xCDS+" widthCDS "+widthCDS);
+			//drawArrow(ctx, xFirstCDS-20 , yCDS, 3, plusMinus, element.family);
+			drawSign(ctx, xFirstCDS-20 , yCDS, 3, plusMinus, element.family);
+			//console.log("first xCDS "+ xCDS+" widthCDS "+widthCDS);
 			drawCDS(ctx, xCDS, yCDS, widthCDS);
 			startLine = xCDS + widthCDS;
 			firstCDS = false;
@@ -820,7 +814,7 @@ function drawReadingSense(tab, countGene, element){
 			//fleche + ou -
 			//enlève l'éventuel gap supplémentaire calculé en dessinant la ligne
 			drawCDS(ctx, currentPosition, yCDS, widthCDS);
-			console.log("other xCDS "+ xCDS+" widthCDS "+widthCDS);
+			//console.log("other xCDS "+ xCDS+" widthCDS "+widthCDS);
 			startLine = currentPosition + widthCDS;
 			currentPosition = startLine;
 		}
@@ -927,7 +921,8 @@ function drawPlusMinus(tab, countGene, element){
 		//draw first CDS
 		if (firstCDS){
 			//Draw plus or minus CDS
-			drawArrow(ctx, xCDS-20 , yCDS, 3, plusMinus, element.family);
+			//drawArrow(ctx, xCDS-20 , yCDS, 3, plusMinus, element.family);
+			drawSign(ctx, xCDS-20 , yCDS, 3, plusMinus, element.family);
 			drawCDS(ctx, xCDS, yCDS, widthCDS);
 			startLine = xCDS + widthCDS;
 			firstCDS = false;
@@ -1154,7 +1149,8 @@ function drawZoom(from, to, report){
 			//draw first CDS
 			if (firstCDS){
 				//Draw plus or minus CDS
-				drawArrow(ctx, xCDS-20 , yCDS, 3, plusMinus, element.family);
+				//drawArrow(ctx, xCDS-20 , yCDS, 3, plusMinus, element.family);
+				drawSign(ctx, xCDS-20 , yCDS, 3, plusMinus, element.family);
 				drawCDS(ctx, xCDS, yCDS, widthCDS);
 				startLine = xCDS + widthCDS;
 				firstCDS = false;
@@ -1490,10 +1486,9 @@ canvas.addEventListener('click', function (event) {
 
 
 
-
 //Draw oriented CDS
-function drawArrow(ctx, x, y, width, orientation, family){
-	//console.log("draw arrow "+x+" "+y+" "+width+" "+orientation+" "+family);
+function drawSign(ctx, x, y, width, orientation, family){
+	//console.log("draw sign "+x+" "+y+" "+width+" "+orientation+" "+family);
 	ctx.save();
 
 	if(family == "RLK"){
@@ -1506,31 +1501,69 @@ function drawArrow(ctx, x, y, width, orientation, family){
 		ctx.fillStyle="#8D8D8D";
 		ctx.strokeStyle="#8D8D8D";
 	}
-	
-	if(orientation == "plus"){
-		ctx.beginPath();
-		ctx.moveTo(x, y );
-		ctx.lineTo(x+width, y);      //--------->
-		ctx.lineTo(x+width+5, y+7);	 //          \
-		ctx.lineTo(x+width, y+15);   //          /
-		ctx.lineTo(x, y+15);        //<---------
-		ctx.lineTo(x+5, y+7); 		 // /
-		ctx.lineTo(x, y);		     // \  (retour point de départ)  
-		ctx.stroke();
-		ctx.fill();
 
+	if($('#readingSense').is(':checked') ){
+		if(orientation == "plus"){
+			//console.log("plus");
+			let l = 5;
+			let w = 3;
+			x = x+l;
+			ctx.beginPath();
+			ctx.moveTo(x, y );
+			ctx.lineTo(x+w, y);      	//    -->
+			ctx.lineTo(x+w, y+l);	 	//       |
+			ctx.lineTo(x+w+l, y+l);    	//       -->
+			ctx.lineTo(x+w+l, y+l +w);  //			|
+			ctx.lineTo(x+w, y+l +w); 	// 		 <--
+			ctx.lineTo(x+w, y+l +w +l); // 		|
+			ctx.lineTo(x, y+l +w +l);   // 	  <--
+			ctx.lineTo(x, y+l +w);      // 	 |
+			ctx.lineTo(x -l, y+l +w);   // <--
+			ctx.lineTo(x -l, y+l);      // |
+			ctx.lineTo(x, y+l);			// -->
+			ctx.lineTo(x, y);			// 	 |
+			ctx.stroke();
+			ctx.fill();
+	
+		}else{
+			//console.log("moins");
+			ctx.beginPath();
+			ctx.moveTo(x, y+5 );
+			ctx.lineTo(x+13, y+5);      //--------->
+			ctx.lineTo(x+13, y+5+width);   //        /
+			ctx.lineTo(x, y+5+width);         //<---------
+			ctx.lineTo(x, y+5);		     // /  (retour point de départ)  
+			ctx.fill();	
+			ctx.stroke();
+		}	
 	}else{
-		ctx.beginPath();
-		ctx.moveTo(x+5, y );
-		ctx.lineTo(x+5+width, y);      //--------->
-		ctx.lineTo(x+5+width-5, y+7);   //        /
-		ctx.lineTo(x+5+width, y+15);   //         \
-		ctx.lineTo(x+5, y+15);         //<---------
-		ctx.lineTo(x, y+7); 		 // \
-		ctx.lineTo(x+5, y);		     // /  (retour point de départ)  
-		ctx.fill();	
-		ctx.stroke();
-	}	
+		if(orientation == "plus"){
+			//console.log(">>>");
+			ctx.beginPath();
+			ctx.moveTo(x, y );
+			ctx.lineTo(x+width, y);      //--------->
+			ctx.lineTo(x+width+5, y+7);	 //          \
+			ctx.lineTo(x+width, y+15);   //          /
+			ctx.lineTo(x, y+15);        //<---------
+			ctx.lineTo(x+5, y+7); 		 // /
+			ctx.lineTo(x, y);		     // \  (retour point de départ)  
+			ctx.stroke();
+			ctx.fill();
+	
+		}else{
+			//console.log("<<<");
+			ctx.beginPath();
+			ctx.moveTo(x+5, y );
+			ctx.lineTo(x+5+width, y);      //--------->
+			ctx.lineTo(x+5+width-5, y+7);   //        /
+			ctx.lineTo(x+5+width, y+15);   //         \
+			ctx.lineTo(x+5, y+15);         //<---------
+			ctx.lineTo(x, y+7); 		 // \
+			ctx.lineTo(x+5, y);		     // /  (retour point de départ)  
+			ctx.fill();	
+			ctx.stroke();
+		}			
+	}
 	ctx.restore();
 }
 
