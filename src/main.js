@@ -553,6 +553,9 @@ function writeSelectedRange() {
 		}
 	});
 
+	//remonte le scroll
+	$('#cds_div').scrollTop(0);
+
   }
 
 //recupère les coordonnées des codons stop

@@ -164,6 +164,36 @@ To make the best use of GeLoc, we recommend you to download the latest Chrome ve
 <!-- Home -->
 <div id="home" class="container">
 
+	<div id="welcome">
+		<h3>Welcome to GeLoc</h3><br/>
+		<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+			<ol class="carousel-indicators">
+				<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+				<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+				<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+			</ol>
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+				<img class="d-block w-100" src="..." alt="First slide">
+				</div>
+				<div class="carousel-item">
+				<img class="d-block w-100" src="..." alt="Second slide">
+				</div>
+				<div class="carousel-item">
+				<img class="d-block w-100" src="..." alt="Third slide">
+				</div>
+			</div>
+			<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="sr-only">Previous</span>
+			</a>
+			<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="sr-only">Next</span>
+			</a>
+		</div>
+	</div>
+
 	<!-- download -->
 	<div id="download">
 		<h3>Download</h3><br/>
@@ -275,7 +305,7 @@ caracterised by an "X" character.
 
 	</div>
 
-	<div class="cds" style="display: none; width:100%; max-height:500px;max-width:1200px;overflow: scroll;">
+	<div id="cds_div" class="cds" style="display: none; width:100%; max-height:500px;max-width:1200px;overflow: scroll;">
 		<!-- The CDS view goes here. -->
 		<canvas id="cds" height="1200" width="1200">
 			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
