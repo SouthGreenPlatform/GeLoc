@@ -516,7 +516,7 @@ margin-left: 2em;
 
 .zoom_global {
     width: 800px;
-    height: 100px;
+    height: 100px; 
     position: relative;
 }
 
@@ -525,3 +525,4 @@ margin-left: 2em;
 z-index: 2 }
 #zoom_global { position: absolute;
 z-index: 1 }
+

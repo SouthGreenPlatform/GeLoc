@@ -23,6 +23,7 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
  
  <!--GELOC-->
+ <!-- <script src="src/hidpi-canvas.min.js"></script> -->
  <script src="src/main.js" defer ></script>
  <script type="text/javascript" src="src/html2canvas.js"></script>
  <script type="text/javascript" src="src/canvas2image.js"></script>
@@ -166,36 +167,42 @@ To make the best use of GeLoc, we recommend you to download the latest Chrome ve
 
 	<div id="welcome">
 		<h3>Welcome to GeLoc</h3><br/>
-		<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-			<ol class="carousel-indicators">
-				<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-				<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-				<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-			</ol>
-			<div class="carousel-inner">
-				<div class="carousel-item active">
-				<img class="d-block w-100" src="..." alt="First slide">
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="card border-dark">
+				<img class="card-img-top" src="./public/img/select.gif" alt="Card image cap">
+				<div class="card-body">
+					<h5 class="card-title">Special title treatment</h5>
+					<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+					<a href="#" class="btn btn-primary">Go somewhere</a>
 				</div>
-				<div class="carousel-item">
-				<img class="d-block w-100" src="..." alt="Second slide">
-				</div>
-				<div class="carousel-item">
-				<img class="d-block w-100" src="..." alt="Third slide">
 				</div>
 			</div>
-			<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-				<span class="sr-only">Previous</span>
-			</a>
-			<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-				<span class="carousel-control-next-icon" aria-hidden="true"></span>
-				<span class="sr-only">Next</span>
-			</a>
+			<div class="col-sm-4">
+				<div class="card border-dark">
+				<img class="card-img-top" src="./public/img/click_chr.gif" alt="Card image cap">
+				<div class="card-body">
+					<h5 class="card-title">Special title treatment</h5>
+					<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+					<a href="#" class="btn btn-primary">Go somewhere</a>
+				</div>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="card border-dark">
+				<img class="card-img-top" src="./public/img/move_range.gif" alt="Card image cap">
+				<div class="card-body">
+					<h5 class="card-title">Special title treatment</h5>
+					<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+					<a href="#" class="btn btn-primary">Go somewhere</a>
+				</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
 	<!-- download -->
-	<div id="download">
+	<div id="download" style="display: none">
 		<h3>Download</h3><br/>
 		
 		Description of fasta files :
@@ -241,7 +248,7 @@ caracterised by an "X" character.
 	</div>
 
 	<!-- feedback -->
-	<div id="feedback">
+	<div id="feedback" style="display: none">
 		<h3>Feedback</h3><br/>
 
 		<form>
@@ -296,7 +303,7 @@ caracterised by an "X" character.
 
 	<div class="zoom_global" style="display: none; width:100%; overflow: scroll;">
 		<!-- The zoomed view goes here. -->
-		<canvas id="zoom_global" height="80" width="1000">
+		<canvas id="zoom_global" height="300" width="1000">
 			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
 		</canvas>
 		<canvas id="zoom_selected" height="80" width="1000">
