@@ -624,6 +624,8 @@ $('#readingSense').change(function() {
 // Draw zoom view and CDS view
 function drawZoom2(from, to, gffHash){
 
+	//console.log("drawZoom "+ from +" "+ to);
+
 	//display div
 	$('.zoom_global').show();
 	$('.cds').show();
@@ -631,6 +633,7 @@ function drawZoom2(from, to, gffHash){
 	//canvas CDS
 	var canvas = document.getElementById('cds');
 	var ctx = canvas.getContext('2d');
+	//ctx.scale(1.75, 1.75);
 
 	//canvas zoom
 	var canvasGlobal = document.getElementById('zoom_global');
@@ -1762,8 +1765,9 @@ document.getElementById("homebutton").addEventListener("click", function(e) {
 	//affiche la page d'accueil
 	//document.getElementById("home").style.display = "block";
 	$('#home').show();
-	$('#download').show();
-	$('#feedback').show();
+	$('#welcome').show();
+	$('#download').hide();
+	$('#feedback').hide();
 	$('#DataViz').hide();
 	$('#floating_legend').hide();
 
@@ -1781,6 +1785,7 @@ document.getElementById("downloadbutton").addEventListener("click", function(e) 
 	$('#DataViz').hide();
 	
 	$('#home').show();
+	$('#welcome').hide();
 	$('#download').show();
 	$('#feedback').hide();
 	$('#floating_legend').hide();
@@ -1798,6 +1803,7 @@ document.getElementById("feedbackbutton").addEventListener("click", function(e) 
 	
 	$('#DataViz').hide();
 	$('#home').show();
+	$('#welcome').hide();
 	$('#download').hide();
 	$('#floating_legend').hide();
 	$('#feedback').show();

@@ -166,40 +166,37 @@ To make the best use of GeLoc, we recommend you to download the latest Chrome ve
 <div id="home" class="container">
 
 	<div id="welcome">
-		<h3>Welcome to GeLoc</h3><br/>
-		<div class="row">
-			<div class="col-sm-4">
+
+		<!--JUMBOTRON-->
+		<div class="jumbotron jb_welcome">
+		<h1 class="display-2">Welcome to GeLoc</h1><br/>
+		
+		
+		<div class="row justify-content-md-center">
+			<div class="col-sm-3">
 				<div class="card border-dark">
 				<img class="card-img-top" src="./public/img/select.gif" alt="Card image cap">
-				<div class="card-body">
-					<h5 class="card-title">Special title treatment</h5>
-					<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-					<a href="#" class="btn btn-primary">Go somewhere</a>
-				</div>
+				<div class="card-footer bg-transparent border-dark">Select an accession to display</div>
 				</div>
 			</div>
-			<div class="col-sm-4">
+			<div class="col-sm-1"></div>
+			<div class="col-sm-3">
 				<div class="card border-dark">
 				<img class="card-img-top" src="./public/img/click_chr.gif" alt="Card image cap">
-				<div class="card-body">
-					<h5 class="card-title">Special title treatment</h5>
-					<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-					<a href="#" class="btn btn-primary">Go somewhere</a>
-				</div>
+				<div class="card-footer bg-transparent border-dark">Click on a chromosome to browse through</div>
 				</div>
 			</div>
-			<div class="col-sm-4">
+			<div class="col-sm-1"></div>
+			<div class="col-sm-3">
 				<div class="card border-dark">
 				<img class="card-img-top" src="./public/img/move_range.gif" alt="Card image cap">
-				<div class="card-body">
-					<h5 class="card-title">Special title treatment</h5>
-					<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-					<a href="#" class="btn btn-primary">Go somewhere</a>
-				</div>
+				<div class="card-footer bg-transparent border-dark">Navigate and view genes</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	</div> <!--fin du jumbotron-->
 
 	<!-- download -->
 	<div id="download" style="display: none">

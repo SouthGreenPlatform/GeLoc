@@ -386,8 +386,15 @@ textarea.form-control {
 }
 .jumbo-bg > p > img{
     width: 275px;
-
 }
+
+.jb_welcome {
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.9) 100%), url(/geloc/public/img/chromosomes.png);
+  background-size: cover;
+  height: 100%;
+  text-align: center;
+}
+
 
 /*Tooltipster*/
 
