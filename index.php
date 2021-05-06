@@ -34,6 +34,7 @@
  <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
 <script>
   var socket = io('http://195.221.173.169:4242');
+  var release = "current";
 </script>
 
  

@@ -24,6 +24,7 @@ var fsTab = [];
 var domains;
 
 //
+console.log(release);
 
 //Définition des tracks
 var annotationTracks = [
@@ -54,7 +55,7 @@ function initConfig(){
 	let conf = { 
 		organism: "oryza-sativa",
 		//repertoire vers les données de chromosome bands
-		//dataDir: './data/bands/native/',
+		//dataDir: './data_'+release+'/bands/native/',
 		container: '.ideo_container_global',
 		orientation: "vertical",
 		rotatable: false,
@@ -103,21 +104,21 @@ selectAccession.addEventListener("change", async function(){
 	$('#floating_legend').show();
 
 	config = initConfig();
-	config.annotationsPath='./data/annotations/annot_'+acc+'.json';
+	config.annotationsPath='./data_'+release+'/annotations/annot_'+acc+'.json';
 	
 	//charge le fichier densité de l'accession choisie
-	let response = await fetch('./data/density/density_'+acc+'.txt');
+	let response = await fetch('./data_'+release+'/density/density_'+acc+'.txt');
 	annotData = await response.text();
 	//Parse les données de densité
 	config.rangeSet = annotationParser(annotData, config);
     
 	//charge les données de chromosomes de l'accession choisie
 	//fichier tsv
- 	response = await fetch('./data/chromosomes/'+acc+'.tsv');
+ 	response = await fetch('./data_'+release+'/chromosomes/'+acc+'.tsv');
 	chr_tsv = await response.text();
 	//parse les données et config les chrBands
 	chromosomeTsvParser(chr_tsv, config); 
-	//config.dataDir = "./data/bands/native/"+acc+"/";
+	//config.dataDir = "./data_'+release+'/bands/native/"+acc+"/";
 	
 	//supprimer la div de l'image "choose accession"
 	document.getElementById("home").style.display = "none";
@@ -537,7 +538,7 @@ function writeSelectedRange() {
 	//console.log("region from "+from+" to "+to+ " extent "+extent);
 
 	//Appel au serveur
-    socket.emit('run', acc, chrnum, from, to, function(err, report){
+    socket.emit('run', release, acc, chrnum, from, to, function(err, report){
         if(err){
             console.log(err);
         }else{
@@ -559,7 +560,7 @@ function writeSelectedRange() {
   }
 
 //recupère les coordonnées des codons stop
-fetch('./data/annotations/Nip_stop_genomic_pos.txt')
+fetch('./data_'+release+'/annotations/Nip_stop_genomic_pos.txt')
 .then(function(response) {
 	return response.text();
 })
@@ -570,7 +571,7 @@ fetch('./data/annotations/Nip_stop_genomic_pos.txt')
 		//console.log(stopTab);
 	});
 });
-fetch('./data/annotations/Kit_stop_genomic_pos.txt')
+fetch('./data_'+release+'/annotations/Kit_stop_genomic_pos.txt')
 .then(function(response) {
 	return response.text();
 })
@@ -583,7 +584,7 @@ fetch('./data/annotations/Kit_stop_genomic_pos.txt')
 });
 
 //recupère les coordonnées des frameshift
-fetch('./data/annotations/frameshift_NIP.txt')
+fetch('./data_'+release+'/annotations/frameshift_NIP.txt')
 .then(function(response) {
 	return response.text();
 })
@@ -594,7 +595,7 @@ fetch('./data/annotations/frameshift_NIP.txt')
 		//console.log(fsTab);
 	});
 });
-fetch('./data/annotations/frameshift_KIT.txt')
+fetch('./data_'+release+'/annotations/frameshift_KIT.txt')
 .then(function(response) {
 	return response.text();
 })
@@ -606,7 +607,7 @@ fetch('./data/annotations/frameshift_KIT.txt')
 });
 
 //recupère les coordonnées des domaines
-fetch('./data/annotations/domains.json')
+fetch('./data_'+release+'/annotations/domains.json')
 .then(function(response) {
 	return response.json();
 })
@@ -1336,7 +1337,7 @@ canvas.addEventListener('click', function (event) {
 			var Aliases ="";
 			var ID_OsKitaake="";
 			var orthologous="";
-			fetch('./data/ids/'+acc+'_IDs.txt')
+			fetch('./data_'+release+'/ids/'+acc+'_IDs.txt')
 			.then(function(response) {
 				return response.text();
 			})
@@ -1355,7 +1356,7 @@ canvas.addEventListener('click', function (event) {
 					});
 
 					//fichier des orthologues
-					fetch('./data/ids/Nip_Kit_ortho.txt')
+					fetch('./data_'+release+'/ids/Nip_Kit_ortho.txt')
 					.then(function(response) {
 						return orthoTab = response.text();
 					})
@@ -1433,7 +1434,7 @@ canvas.addEventListener('click', function (event) {
 					});
 
 					//fichier des orthologues
-					fetch('./data/ids/Nip_Kit_ortho.txt')
+					fetch('./data_'+release+'/ids/Nip_Kit_ortho.txt')
 					.then(function(response) {
 						return orthoTab = response.text();
 					})
@@ -1854,7 +1855,7 @@ function searchKit(keyword){
 	var foundKit = false;
 	var resultIdKit = "<p>Results in Nipponbare:</p><br/>";
 	//charge le fichier ids Kitaake
-	fetch('./data/ids/Kitaake_IDs.txt')
+	fetch('./data_'+release+'/ids/Kitaake_IDs.txt')
 	.then(function(response) {
 		return response.text();
 	})
@@ -1912,7 +1913,7 @@ function searchNip(keyword){
 	var foundNip = false;
 	var resultIdNip = "<p>Results in Nipponbare:</p><br/>";
 	//charge les fichiers ids Nipponbare
-	fetch('./data/ids/Nipponbare_IDs.txt')
+	fetch('./data_'+release+'/ids/Nipponbare_IDs.txt')
 	.then(function(response) {
 		return response.text();
 	})

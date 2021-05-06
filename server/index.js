@@ -31,12 +31,12 @@ io.on('connection', socket => {
 	  });
 	
 	//run pipeline
-	socket.on('run', (acc, chrnum, from, to, callback) => {
+	socket.on('run', (release, acc, chrnum, from, to, callback) => {
 		console.log("RUN");
 		from = from.replace(/ /g, "");
 		to = to.replace(/ /g, "");
 
-		const gffPath = './data/gff';
+		const gffPath = './data_'+release+'/gff';
 
 		 const { exec } = require("child_process");
 		 console.log(`tabix ${gffPath}/LRR_${acc}.gff.gz Chr${chrnum}:${from}-${to}`);
