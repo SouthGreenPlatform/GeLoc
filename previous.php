@@ -136,7 +136,7 @@ var release = "Release_2021-01-22";
 		<li id="downloadbutton">
 			<a class="accordion-toggle collapsed toggle-switch" data-toggle="collapse" href="#submenu-4">
 				<span class="sidebar-icon"><i class="fa fa-dashboard"></i></span>
-				<span class="sidebar-title">Download data</span>
+				<span class="sidebar-title">Download</span>
 				<b class="caret"></b>
 			</a>
 		</li>  
@@ -166,7 +166,7 @@ var release = "Release_2021-01-22";
 <!-- Message release -->
 <div class="alert alert-warning alert-dismissible fade show" role="alert">
 Hello! 
-This is a previous releases : Release 2021-01-22
+This is a previous release : 2021-01-22
 <br/>
 <a href="index.php">Browse the latest release here</a>
 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
