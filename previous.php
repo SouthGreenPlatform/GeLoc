@@ -1,45 +1,45 @@
 <!DOCTYPE html> 
 <html>
 <head> 
-  <title>GeLoc</title>
-  <meta charset="utf-8">
+<title>GeLoc</title>
+<meta charset="utf-8">
 
-  <!--Bootstrap 4.4-->
+<!--Bootstrap 4.4-->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-  
+
 <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/sandstone/bootstrap.min.css" rel="stylesheet" integrity="sha384-ABdnjefqVzESm+f9z9hcqx2cvwvDNjfrwfW5Le9138qHCMGlNmWawyn/tt4jR4ba" crossorigin="anonymous">  
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.1/d3.min.js"></script>
- <!-- <script src="https://cdn.jsdelivr.net/npm/ideogram@1.16.0/dist/js/ideogram.min.js"></script> -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.1/d3.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/ideogram@1.16.0/dist/js/ideogram.min.js"></script> -->
     
 <!--Ideogram-->
 <!-- <script src="https://cdn.jsdelivr.net/npm/ideogram@1.16.0/dist/js/ideogram.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/ideogram@1.19.0/dist/js/ideogram.min.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/ideogram@1.21.0/dist/js/ideogram.min.js"></script>
-  
+
 <!--D3JS-->
 <script src="https://d3js.org/d3.v5.min.js"></script>
- 
- <!--GELOC-->
- <!-- <script src="src/hidpi-canvas.min.js"></script> -->
- <script src="src/main.js" defer ></script>
- <script type="text/javascript" src="src/html2canvas.js"></script>
- <script type="text/javascript" src="src/canvas2image.js"></script>
 
- <script src="https://d3js.org/d3-axis.v1.min.js"></script>
+<!--GELOC-->
+<!-- <script src="src/hidpi-canvas.min.js"></script> -->
+<script src="src/main.js" defer ></script>
+<script type="text/javascript" src="src/html2canvas.js"></script>
+<script type="text/javascript" src="src/canvas2image.js"></script>
+
+<script src="https://d3js.org/d3-axis.v1.min.js"></script>
 
 <!--SocketIO-->
- <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
+<script src="node_modules/socket.io-client/dist/socket.io.js"></script>
 <script>
-  var socket = io('http://195.221.173.169:4242');
-  var release = "current";
+var socket = io('http://195.221.173.169:4242');
+var release = "Release_2021-01-22";
 </script>
 
- 
- <link rel="stylesheet" type="text/css" href="src/css/gemo.css">
- 
+
+<link rel="stylesheet" type="text/css" href="src/css/gemo.css">
+
 <link rel="shortcut icon" href="/gemo/public/img/favicon.ico">
 
 
@@ -49,13 +49,14 @@
 
 
 <!--JUMBOTRON-->
-<div class="jumbotron jumbo-bg">
-  <p class="lead">
-  <img src="./public/img/GeLoc_full.png"></img>
-  </p>
+<div class="jumbotron jumbo-bg-previous">
+	<p class="lead">
+	<img src="./public/img/GeLoc_full.png"></img>
+	</p>
+	
 </div>
 
-  <!-- END OF JUMBOTRON-->
+<!-- END OF JUMBOTRON-->
 
 <div id="loader" class="triple-spinner" style="display:none;"></div>
 
@@ -70,23 +71,23 @@
 			<a class="accordion-toggle collapsed toggle-switch" data-toggle="collapse" href="#submenu-1">
 				<span class="sidebar-icon"><i class="fa fa-dashboard"></i></span>
 				<span class="sidebar-title">Home</span>
-			  	<b class="caret"></b>
+				<b class="caret"></b>
 			</a>
 			<!-- <ul id="submenu-1" class="panel-collapse collapse panel-switch" role="menu">
 			</ul> -->
 		</li>
 
 		<!--DATA-->
-	  	<li>
+		<li>
 			<a class="accordion-toggle collapsed toggle-switch" data-toggle="collapse" href="#submenu-2">
 				<span class="sidebar-icon"><i class="fa fa-dashboard"></i></span>
-				<span class="sidebar-title">Browse data</span>
-			  	<b class="caret"></b>
+				<span class="sidebar-title">Browse data (previous release)</span>
+				<b class="caret"></b>
 			</a>
 			
 
 			<ul id="submenu-2" class="panel-collapse collapse show panel-switch" role="menu">
-			  
+				
 				<li>
 					<!-- select accessions-->  
 					<label for="selectAccession">Accession</label>
@@ -135,8 +136,8 @@
 		<li id="downloadbutton">
 			<a class="accordion-toggle collapsed toggle-switch" data-toggle="collapse" href="#submenu-4">
 				<span class="sidebar-icon"><i class="fa fa-dashboard"></i></span>
-				<span class="sidebar-title">Download</span>
-			  	<b class="caret"></b>
+				<span class="sidebar-title">Download data</span>
+				<b class="caret"></b>
 			</a>
 		</li>  
 		<!-- feedback -->
@@ -144,7 +145,7 @@
 			<a class="accordion-toggle collapsed toggle-switch" data-toggle="collapse" href="#submenu-5">
 				<span class="sidebar-icon"><i class="fa fa-dashboard"></i></span>
 				<span class="sidebar-title">Send feedback</span>
-			  	<b class="caret"></b>
+				<b class="caret"></b>
 			</a>
 		</li> 
 		</ul>
@@ -156,17 +157,18 @@
 <div id=floating_legend>
 	<button type="button" class="btn btn-dark btn-sm" style="display: none" id="legend_button" data-toggle="collapse" data-target="#legend_div" aria-expanded="false" aria-controls="legend_div">	
     Legend
-  	</button>
+	</button>
 	<div class="collapse" id="legend_div" >
 	</div>
 </div>
 <!-- fin legende flottante -->
-		
-<!-- Message navigateur -->
-<div class="alert alert-secondary alert-dismissible fade show" role="alert">
+
+<!-- Message release -->
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
 Hello! 
-This Web site is optimized for viewing in Chrome.
-To make the best use of GeLoc, we recommend you to download the latest Chrome version.
+This is a previous releases : Release 2021-01-22
+<br/>
+<a href="index.php">Browse the latest release here</a>
 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
 </button>
@@ -214,9 +216,9 @@ To make the best use of GeLoc, we recommend you to download the latest Chrome ve
 		
 		<p><strong>2021-05-03 - Latest</strong></p> 
 		<p>Release note...</p>
+		<a href="index.php">Browse the latest release here</a>
 		<p><strong>2021-01-22</strong></p> 
 		<p>Release note...</p>
-		<a href="previous.php">Browse this release here</a>
 	</div>
 
 	<!-- download -->
@@ -337,7 +339,7 @@ caracterised by an "X" character.
 		</canvas>
 	</div>
 
-	<div id="chr_region" heigth="300px" style="display: none;">
+	<div id="chr_region" heigth="300px">
 	<!-- The GFF info goes here. -->
 
 		<div class='container'>

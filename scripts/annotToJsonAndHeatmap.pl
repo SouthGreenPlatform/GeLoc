@@ -27,8 +27,8 @@ my $total =0;
 my $currentChr = "0";
 
 my %track = ( 
-'RLK'     => 0,
-'RLP'     => 1,
+'LRR-RLK'     => 0,
+'LRR-RLP'     => 1,
 'NLR'     => 2,
 );
 

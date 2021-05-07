@@ -388,6 +388,27 @@ textarea.form-control {
     width: 275px;
 }
 
+.logo{
+  width: 275px;
+}
+
+/*Jumbotron for previous releases*/
+.jumbo-bg-previous{
+  background-color: #262721;
+  opacity: 0.33;
+  color: grey;
+  margin-bottom:0px;
+  padding: 10px;
+  border-radius: 0 !important;
+}
+.jumbo-bg-previous > p > img{
+  width: 275px;
+}
+.jumbo-bg-previous > p > a {
+  color: #005B59 !important;
+  font-weight: 500;
+}
+
 .jb_welcome {
   background-image: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.9) 100%), url(/geloc/public/img/chromosomes.png);
   background-size: cover;
@@ -447,7 +468,7 @@ textarea.form-control {
   
 }
 
-#download {
+.home_content {
   line-height: 25px;
   margin-top: 5px;
   border:1px dotted black;
@@ -457,12 +478,12 @@ textarea.form-control {
   padding-right: 5px;
 }
 
-#download > p {
+.home_content > p {
   background: white !important;
   color: black !important;
 }
 
-#download > a {
+.home_content > a {
   background: white !important;
   color: #005B59 !important;
   font-weight: 500;

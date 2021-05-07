@@ -1767,10 +1767,11 @@ document.getElementById("homebutton").addEventListener("click", function(e) {
 	//document.getElementById("home").style.display = "block";
 	$('#home').show();
 	$('#welcome').show();
-	$('#download').hide();
+	$('#download_section').hide();
 	$('#feedback').hide();
 	$('#DataViz').hide();
 	$('#floating_legend').hide();
+	$('#releases').hide();
 
 	//remet le selcteur d'acc vide
 	$('#selectAccession')[0].value="";
@@ -1787,9 +1788,28 @@ document.getElementById("downloadbutton").addEventListener("click", function(e) 
 	
 	$('#home').show();
 	$('#welcome').hide();
-	$('#download').show();
+	$('#download_section').show();
 	$('#feedback').hide();
 	$('#floating_legend').hide();
+	$('#releases').hide();
+
+	//remet le selcteur d'acc vide
+	$('#selectAccession')[0].value="";
+
+});
+
+///////////////////////////
+///// BOUTON RELEASES /////
+///////////////////////////
+document.getElementById("releasebutton").addEventListener("click", function(e) {
+	
+	$('#DataViz').hide();
+	$('#home').show();
+	$('#welcome').hide();
+	$('#download_section').hide();
+	$('#floating_legend').hide();
+	$('#feedback').hide();
+	$('#releases').show();
 
 	//remet le selcteur d'acc vide
 	$('#selectAccession')[0].value="";
@@ -1805,9 +1825,10 @@ document.getElementById("feedbackbutton").addEventListener("click", function(e) 
 	$('#DataViz').hide();
 	$('#home').show();
 	$('#welcome').hide();
-	$('#download').hide();
+	$('#download_section').hide();
 	$('#floating_legend').hide();
 	$('#feedback').show();
+	$('#releases').hide();
 
 	//remet le selcteur d'acc vide
 	$('#selectAccession')[0].value="";
