@@ -694,7 +694,7 @@ function drawZoom2(from, to, gffHash){
 		ctx.fillStyle="white";
 		ctx.fillRect(xFirstCDS + x -5, countGene * y + yInit -2, 1200, 22);
 
-		var regexpClass = /Class=(\w*)/;
+		var regexpClass = /Class=([^\s]*)/;
 		var geneClass = tab[8].match(regexpClass)[1];
 		var regexpId = /ID=(\w*)/;
 		var id = tab[8].match(regexpId)[1];
@@ -1080,7 +1080,7 @@ function drawZoom(from, to, report){
 			ctx.fillStyle="white";
 			ctx.fillRect(xFirstCDS + x -5, countGene * y + yInit -2, 1200, 22);
 
-			var regexpClass = /Class=(\w*)/;
+			var regexpClass = /Class=([^\s]*)/;
 			var geneClass = tab[8].match(regexpClass)[1];
 			var regexpId = /ID=(\w*)/;
 			var id = tab[8].match(regexpId)[1];
