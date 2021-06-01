@@ -220,8 +220,6 @@ To make the best use of GeLoc, we recommend you to download the latest Chrome ve
 	<!-- download -->
 	<div id="download_section" class="home_content" style="display: none">
 		<h3>Download</h3><br/>
-		
-		Description of fasta files :
 
 		<p><strong>Files "Peptides" and "CDS":</strong></p> 
 		<p>These files contain amino acid and nuclotide sequences for LRR-CR genes.
@@ -244,22 +242,22 @@ caracterised by an "X" character.
 </p>
 
 		<p><strong>Nipponbare</strong></p>
-		<a href="./public/dl/Nipponbare_IDs.txt.zip" download="Nipponbare_IDs.txt.zip">Nipponbare_IDs.txt.zip</a><br/>
-		<a href="./public/dl/ORYSJ_nipponbare_LRR-CR__01-19-2021.gff.zip" download="ORYSJ_nipponbare_LRR-CR__01-19-2021.gff.zip">ORYSJ_nipponbare_LRR-CR__01-19-2021.gff.zip</a><br/>
-		<a href="./public/dl/OSJnip_LRR-CR_cDNA__01-19-2021.fasta.zip" download="OSJnip_LRR-CR_cDNA__01-19-2021.fasta.zip">OSJnip_LRR-CR_cDNA__01-19-2021.fasta.zip</a><br/>
-		<a href="./public/dl/OSJnip_LRR-CR_CDS__01-19-2021.fasta.zip" download="OSJnip_LRR-CR_CDS__01-19-2021.fasta.zip">OSJnip_LRR-CR_CDS__01-19-2021.fasta.zip</a><br/>
-		<a href="./public/dl/OSJnip_LRR-CR_PEP__01-19-2021.fasta.zip" download="OSJnip_LRR-CR_PEP__01-19-2021.fasta.zip">OSJnip_LRR-CR_PEP__01-19-2021.fasta.zip</a><br/>
-		<a href="./public/dl/OSJnip_noncanonic_cDNA_wFrameshift__01-19-2021.fasta.zip" download="OSJnip_noncanonic_cDNA_wFrameshift__01-19-2021.fasta.zip">OSJnip_noncanonic_cDNA_wFrameshift__01-19-2021.fasta.zip</a><br/>
+		<a href="./data_current/dl/Nipponbare_IDs.txt.zip" download="Nipponbare_IDs.txt.zip">Nipponbare_IDs.txt.zip</a><br/>
+		<a href="./data_current/dl/Oryza_Kitaake_LRR-CR_cDNA__20210503.fasta.zip" download="Oryza_Kitaake_LRR-CR_cDNA__20210503.fasta.zip">Oryza_Kitaake_LRR-CR_cDNA__20210503.fasta.zip</a><br/>
+		<a href="./data_current/dl/Oryza_Nipponbare_IRGSP-1.0_LRR-CR_cDNA__20210503.fasta.zip" download="Oryza_Nipponbare_IRGSP-1.0_LRR-CR_cDNA__20210503.fasta.zip">Oryza_Nipponbare_IRGSP-1.0_LRR-CR_cDNA__20210503.fasta.zip</a><br/>
+		<a href="./data_current/dl/Oryza_Nipponbare_IRGSP-1.0_LRR-CR_CDS__20210503.fasta.zip" download="Oryza_Nipponbare_IRGSP-1.0_LRR-CR_CDS__20210503.fasta.zip">Oryza_Nipponbare_IRGSP-1.0_LRR-CR_CDS__20210503.fasta.zip</a><br/>
+		<a href="./data_current/dl/Oryza_Nipponbare_IRGSP-1.0_LRR-CR_PEP__20210503.fasta.zip" download="Oryza_Nipponbare_IRGSP-1.0_LRR-CR_PEP__20210503.fasta.zip">Oryza_Nipponbare_IRGSP-1.0_LRR-CR_PEP__20210503.fasta.zip</a><br/>
+		<a href="./data_current/dl/Oryza_Nipponbare_IRGSP-1.0_LRR-CR_cDNA_wFrameshift___20210503.fasta.zip" download="Oryza_Nipponbare_IRGSP-1.0_LRR-CR_cDNA_wFrameshift___20210503.fasta.zip">Oryza_Nipponbare_IRGSP-1.0_LRR-CR_cDNA_wFrameshift___20210503.fasta.zip</a><br/>
 		<br/>
 		<p><strong>Kitaake</strong></p>
-		<a href="./public/dl/Kitaake_IDs.txt.zip" download="Kitaake_IDs.txt.zip">Kitaake_IDs.txt.zip</a><br/>
-		<a href="./public/dl/ORYSJ_kitaake_LRR-CR__01-19-2021.gff.zip" download="ORYSJ_kitaake_LRR-CR__01-19-2021.gff.zip">ORYSJ_kitaake_LRR-CR__01-19-2021.gff.zip</a><br/>
-		<a href="./public/dl/OSJkit_LRR-CR_cDNA__01-19-2021.fasta.zip" download="OSJkit_LRR-CR_cDNA__01-19-2021.fasta.zip">OSJkit_LRR-CR_cDNA__01-19-2021.fasta.zip</a><br/>
-		<a href="./public/dl/OSJkit_LRR-CR_CDS__01-19-2021.fasta.zip" download="OSJkit_LRR-CR_CDS__01-19-2021.fasta.zip">OSJkit_LRR-CR_CDS__01-19-2021.fasta.zip</a><br/>
-		<a href="./public/dl/OSJkit_noncanonic_cDNA_wFrameshift__01-19-2021.fasta.zip" download="OSJkit_noncanonic_cDNA_wFrameshift__01-19-2021.fasta.zip">OSJkit_noncanonic_cDNA_wFrameshift__01-19-2021.fasta.zip</a><br/>
+		<a href="./data_current/dl/Kitaake_IDs.txt.zip" download="Kitaake_IDs.txt.zip">Kitaake_IDs.txt.zip</a><br/>
+		<a href="./data_current/dl/ORYSJ_kitaake_LRR-CR__20210503.gff.zip" download="ORYSJ_kitaake_LRR-CR__20210503.gff.zip">ORYSJ_kitaake_LRR-CR__20210503.gff.zip</a><br/>
+		<a href="./data_current/dl/Oryza_Kitaake_LRR-CR_cDNA__20210503.fasta.zip" download="Oryza_Kitaake_LRR-CR_cDNA__20210503.fasta.zip">Oryza_Kitaake_LRR-CR_cDNA__20210503.fasta.zip</a><br/>
+		<a href="./data_current/dl/Oryza_Kitaake_LRR-CR_CDS__20210503.fasta.zip" download="Oryza_Kitaake_LRR-CR_CDS__20210503.fasta.zip">Oryza_Kitaake_LRR-CR_CDS__20210503.fasta.zip</a><br/>
+		<a href="./data_current/dl/Oryza_Kitaake_LRR-CR_cDNA_wFrameshift__20210503.fasta.zip" download="Oryza_Kitaake_LRR-CR_cDNA_wFrameshift__20210503.fasta.zip">Oryza_Kitaake_LRR-CR_cDNA_wFrameshift__20210503.fasta.zip</a><br/>
 		<br/>
 		<p><strong>Orthologous</strong></p>
-		<a href="./public/dl/Nip_Kit_ortho.txt.zip" download="Nip_Kit_ortho.txt.zip">Nip_Kit_ortho.txt.zip</a><br/>
+		<a href="./data_current/dl/Nip_Kit_ortho.txt.zip" download="Nip_Kit_ortho.txt.zip">Nip_Kit_ortho.txt.zip</a><br/>
 
 	</div>
 
