@@ -213,10 +213,8 @@ To make the best use of GeLoc, we recommend you to download the latest Chrome ve
 		<h3>Releases</h3><br/>
 		
 		<p><strong>2021-05-03 - Latest</strong></p> 
-		<p>Release note...</p>
-		<p><strong>2021-01-22</strong></p> 
-		<p>Release note...</p>
-		<a href="previous.php">Browse this release here</a>
+		<p><strong>2021-01-22</strong>  <a href="previous.php">Browse this release here</a></p> 
+		
 	</div>
 
 	<!-- download -->

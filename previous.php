@@ -214,11 +214,8 @@ This is a previous release : 2021-01-22
 	<div id="releases" class="home_content" style="display: none">
 		<h3>Releases</h3><br/>
 		
-		<p><strong>2021-05-03 - Latest</strong></p> 
-		<p>Release note...</p>
-		<a href="index.php">Browse the latest release here</a>
+		<p><strong>2021-05-03 - Latest</strong>  <a href="index.php">Browse the latest release here</a></p> 
 		<p><strong>2021-01-22</strong></p> 
-		<p>Release note...</p>
 	</div>
 
 	<!-- download -->
