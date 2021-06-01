@@ -1351,7 +1351,7 @@ canvas.addEventListener('click', function (event) {
 							ID_MSU7 = tab[1];
 							ID_IRGSP = tab[2];
 							ID_NCBI = tab[3];
-							Aliases = tab[4];
+							//Aliases = tab[4];
 						}
 					});
 
@@ -1381,7 +1381,7 @@ canvas.addEventListener('click', function (event) {
 						+"<br/>ID MSU: <a target='_blank' href=\"http://rice.plantbiology.msu.edu/cgi-bin/ORF_infopage.cgi?orf="+ID_MSU7+"\">"+ID_MSU7+"</a>"
 						+"<br/>ID IRGSP: <a target='_blank' href=\"https://rapdb.dna.affrc.go.jp/viewer/gbrowse_details/irgsp1?name="+ID_IRGSP+"\">"+ID_IRGSP+"</a>"
 						+"<br/>ID NCBI:";
-						if(ID_NCBI == "None"){
+						if(ID_NCBI.match("None")){
 							htmlstring += "None";
 							
 						}else{
@@ -1884,6 +1884,7 @@ function searchKit(keyword){
 		let idsLines = ids.split('\n');
 		idsLines.forEach(line => {
 			var tab = line.split(/\t/);
+			console.log(tab);
 			if(keyword == tab[0] || tab[1].match(keyword)){
 				//console.log(line);
 				ID_OsKitaake = tab[1];
@@ -1914,7 +1915,7 @@ function searchKit(keyword){
 				triggerEvent(selectAccession, 'change');
 
 				//affiche la vue zoom sur le chromosome de l'id cliqué
-				var regexpChrom = /kitaake_Chr(\d*)_(\d*)/;
+				var regexpChrom = /Chr(\d*)_(\d*)/;
 				var idChrom = this.innerText.match(regexpChrom)[1];
 				var position = this.innerText.match(regexpChrom)[2];
 				position = parseInt(position);
@@ -1942,12 +1943,12 @@ function searchNip(keyword){
 		let idsLines = ids.split('\n');
 		idsLines.forEach(line => {
 			var tab = line.split(/\t/);
-			if(keyword == tab[0] || keyword == tab[1] || keyword == tab[2] || keyword == tab[3] || tab[4].match(keyword)){
+			if(keyword == tab[0] || keyword == tab[1] || keyword == tab[2] || keyword == tab[3] ){ //|| tab[4].match(keyword)){
 				//console.log(line);
 				ID_MSU7 = tab[1];
 				ID_IRGSP = tab[2];
 				ID_NCBI = tab[3];
-				Aliases = tab[4];
+				//Aliases = tab[4];
 				foundNip = true;
 				resultIdNip += "<a class='resLink1' href='#'>"+tab[0]+"</a><br/>";
 			}
