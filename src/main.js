@@ -698,7 +698,8 @@ function drawZoom2(from, to, gffHash){
 		var geneClass = tab[8].match(regexpClass)[1];
 		var regexpId = /ID=(\w*)/;
 		var id = tab[8].match(regexpId)[1];
-		var regexpFamily = /Fam=(\w*)/;
+
+		var regexpFamily = /Fam=(.*);/;
 		var family = tab[8].match(regexpFamily)[1];
 
 		//Save gene infos
@@ -1084,7 +1085,9 @@ function drawZoom(from, to, report){
 			var geneClass = tab[8].match(regexpClass)[1];
 			var regexpId = /ID=(\w*)/;
 			var id = tab[8].match(regexpId)[1];
-			var regexpFamily = /Fam=(\w*)/;
+			
+			var regexpFamily = /Fam=(.*);/;
+
 			var family = tab[8].match(regexpFamily)[1];
 
 			//Save gene infos
