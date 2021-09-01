@@ -442,7 +442,7 @@ textarea.form-control {
 
 #floating_legend {
   position: fixed;
-  right: 0;
+  right: 5%;
   bottom: 2%;
   /*top: 75%;*/
   /*width: 8em;*/
