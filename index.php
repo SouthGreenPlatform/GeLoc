@@ -100,6 +100,8 @@
 						<input type="checkbox" class="custom-control-input" id="readingSense" checked>
 						<label class="custom-control-label" for="readingSense">Show genes in reading sense</label>
 					</div>
+
+					
 					
 					<!-- search-->  
 					<br/>
@@ -118,6 +120,16 @@
 					<div id="gene_card" style="display: none">
 					Gene card
 					</div>
+
+					<!-- legende flottante -->
+					<div id=floating_legend>
+						<button type="button" class="btn btn-dark btn-sm" style="display: none" id="legend_button" data-toggle="collapse" data-target="#legend_div" aria-expanded="false" aria-controls="legend_div">	
+						Legend
+						</button>
+						<div class="collapse" id="legend_div" >
+						</div>
+					</div>
+					<!-- fin legende flottante -->
 				</li>
 			</ul>
 		</li>
@@ -152,15 +164,7 @@
 </div>
 <!-- fin de la sidebar -->
 
-<!-- legende flottante -->
-<div id=floating_legend>
-	<button type="button" class="btn btn-dark btn-sm" style="display: none" id="legend_button" data-toggle="collapse" data-target="#legend_div" aria-expanded="false" aria-controls="legend_div">	
-    Legend
-  	</button>
-	<div class="collapse" id="legend_div" >
-	</div>
-</div>
-<!-- fin legende flottante -->
+
 		
 <!-- Message navigateur -->
 <div class="alert alert-secondary alert-dismissible fade show" role="alert">
