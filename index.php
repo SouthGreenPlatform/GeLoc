@@ -184,8 +184,22 @@ To make the best use of GeLoc, we recommend you to download the latest Chrome ve
 		<!--JUMBOTRON-->
 		<div class="jumbotron jb_welcome">
 		<h1 class="display-2">Welcome to GeLoc</h1><br/>
-		
-		
+		</div><!--fin du jumbotron-->
+
+		<div id="home_text">
+			<p>
+				Plant resistance genes are mainly encoded by three large Leucine-Rich Repeat (LRR)-containing receptor (LRR-CR) families: the LRR-Receptor-Like Kinase (LRR-RLK), LRR-Receptor-Like Protein (LRR-RLP) and Nucleotide-binding LRR Receptor (NLR). 
+			</p>
+			<p>
+				We have proposed manually curated annotations of these genes for reference rice genomes: nipponbare <a href="https://rapdb.dna.affrc.go.jp/download/irgsp1.html">(IRGSP-01) </a> and kitaake <a href="https://phytozome-next.jgi.doe.gov/info/OsativaKitaake_v3_1"> (KitaakeX-v3.1)</a> japonica cultivars.
+			</p>
+			<p>
+				These annotations include genes tagged as non-canonical because they contain nonsense mutations, as opposed to canonical genes that contain all expected features to be functional (see Gottin et al. 2021 for further details). 
+			</p>
+			<p>
+			Geloc provides convenient tools to visualised and download these annotation data.
+			</p>
+		</div>
 		<div class="row justify-content-md-center">
 			<div class="col-sm-3">
 				<div class="card border-dark">
@@ -208,9 +222,15 @@ To make the best use of GeLoc, we recommend you to download the latest Chrome ve
 				</div>
 			</div>
 		</div>
-	</div>
-
-	</div> <!--fin du jumbotron-->
+		<div id="home_text">
+			<p>Please cite:</p>
+			<div id="gene_card">
+				<p>
+				Gottin, C., Dievart, A., Summo, M., Droc, G., Périn, C., Ranwez, V. and Chantret, N. (2021), A New Comprehensive Annotation of Leucine-Rich Repeat-Containing Receptors in Rice. The Plant Journal. Accepted Author Manuscript. https://doi.org/10.1111/tpj.15456
+				</p>
+			</div>
+		</div>
+	</div> <!-- fin welcome -->
 
 	<!-- releases -->
 	<div id="releases" class="home_content" style="display: none">

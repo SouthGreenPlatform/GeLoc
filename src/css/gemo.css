@@ -474,6 +474,15 @@ textarea.form-control {
   
 }
 
+#home_text {
+  line-height: 25px;
+  margin-top: 5px;
+  width: 95%;
+  background: white !important;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 .home_content {
   line-height: 25px;
   margin-top: 5px;
