@@ -86,7 +86,7 @@ while (<CHROMLENGTH>) {
 close CHROMLENGTH;
 
 foreach my $k (keys(%chromLength)) {
-   print "Clef=$k Valeur=$chromLength{$k}\n";
+    print "Clef=$k Valeur=$chromLength{$k}\n";
 }
 
 open INFILE, "$inFile" or die "cannot open $inFile !\n";
@@ -97,11 +97,13 @@ while (<INFILE>) {
     #regexp Chr1 Nip 56809 57972 RLK
 	#       chr  acc start stop  track
     #       $1="chr1" $2="1" $3="56809" $4="57972" $5="RLK"
+    #enleve les retours charriot et sauts de ligne
+    $line =~ s/\r?\n?$//;
     if ($line=~/(Chr(\d+))\s+.*\s+(\d+)\s+(\d+)\s+(.*)/) {
         $length = $4 - $3;
 
         #élimine les genes "other"
-        if ($5 eq "other"){
+        if ($5 eq "other" || $5 eq "UC" ){
             #print "other";
             next;
         }
