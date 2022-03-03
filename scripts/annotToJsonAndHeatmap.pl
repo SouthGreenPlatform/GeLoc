@@ -99,7 +99,8 @@ while (<INFILE>) {
     #       $1="chr1" $2="1" $3="56809" $4="57972" $5="RLK"
     #enleve les retours charriot et sauts de ligne
     $line =~ s/\r?\n?$//;
-    if ($line=~/(Chr(\d+))\s+.*\s+(\d+)\s+(\d+)\s+(.*)/) {
+    #if ($line=~/(Chr(\d+))\s+.*\s+(\d+)\s+(\d+)\s+(.*)/) {
+    if ($line=~/(\D*(\d+))\s+.*\s+(\d+)\s+(\d+)\s+(.*)/) {
         $length = $4 - $3;
 
         #élimine les genes "other"
@@ -141,6 +142,8 @@ while (<INFILE>) {
 
         #sinon on termine ce chromosome et on passe au suivant
         }else{
+
+            print "new chromosome $currentChr $2";
 
             #écrit la densité de la dernière fenetre
             #print HEATMAP "$currentChr 0 $start $stop $color{$count}\n";

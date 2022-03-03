@@ -21,7 +21,7 @@ var stopTab = [];
 //table des positions frameshift
 var fsTab = [];
 //json des positions des domaines
-var domains;
+var domains = {};
 
 //
 console.log(release);
@@ -550,14 +550,14 @@ function writeSelectedRange() {
 			//update to draw in reading sense
 			gffResult.innerHTML = report;
 			gffHash = parseGff(report);
+			//console.log(gffHash);
 			drawZoom2(from, to, gffHash);
 		}
 	});
 
 	//remonte le scroll
 	$('#cds_div').scrollTop(0);
-
-  }
+}
 
 //recupère les coordonnées des codons stop
 fetch('./data_'+release+'/annotations/Nip_stop_genomic_pos.txt')
@@ -582,11 +582,24 @@ fetch('./data_'+release+'/annotations/Kit_stop_genomic_pos.txt')
 		//console.log(stopTab);
 	});
 });
+fetch('./data_'+release+'/annotations/Ruf_stop_genomic_pos.txt')
+.then(function(response) {
+	return response.text();
+})
+.then(function(text) {
+	let lines = text.split('\n');
+	lines.forEach(line => {
+		stopTab.push(line);
+		//console.log(stopTab);
+	});
+});
 
 //recupère les coordonnées des frameshift
 fetch('./data_'+release+'/annotations/frameshift_NIP.txt')
 .then(function(response) {
-	return response.text();
+	if(response.ok){
+		return response.text();
+	}
 })
 .then(function(text) {
 	let lines = text.split('\n');
@@ -597,7 +610,21 @@ fetch('./data_'+release+'/annotations/frameshift_NIP.txt')
 });
 fetch('./data_'+release+'/annotations/frameshift_KIT.txt')
 .then(function(response) {
-	return response.text();
+	if(response.ok){
+		return response.text();
+	}
+})
+.then(function(text) {
+	let lines = text.split('\n');
+	lines.forEach(line => {
+		fsTab.push(line);
+	});
+});
+fetch('./data_'+release+'/annotations/frameshift_RUF.txt')
+.then(function(response) {
+	if(response.ok){
+		return response.text();
+	}
 })
 .then(function(text) {
 	let lines = text.split('\n');
@@ -607,13 +634,42 @@ fetch('./data_'+release+'/annotations/frameshift_KIT.txt')
 });
 
 //recupère les coordonnées des domaines
-fetch('./data_'+release+'/annotations/domains.json')
+fetch('./data_'+release+'/annotations/domains_NIP.json')
 .then(function(response) {
-	return response.json();
+	if(response.ok){
+		return response.json();
+	}
 })
 .then((data) => {
     // Work with JSON data here
-    domains = data;
+    //domains = data;
+	domains = $.extend(domains, data);
+});
+
+//recupère les coordonnées des domaines
+fetch('./data_'+release+'/annotations/domains_KIT.json')
+.then(function(response) {
+	if(response.ok){
+		return response.json();
+	}
+})
+.then((data) => {
+    // Work with JSON data here
+    //domains = data;
+	domains = $.extend(domains, data);
+});
+
+//recupère les coordonnées des domaines
+fetch('./data_'+release+'/annotations/domains_RUF.json')
+.then(function(response) {
+	if(response.ok){
+		return response.json();
+	}
+})
+.then((data) => {
+    // Work with JSON data here
+    //domains = data;
+	domains = $.extend(domains, data);
 });
 
 $('#readingSense').change(function() {
@@ -869,7 +925,8 @@ function drawReadingSense(tab, countGene, element){
 		//draw frameshift if it is inside the current CDS
 		fsTab.forEach(line => {
 			if(line.length >0){
-				var regexpFS = /(.*);frameshift;(.*)/;
+				//var regexpFS = /(.*);frameshift;(.*)/;
+				var regexpFS = /(.*)\t(.*)/; //nouveau format
 				var idFS = line.match(regexpFS)[1];
 				var posFS = line.match(regexpFS)[2];
 
@@ -990,7 +1047,8 @@ function drawPlusMinus(tab, countGene, element){
 		//draw frameshift if it is inside the current CDS
 		fsTab.forEach(line => {
 			if(line.length >0){
-				var regexpFS = /(.*);frameshift;(.*)/;
+				//var regexpFS = /(.*);frameshift;(.*)/;
+				var regexpFS = /(.*)\t(.*)/; //nouveau format
 				var idFS = line.match(regexpFS)[1];
 				var posFS = line.match(regexpFS)[2];
 
@@ -1229,7 +1287,8 @@ function drawZoom(from, to, report){
 				if(line.length >0){
 					//console.log(line);
 				
-					var regexpFS = /(.*);frameshift;(.*)/;
+					//var regexpFS = /(.*);frameshift;(.*)/;
+					var regexpFS = /(.*)\t(.*)/; //nouveau format
 					var idFS = line.match(regexpFS)[1];
 					var posFS = line.match(regexpFS)[2];
 
@@ -1250,6 +1309,7 @@ function drawZoom(from, to, report){
 
 //parsing GFF to hash
 function parseGff(report){
+	//console.log(report);
 	let gffLines = report.split('\n');
 	var gffHash = {};
 	geneNumber =0;
@@ -1269,7 +1329,7 @@ function parseGff(report){
 			gffHash[geneNumber]['cds'].push(tab);
 		}
 	});
-	//console.log(gffHash);
+	console.log(gffHash);
 	return gffHash;
 }
 

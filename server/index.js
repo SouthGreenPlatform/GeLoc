@@ -11,16 +11,16 @@ const app = express(),
 
 const sendmail = require('sendmail')({
 	logger: {
-	  debug: console.log,
-	  info: console.info,
-	  warn: console.warn,
-	  error: console.error
+		debug: console.log,
+		info: console.info,
+		warn: console.warn,
+		error: console.error
 	},
 	silent: false,
 	devHost: 'localhost', // Default: localhost
 	smtpPort: 25, // Default: 25
 	smtpHost: 'smtp.cirad.fr' // Default: -1 - extra smtp host after resolveMX
-  })
+})
 
 
 io.on('connection', socket => {
@@ -28,7 +28,7 @@ io.on('connection', socket => {
 
 	socket.on('hello', (data) => {
 		console.log(data);
-	  });
+	});
 	
 	//run pipeline
 	socket.on('run', (release, acc, chrnum, from, to, callback) => {
@@ -38,17 +38,31 @@ io.on('connection', socket => {
 
 		const gffPath = './data_'+release+'/gff';
 
-		 const { exec } = require("child_process");
-		 console.log(`tabix ${gffPath}/LRR_${acc}.gff.gz Chr${chrnum}:${from}-${to}`);
+		const { exec } = require("child_process");
+		console.log(`tabix ${gffPath}/LRR_${acc}.gff.gz Chr${chrnum}:${from}-${to}`);
 		exec(`tabix ${gffPath}/LRR_${acc}.gff.gz Chr${chrnum}:${from}-${to}`, (error, stdout, stderr) => {
 			if (error) {
-			  console.error(`exec error: ${error}`);
-			  return;
+				console.error(`exec error: ${error}`);
+				return;
 			}
 			console.log(`stdout: ${stdout}`);
 			console.error(`stderr: ${stderr}`);
-			callback(null, stdout);
-		  }); 
+
+			//si pas de resultat on essaye sans "chr"
+			if(!stdout){
+				exec(`tabix ${gffPath}/LRR_${acc}.gff.gz ${chrnum}:${from}-${to}`, (error, stdout, stderr) => {
+					if (error) {
+						console.error(`exec error: ${error}`);
+						return;
+					}
+					console.log(`stdout: ${stdout}`);
+					console.error(`stderr: ${stderr}`);
+					callback(null, stdout);
+				}); 
+			}else{
+				callback(null, stdout);
+			}
+		}); 
 		
 	});
 
@@ -60,7 +74,7 @@ io.on('connection', socket => {
 			to: 'marilyne.summo@cirad.fr ',
 			subject: 'GeLoc feedback',
 			html: 'message from: '+email+'<br/>'+xp+'<br/>Message:<br/>'+data,
-		  }, function(err, reply) {
+		}, function(err, reply) {
 			console.log(err && err.stack);
 			console.dir(reply);
 			callback(null, data);
