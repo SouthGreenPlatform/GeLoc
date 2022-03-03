@@ -24,7 +24,7 @@
 
 <!--GELOC-->
 <!-- <script src="src/hidpi-canvas.min.js"></script> -->
-<script src="src/main.js" defer ></script>
+<script src="src/main_V1.js" defer ></script>
 <script type="text/javascript" src="src/html2canvas.js"></script>
 <script type="text/javascript" src="src/canvas2image.js"></script>
 
