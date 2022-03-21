@@ -559,6 +559,21 @@ function writeSelectedRange() {
 	$('#cds_div').scrollTop(0);
 }
 
+
+var config_accessions = {};
+fetch('./data_'+release+'/config_accessions.json')
+.then(function(response) {
+	if(response.ok){
+		return response.json();
+	}
+})
+.then((data) => {
+    // Work with JSON data here
+    //domains = data;
+	config_accessions = $.extend(config_accessions, data);
+});
+console.log(config_accessions);
+
 //recupère les coordonnées des codons stop
 fetch('./data_'+release+'/annotations/Nip_stop_genomic_pos.txt')
 .then(function(response) {
@@ -1329,7 +1344,7 @@ function parseGff(report){
 			gffHash[geneNumber]['cds'].push(tab);
 		}
 	});
-	console.log(gffHash);
+	//console.log(gffHash);
 	return gffHash;
 }
 
@@ -1338,7 +1353,7 @@ function parseGff(report){
 var canvas = document.getElementById('cds');
 var ctx = canvas.getContext('2d');
 
-//fonction click sur un gene / CDS
+//fonction passe sur un gene / CDS avec la souris
 canvas.addEventListener('mousemove', function (event) {
 
 	
@@ -1402,19 +1417,34 @@ canvas.addEventListener('click', function (event) {
 			var orthologous="";
 			fetch('./data_'+release+'/ids/'+acc+'_IDs.txt')
 			.then(function(response) {
-				return response.text();
+				if(response.ok){
+					return response.text();
+				}
 			})
 			.then(function(ids) {
 				if(acc == "Nipponbare"){
 					let idsLines = ids.split('\n');
+					var htmlIDstring = "";
+					
+					//récupère les intitulés des champs en-tete
+					let entete = idsLines[0].split(/\t/);
+					console.log(entete);
+
 					idsLines.forEach(line => {
 						var tab = line.split(/\t/);
 						if(element.id == tab[0]){
+
+							for (var i = 1; i < entete.length; i++) {
+								htmlIDstring += "<br/>"+entete[i]+" : "+ tab[i]
+							}
+							
+							console.log(htmlIDstring);
+/* 
 							//console.log(tab[0] +tab[1] +tab[2] +tab[3] +tab[4]);
 							ID_MSU7 = tab[1];
 							ID_IRGSP = tab[2];
 							ID_NCBI = tab[3];
-							//Aliases = tab[4];
+							//Aliases = tab[4]; */
 						}
 					});
 
@@ -1441,7 +1471,7 @@ canvas.addEventListener('click', function (event) {
 						+"<br/>Family: "+element.family 
 						+"<br/>Class: "+element.geneClass
 						+"<br/>Kitaake orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
-						+"<br/>ID MSU: <a target='_blank' href=\"http://rice.plantbiology.msu.edu/cgi-bin/ORF_infopage.cgi?orf="+ID_MSU7+"\">"+ID_MSU7+"</a>"
+						+htmlIDstring;/* +"<br/>ID MSU: <a target='_blank' href=\"http://rice.plantbiology.msu.edu/cgi-bin/ORF_infopage.cgi?orf="+ID_MSU7+"\">"+ID_MSU7+"</a>"
 						+"<br/>ID IRGSP: <a target='_blank' href=\"https://rapdb.dna.affrc.go.jp/viewer/gbrowse_details/irgsp1?name="+ID_IRGSP+"\">"+ID_IRGSP+"</a>"
 						+"<br/>ID NCBI:";
 						if(ID_NCBI.match("None")){
@@ -1457,7 +1487,7 @@ canvas.addEventListener('click', function (event) {
 								htmlstring += " <a target='_blank' href=\"https://www.ncbi.nlm.nih.gov/gene/"+NCBI_num+"\">"+element+"</a>"
 							});
 						}
-						htmlstring+= "<br/>Aliases: "+Aliases;
+						htmlstring+= "<br/>Aliases: "+Aliases; */
 						$('#gene_card').html(htmlstring);
 					})
 					.then(function() {
