@@ -571,8 +571,17 @@ fetch('./data_'+release+'/config_accessions.json')
     // Work with JSON data here
     //domains = data;
 	config_accessions = $.extend(config_accessions, data);
+
+	//populate accessions selector
+    $.each(config_accessions, function (index, value) {
+		//index = accesions name
+		//value = json content
+        //Fill the dropdown with accessions names
+        $('#selectAccession').append('<option value="' + index + '">' + index + '</option>');
+        
+    });
 });
-console.log(config_accessions);
+
 
 //recupère les coordonnées des codons stop
 fetch('./data_'+release+'/annotations/Nip_stop_genomic_pos.txt')

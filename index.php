@@ -92,9 +92,9 @@
 					<label for="selectAccession">Accession</label>
 					<select class="form-control-sm" id="selectAccession">
 						<option value=""></option>
-						<option value="Nipponbare">Nipponbare</option>
+<!-- 						<option value="Nipponbare">Nipponbare</option>
 						<option value="Kitaake">Kitaake</option>
-						<option value="Rufipogon">Rufipogon</option>
+						<option value="Rufipogon">Rufipogon</option> -->
 
 					</select>
 					<div id="switch" class="custom-control custom-switch">
