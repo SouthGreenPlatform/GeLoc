@@ -78,80 +78,6 @@ function initConfig(){
 	return conf;
 }
 
-
-////////////////////////////////////////////////////////////////
-//LOAD ACCESSION
-////////////////////////////////////////////////////////////////
-let selectAccession = document.getElementById("selectAccession");
-
-selectAccession.addEventListener("change", async function(){
-	//console.log(this.value);
-
-	acc = this.value;
-	clear();
-	//affiche le loader
-	document.getElementById("loader").style.display = "block";
-
-	//hide div to refresh
-	$('#selected_region').hide();
-	$('.ideo_container_chr').hide();
-	$('#gene_card').hide();
-	$('.zoom_global').hide();
-	$('.cds').hide();
-	
-	//affiche la div si elle est cachée
-	$(".ideo_container_global").collapse('show');
-	$('#floating_legend').show();
-
-	config = initConfig();
-	config.annotationsPath='./data_'+release+'/annotations/annot_'+acc+'.json';
-	
-	//charge le fichier densité de l'accession choisie
-	let response = await fetch('./data_'+release+'/density/density_'+acc+'.txt');
-	annotData = await response.text();
-	//Parse les données de densité
-	config.rangeSet = annotationParser(annotData, config);
-    
-	//charge les données de chromosomes de l'accession choisie
-	//fichier tsv
- 	response = await fetch('./data_'+release+'/chromosomes/'+acc+'.tsv');
-	chr_tsv = await response.text();
-	//parse les données et config les chrBands
-	chromosomeTsvParser(chr_tsv, config); 
-	//config.dataDir = "./data_'+release+'/bands/native/"+acc+"/";
-	
-	//supprimer la div de l'image "choose accession"
-	document.getElementById("home").style.display = "none";
-
-	//Charge ideogram
-	ideogram = new Ideogram(config);
-
-	//apparition du bouton download
-	$('#download').fadeIn()
-
-	
-
-	//affiche la selection de chromosome
-	//createSelectChrom();
-
-	//LEGEND
-
-	//affiche la div
-	$('#legend_button').show();
-	$("#DataViz").show();
-	$("#show-hide").show();
-
-	/////// à virer si je remet les tooltips
-	loadingoff();
-
-	//cache le lettres
-	setTimeout(removeLetters, 100);
-	setTimeout(removeLetters, 100);
-
-	//ajoute listener click chromosome
-	setTimeout(onClickChr, 100);
-});
-
 ////////////////////////////////////////////////////////////////
 //parsing fichier chromosome TSV
 //Genère les bands pour chaque chromosome
@@ -560,6 +486,9 @@ function writeSelectedRange() {
 }
 
 
+////////////////////////////////////////////////////////
+// Menu select accession
+////////////////////////////////////////////////////////
 var config_accessions = {};
 fetch('./data_'+release+'/config_accessions.json')
 .then(function(response) {
@@ -578,123 +507,127 @@ fetch('./data_'+release+'/config_accessions.json')
 		//value = json content
         //Fill the dropdown with accessions names
         $('#selectAccession').append('<option value="' + index + '">' + index + '</option>');
-        
     });
 });
 
+////////////////////////////////////////////////////////////////
+//LOAD ACCESSION
+////////////////////////////////////////////////////////////////
+let selectAccession = document.getElementById("selectAccession");
 
-//recupère les coordonnées des codons stop
-fetch('./data_'+release+'/annotations/Nip_stop_genomic_pos.txt')
-.then(function(response) {
-	return response.text();
-})
-.then(function(text) {
-	let lines = text.split('\n');
-	lines.forEach(line => {
-		stopTab.push(line);
-		//console.log(stopTab);
-	});
-});
-fetch('./data_'+release+'/annotations/Kit_stop_genomic_pos.txt')
-.then(function(response) {
-	return response.text();
-})
-.then(function(text) {
-	let lines = text.split('\n');
-	lines.forEach(line => {
-		stopTab.push(line);
-		//console.log(stopTab);
-	});
-});
-fetch('./data_'+release+'/annotations/Ruf_stop_genomic_pos.txt')
-.then(function(response) {
-	return response.text();
-})
-.then(function(text) {
-	let lines = text.split('\n');
-	lines.forEach(line => {
-		stopTab.push(line);
-		//console.log(stopTab);
-	});
-});
+selectAccession.addEventListener("change", async function(){
+	//console.log(this.value);
 
-//recupère les coordonnées des frameshift
-fetch('./data_'+release+'/annotations/frameshift_NIP.txt')
-.then(function(response) {
-	if(response.ok){
+	acc = this.value;
+	clear();
+	//affiche le loader
+	document.getElementById("loader").style.display = "block";
+
+	//hide div to refresh
+	$('#selected_region').hide();
+	$('.ideo_container_chr').hide();
+	$('#gene_card').hide();
+	$('.zoom_global').hide();
+	$('.cds').hide();
+	
+	//affiche la div si elle est cachée
+	$(".ideo_container_global").collapse('show');
+	$('#floating_legend').show();
+
+	config = initConfig();
+	//config le fichier annot de l'accession choisie
+	config.annotationsPath=config_accessions[acc]['annot_file'];
+	
+	//charge le fichier densité de l'accession choisie
+	let response = await fetch(config_accessions[acc]['density']);
+	annotData = await response.text();
+	//Parse les données de densité
+	config.rangeSet = annotationParser(annotData, config);
+    
+	//charge les données de chromosomes de l'accession choisie
+	//fichier tsv
+	response = await fetch(config_accessions[acc]['chrom_tsv']);
+	chr_tsv = await response.text();
+	//parse les données et config les chrBands
+	chromosomeTsvParser(chr_tsv, config); 
+	//config.dataDir = "./data_'+release+'/bands/native/"+acc+"/";
+
+	//recupère les coordonnées des codons stop
+	console.log(config_accessions[acc]['stop']);
+	stopTab = [];
+	fetch(config_accessions[acc]['stop'])
+	.then(function(response) {
 		return response.text();
-	}
-})
-.then(function(text) {
-	let lines = text.split('\n');
-	lines.forEach(line => {
-		fsTab.push(line);
-		//console.log(fsTab);
+		
+	})
+	.then(function(text) {
+		let lines = text.split('\n');
+		lines.forEach(line => {			
+			stopTab.push(line);
+		});
 	});
-});
-fetch('./data_'+release+'/annotations/frameshift_KIT.txt')
-.then(function(response) {
-	if(response.ok){
-		return response.text();
-	}
-})
-.then(function(text) {
-	let lines = text.split('\n');
-	lines.forEach(line => {
-		fsTab.push(line);
+
+	//recupère les coordonnées des frameshift
+	fsTab = [];
+	fetch(config_accessions[acc]['frameshift'])
+	.then(function(response) {
+		if(response.ok){
+			return response.text();
+		}
+	})
+	.then(function(text) {
+		let lines = text.split('\n');
+		lines.forEach(line => {
+			fsTab.push(line);
+		});
 	});
-});
-fetch('./data_'+release+'/annotations/frameshift_RUF.txt')
-.then(function(response) {
-	if(response.ok){
-		return response.text();
-	}
-})
-.then(function(text) {
-	let lines = text.split('\n');
-	lines.forEach(line => {
-		fsTab.push(line);
+
+	//recupère les coordonnées des domaines
+	domains = {};
+	fetch(config_accessions[acc]['domains'])
+	.then(function(response) {
+		if(response.ok){
+			return response.json();
+		}
+	})
+	.then((data) => {
+		// Work with JSON data here
+		//domains = data;
+		domains = $.extend(domains, data);
 	});
+	
+	//supprimer la div de l'image "choose accession"
+	document.getElementById("home").style.display = "none";
+
+	//Charge ideogram
+	ideogram = new Ideogram(config);
+
+	//apparition du bouton download
+	$('#download').fadeIn()
+
+	
+
+	//affiche la selection de chromosome
+	//createSelectChrom();
+
+	//LEGEND
+
+	//affiche la div
+	$('#legend_button').show();
+	$("#DataViz").show();
+	$("#show-hide").show();
+
+	/////// à virer si je remet les tooltips
+	loadingoff();
+
+	//cache le lettres
+	setTimeout(removeLetters, 100);
+	setTimeout(removeLetters, 100);
+
+	//ajoute listener click chromosome
+	setTimeout(onClickChr, 100);
 });
 
-//recupère les coordonnées des domaines
-fetch('./data_'+release+'/annotations/domains_NIP.json')
-.then(function(response) {
-	if(response.ok){
-		return response.json();
-	}
-})
-.then((data) => {
-    // Work with JSON data here
-    //domains = data;
-	domains = $.extend(domains, data);
-});
-
-//recupère les coordonnées des domaines
-fetch('./data_'+release+'/annotations/domains_KIT.json')
-.then(function(response) {
-	if(response.ok){
-		return response.json();
-	}
-})
-.then((data) => {
-    // Work with JSON data here
-    //domains = data;
-	domains = $.extend(domains, data);
-});
-
-//recupère les coordonnées des domaines
-fetch('./data_'+release+'/annotations/domains_RUF.json')
-.then(function(response) {
-	if(response.ok){
-		return response.json();
-	}
-})
-.then((data) => {
-    // Work with JSON data here
-    //domains = data;
-	domains = $.extend(domains, data);
-});
 
 $('#readingSense').change(function() {
 	//console.log($('#readingSense').is(':checked')+" redraw");
