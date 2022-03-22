@@ -565,7 +565,7 @@ selectAccession.addEventListener("change", async function(){
 	});
 
 	//recupère les coordonnées des frameshift
-	fsTab = [];
+	
 	fetch(config_accessions[acc]['frameshift'])
 	.then(function(response) {
 		if(response.ok){
@@ -573,12 +573,12 @@ selectAccession.addEventListener("change", async function(){
 		}
 	})
 	.then(function(text) {
+		fsTab = [];
 		let lines = text.split('\n');
 		lines.forEach(line => {
 			fsTab.push(line);
 		});
 	});
-	console.log(fsTab);
 
 	//recupère les coordonnées des domaines
 	domains = {};
@@ -881,13 +881,14 @@ function drawReadingSense(tab, countGene, element){
 				var regexpFS = /(.*)\t(.*)/; //nouveau format
 				var idFS = line.match(regexpFS)[1];
 				var posFS = line.match(regexpFS)[2];
-
-				if(idFS == element.id && posFS <= stopCDS && posFS >= startCDS){
-						
+				
+				//ajoute une marge de 10 aux positions CDS
+				if(idFS == element.id && posFS <= stopCDS+10 && posFS >= startCDS-10){
+					
 					//stop position
 					var xFsPos = (Math.abs(posFS - element.stop) / 10) + x ;
 					drawFrameshift(ctx, xFsPos - totalGap, countGene * y + yInit )	
-				} 
+				}
 			}
 		});
 	});
@@ -1003,9 +1004,11 @@ function drawPlusMinus(tab, countGene, element){
 				var regexpFS = /(.*)\t(.*)/; //nouveau format
 				var idFS = line.match(regexpFS)[1];
 				var posFS = line.match(regexpFS)[2];
-
-				if(idFS == element.id && posFS <= stopCDS && posFS >= startCDS){
+				
+				//ajoute une marge de 10 aux positions CDS
+				if(idFS == element.id && posFS <= stopCDS+10 && posFS >= startCDS-10){
 						
+					console.log("match frameshift");
 					//stop position
 					var xFsPos = ((posFS - element.start) / 10) + x ;
 					drawFrameshift(ctx, xFsPos - totalGap, countGene * y + yInit )	
@@ -1411,6 +1414,7 @@ function drawStop(ctx, x, y){
 
 //Draw frameshift
 function drawFrameshift(ctx, x, y){
+	console.log("Frameshift");
 
 	ctx.strokeStyle="orange";
 	ctx.lineWidth = 2;
