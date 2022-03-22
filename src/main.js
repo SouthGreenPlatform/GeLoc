@@ -471,13 +471,11 @@ function writeSelectedRange() {
 			//console.log(report);
 			const gffResult = document.getElementById('gffResult');
 			
-			//drawZoom(from, to, report);
-			
 			//update to draw in reading sense
 			gffResult.innerHTML = report;
 			gffHash = parseGff(report);
 			//console.log(gffHash);
-			drawZoom2(from, to, gffHash);
+			drawZoom(from, to, gffHash);
 		}
 	});
 
@@ -514,7 +512,6 @@ fetch('./data_'+release+'/config_accessions.json')
 //LOAD ACCESSION
 ////////////////////////////////////////////////////////////////
 let selectAccession = document.getElementById("selectAccession");
-
 selectAccession.addEventListener("change", async function(){
 	//console.log(this.value);
 
@@ -581,6 +578,7 @@ selectAccession.addEventListener("change", async function(){
 			fsTab.push(line);
 		});
 	});
+	console.log(fsTab);
 
 	//recupère les coordonnées des domaines
 	domains = {};
@@ -631,14 +629,11 @@ selectAccession.addEventListener("change", async function(){
 
 $('#readingSense').change(function() {
 	//console.log($('#readingSense').is(':checked')+" redraw");
-	//drawZoom2(from, to, gffHash);
 	writeSelectedRange();
 }); 
 
 // Draw zoom view and CDS view
-function drawZoom2(from, to, gffHash){
-
-	//console.log("drawZoom "+ from +" "+ to);
+function drawZoom(from, to, gffHash){
 
 	//display div
 	$('.zoom_global').show();
@@ -1019,250 +1014,6 @@ function drawPlusMinus(tab, countGene, element){
 		});	
 	});
 }
-
-// Draw zoom view and CDS view
-function drawZoom(from, to, report){
-
-	//display div
-	$('.zoom_global').show();
-	$('.cds').show();
-
-	//canvas CDS
-	var canvas = document.getElementById('cds');
-	var ctx = canvas.getContext('2d');
-
-	//canvas zoom
-	var canvasGlobal = document.getElementById('zoom_global');
-	var ctxGlobal = canvasGlobal.getContext('2d');
-
-	//clear before redraw
-	ctxGlobal.clearRect(0, 0, canvasGlobal.width, canvasGlobal.height);
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-	//
-	let firstCDS = true;
-	let countGene = 0;
-	let x = 40;
-	let y = 50;
-	let yInit = 10;
-	let xFirstCDS = 0;
-	let startFirstCDS = 0;
-	let xCDS;
-	let yCDS;
-	let widthCDS;
-	let startLine = 0;
-	let stopLine = 0;
-	let currentDom;
-
-	//reset CDS elements tab
-	genesElements = [];
-	
-	//nb de bases dans le canvas
-	const seqLength = to - from;
-	//console.log("seq length "+seqLength);
-	let gffLines = report.split('\n');
-
-	//parsing GFF file
-	gffLines.forEach(line => {
-		var tab = line.split(/\t/);
-		var geneGenomicCoord = tab[3];
-
-		//Ligne gene
-		if(tab[2] == "gene"){
-
-			countGene++;
-			firstCDS = true;
-			gap = 0;
-			totalGap =0;
-			//console.log("gap : "+gap+" totalgap : "+totalGap );
-
-			//position on canvas
-			startGene = ((tab[3]-from) * 800) / seqLength;
-			widthGene = ((tab[4]-tab[3]) * 800) / seqLength;
-
-			//draw line
-			ctxGlobal.beginPath();
-			ctxGlobal.moveTo(x, y );
-			ctxGlobal.lineTo(800+x, y);
-			ctxGlobal.stroke();
-			
-			//draw gene rect
-			ctxGlobal.fillStyle="black";    // color of fill
-			// x y width height	
-			ctxGlobal.fillRect(startGene+x, 40, widthGene, 20); // create rectangle  
-			//console.log(startGene + wigthGene );
-
-			//draw background = element clickable
-			ctx.fillStyle="white";
-			ctx.fillRect(xFirstCDS + x -5, countGene * y + yInit -2, 1200, 22);
-
-			var regexpClass = /Class=([^\s]*)/;
-			var geneClass = tab[8].match(regexpClass)[1];
-			var regexpId = /ID=(\w*)/;
-			var id = tab[8].match(regexpId)[1];
-			
-			var regexpFamily = /Fam=(.*);/;
-
-			var family = tab[8].match(regexpFamily)[1];
-
-			//Save gene infos
-			element = {
-				chr: tab[0], 
-				start: tab[3],
-				stop: tab[4],
-				orientation: tab[6],
-				infos: tab[8],
-				geneClass: geneClass,
-				id: id,
-				family: family,
-
-				//global gene view infos
-				genePosX: startGene+x,
-				genePosY: 40,
-				geneWidth: widthGene,
-				geneHeigth: 20,
-
-				//CDS view infos
-				width: 1200,
-				height: 22,
-				top: countGene * y + yInit -2, //first CDS position top
-				left: xFirstCDS + x -5         //first CDS position left
-			}
-			genesElements.push(element);
-
-			//draw gene infos
-			ctx.fillStyle="black";
-			ctx.font = '12px sans-serif';
-			ctx.fillText(element.id+" - "+element.family+" - "+element.geneClass, x, countGene * y + yInit -5);
-
-			startFirstCDS = tab[3];			
-		}
-
-		//Traitement des CDS
-		if(tab[2] == "CDS"){
-
-			//convert bp to pixel
-			startCDS = tab[3];
-			stopCDS = tab[4];
-			widthCDS = (tab[4] - tab[3]) / 10;
-			yCDS = countGene * y + yInit;
-			//position du début du CDS
-			// largeur / 10 + x de départ - le gap si on a coupé dans l'intron
-			xCDS = (tab[3] - startFirstCDS) / 10 + x - totalGap;
-
-			//identifiant cds
-			var regexpCDSID = /.*(cds_\d+);.*/;
-			if (tab[8].match(regexpCDSID)) {
-				cdsid = tab[8].match(regexpCDSID)[1];
-			}else{
-				cdsid = "";
-			}
-
-			//console.log(cdsid);
-
-			//variable pour les plus ou minus
-			if(tab[6] == "+"){
-				plusMinus = "plus";
-			}else{
-				plusMinus = "minus";
-
-				//calcul des positions px pour l'affichage reading sense
-				
-
-			}
-			
-			//draw first CDS
-			if (firstCDS){
-				//Draw plus or minus CDS
-				//drawArrow(ctx, xCDS-20 , yCDS, 3, plusMinus, element.family);
-				drawSign(ctx, xCDS-20 , yCDS, 3, plusMinus, element.family);
-				drawCDS(ctx, xCDS, yCDS, widthCDS);
-				startLine = xCDS + widthCDS;
-				firstCDS = false;
-			
-			//Draw other CDS
-			}else{
-				//line to bloc
-				stopLine = xCDS;
-				
-				//dessine la ligne et update le gap
-				drawLine(ctx, startLine, stopLine, yCDS );
-				
-				//fleche + ou -
-				//enlève l'éventuel gap supplémentaire calculé en dessinant la ligne
-				drawCDS(ctx, xCDS-gap, yCDS, widthCDS);
-				startLine = xCDS-gap + widthCDS;
-			}
-
-			//draw domain if it is inside the current CDS
-			if(cdsid != ""){
-				let currentGene = element.id;
-				
-				if(domains[currentGene] !== undefined){
-					cdsDom = domains[currentGene][cdsid];
-				}
-
-				if(cdsDom !== undefined){
-					//console.log("current Gene  : "+currentGene+ " cdsid " +cdsid+ " dom :  "+ JSON.stringify(cdsDom));
-					
-					//pour chaque type de domain
-					for(key in cdsDom){
-						//console.log(key);
-						let currentDom = cdsDom[key];
-						currentDom.forEach(dom => {
-							var domStart = dom.match(/(.*);(.*)/)[1];
-							var domStop = dom.match(/(.*);(.*)/)[2];
-							var domLength = (domStop - domStart) /10;
-							//console.log(domStart +" "+domStop);
-
-							//domain position in px
-							var xDomStart = ((domStart - startFirstCDS) / 10) + x- totalGap ;
-							//var xDomStop = ((domStop - startFirstCDS) / 10) + x- totalGap ;
-
-							drawDomain(ctx, key, xDomStart , countGene * y + yInit +1, domLength);
-						});
-					}
-				} 
-			}
-			
-			
-			//draw stop if it is inside the current CDS
-			stopTab.forEach(line => {
-				var tab = line.split(/\t/);
-				if(tab[0] == element.id && tab[1] <= stopCDS && tab[1] >= startCDS){
-						
-					//stop position
-					var stopPos = tab[1];
-					var XstopPos = ((stopPos - startFirstCDS) / 10) + x ;
-					drawStop(ctx, XstopPos-totalGap, countGene * y + yInit )	
-					drawStar(ctx, XstopPos-totalGap, countGene * y + yInit +7, 2, 5, 2);		
-				}
-			});
-
-			//draw frameshift if it is inside the current CDS
-			fsTab.forEach(line => {
-				if(line.length >0){
-					//console.log(line);
-				
-					//var regexpFS = /(.*);frameshift;(.*)/;
-					var regexpFS = /(.*)\t(.*)/; //nouveau format
-					var idFS = line.match(regexpFS)[1];
-					var posFS = line.match(regexpFS)[2];
-
-					if(idFS == element.id && posFS <= stopCDS && posFS >= startCDS){
-							
-						//stop position
-						var xFsPos = ((posFS - startFirstCDS) / 10) + x ;
-						drawFrameshift(ctx, xFsPos - totalGap, countGene * y + yInit )	
-						//console.log("frameshift "+ posFS + " gap "+ gap+" totalGap "+totalGap);	
-					} 
-				}
-			});	
-		}
-	});
-}
-
-
 
 //parsing GFF to hash
 function parseGff(report){
