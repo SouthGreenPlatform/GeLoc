@@ -22,6 +22,8 @@ var stopTab = [];
 var fsTab = [];
 //json des positions des domaines
 var domains = {};
+//table des identifiants de séquences + synonymes
+var idsTab = [];
 
 //
 console.log(release);
@@ -550,7 +552,6 @@ selectAccession.addEventListener("change", async function(){
 	//config.dataDir = "./data_'+release+'/bands/native/"+acc+"/";
 
 	//recupère les coordonnées des codons stop
-	console.log(config_accessions[acc]['stop']);
 	stopTab = [];
 	fetch(config_accessions[acc]['stop'])
 	.then(function(response) {
@@ -565,7 +566,6 @@ selectAccession.addEventListener("change", async function(){
 	});
 
 	//recupère les coordonnées des frameshift
-	
 	fetch(config_accessions[acc]['frameshift'])
 	.then(function(response) {
 		if(response.ok){
@@ -593,6 +593,28 @@ selectAccession.addEventListener("change", async function(){
 		//domains = data;
 		domains = $.extend(domains, data);
 	});
+
+	//récupère le fichier des ids s'il existe
+	console.log(config_accessions[acc]['ids']);
+	if(config_accessions[acc]['ids']){
+		fetch(config_accessions[acc]['ids'])
+		.then(function(response) {
+			if(response.ok){
+				return response.text();
+			}
+		})
+		.then(function(text) {
+			idsTab = [];
+			let lines = text.split('\n');
+			lines.forEach(line => {
+				idsTab.push(line);
+			});
+		});
+	}
+		
+	
+
+
 	
 	//supprimer la div de l'image "choose accession"
 	document.getElementById("home").style.display = "none";
@@ -1087,6 +1109,51 @@ canvas.addEventListener('mousemove', function (event) {
 	
 });
 
+function findOrtho(acc, id ){
+	return new Promise((resolve,reject)=>{
+		let htmlOrthoString = "";
+		//pour tout les fichiers orthologues
+		var orthos = config_accessions[acc]['ortho'];
+		console.log(orthos);
+		if(orthos){
+			console.log("ok orthologous");
+			for (var i = 0; i < orthos.length; i++) {
+			
+				let versus = orthos[i]['versus'];
+			
+				//fichier des orthologues
+				fetch(config_accessions[acc]['ortho'][i]['ortho_file'])
+				.then(function(response) {
+					if(response.ok){
+						return response.text();
+					}
+				})
+				.then(function(text) {
+					let orthoLines = text.split('\n');
+					orthoLines.forEach(line => {
+						var tab = line.split(/\t/);
+						if(id == tab[0].trim()){ //trim pour enlever les eventuels espaces ou retour chariot
+							orthologous = tab[1];
+							htmlOrthoString += "<br/>"+versus+" orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
+							//console.log(htmlOrthoString);
+							resolve(htmlOrthoString);
+						}else if(id == tab[1].trim()){
+							orthologous = tab[0];
+							htmlOrthoString += "<br/>"+versus+" orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
+							//console.log(htmlOrthoString);
+							resolve(htmlOrthoString);
+						}
+					});
+				});
+			}
+		}else{
+			console.log("no orthologous");
+			resolve(htmlOrthoString);
+		}
+			
+	});
+}
+
 
 //fonction click sur un gene / CDS
 canvas.addEventListener('click', function (event) {
@@ -1097,7 +1164,7 @@ canvas.addEventListener('click', function (event) {
 	var y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoffset.top) + 1;
 
 	// Collision detection between clicked offset and element.
-	genesElements.forEach(function (element) {
+	genesElements.forEach(async function (element) {
 		if (y > element.top && y < element.top + element.height
 			&& x > element.left && x < element.left + element.width) {
 
@@ -1111,109 +1178,100 @@ canvas.addEventListener('click', function (event) {
 			var Aliases ="";
 			var ID_OsKitaake="";
 			var orthologous="";
-			fetch('./data_'+release+'/ids/'+acc+'_IDs.txt')
-			.then(function(response) {
-				if(response.ok){
-					return response.text();
+
+			var htmlIDstring = "";
+			var htmlOrthoString = "";
+			//récupère les intitulés des champs en-tete
+			if(idsTab.length){
+				let entete = idsTab[0].split(/\t/);
+				console.log(entete);
+
+				//cherche dans la table des ids
+				idsTab.forEach(line => {
+					var tab = line.split(/\t/);
+					if(element.id == tab[0]){
+
+						for (var i = 1; i < entete.length; i++) {
+							htmlIDstring += "<br/>"+entete[i]+" : "+ tab[i]
+						}
+								
+						console.log(htmlIDstring);
+	/* 
+						//console.log(tab[0] +tab[1] +tab[2] +tab[3] +tab[4]);
+						ID_MSU7 = tab[1];
+						ID_IRGSP = tab[2];
+						ID_NCBI = tab[3];
+						//Aliases = tab[4]; */
+					}
+				});
+			}
+			
+
+			htmlOrthoString = await findOrtho(acc, element.id);
+			console.log(htmlOrthoString);
+
+			console.log("affiche la gene card");
+			//affiche la gene card
+			document.getElementById("gene_card").style.display = "block";
+			var htmlstring = "<p class='font-weight-bold'>Gene card "+element.id
+			+"</p><a target='_blank' href=\"https://rice-genome-hub.southgreen.fr/oryza_sativa_japonica_nipponbare?loc="+element.chr+":"+element.start+".."+element.stop+"\"><button type=\"button\" class=\"btn btn-sm btn-outline-dark\">View on JBrowse </button></a>"
+			+"</p>Position: "+element.chr+":"+element.start+"-"+element.stop
+			+"<br/>Family: "+element.family 
+			+"<br/>Class: "+element.geneClass
+/* 			+"<br/>Kitaake orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
+ */			+htmlOrthoString
+			+htmlIDstring;/* +"<br/>ID MSU: <a target='_blank' href=\"http://rice.plantbiology.msu.edu/cgi-bin/ORF_infopage.cgi?orf="+ID_MSU7+"\">"+ID_MSU7+"</a>"
+			+"<br/>ID IRGSP: <a target='_blank' href=\"https://rapdb.dna.affrc.go.jp/viewer/gbrowse_details/irgsp1?name="+ID_IRGSP+"\">"+ID_IRGSP+"</a>"
+			+"<br/>ID NCBI:";
+			if(ID_NCBI.match("None")){
+				htmlstring += "None";
+						
+			}else{
+				//split NCBI
+				var tabNCBI=ID_NCBI.split(",");
+				//pour chaque split regexp, add url to html string
+				tabNCBI.forEach(element => {
+					var regexpNCBI = /LOC(\d*)/;
+					NCBI_num = element.match(regexpNCBI)[1];
+					htmlstring += " <a target='_blank' href=\"https://www.ncbi.nlm.nih.gov/gene/"+NCBI_num+"\">"+element+"</a>"
+				});
+			}
+			htmlstring+= "<br/>Aliases: "+Aliases; */
+			$('#gene_card').html(htmlstring);
+
+			console.log(htmlstring);
+		}
+	});
+});
+
+/* 			.then(function() {
+				//Clic sur l'identifiant affiche la zone
+				var resLinks = document.getElementsByClassName('resLink3');
+				for(var i = 0, len = resLinks.length; i < len; i++) {
+					resLinks[i].onclick = function () {
+				
+						//affiche la vue globale
+						let selectAccession = document.getElementById("selectAccession");
+						selectAccession.value="Kitaake";
+						triggerEvent(selectAccession, 'change');
+				
+						//affiche la vue zoom sur le chromosome de l'id cliqué
+						var regexpChrom = /Chr(\d*)_(\d*)/;
+						var idChrom = this.innerText.match(regexpChrom)[1];
+						var position = this.innerText.match(regexpChrom)[2];
+						position = parseInt(position);
+						var stop = position + 1000000;
+				
+						idChrom = parseInt(idChrom);
+						setTimeout(function(){ drawChromosome(idChrom, position, stop ); }, 1000);
+								
+					}
 				}
-			})
-			.then(function(ids) {
-				if(acc == "Nipponbare"){
-					let idsLines = ids.split('\n');
-					var htmlIDstring = "";
-					
-					//récupère les intitulés des champs en-tete
-					let entete = idsLines[0].split(/\t/);
-					console.log(entete);
-
-					idsLines.forEach(line => {
-						var tab = line.split(/\t/);
-						if(element.id == tab[0]){
-
-							for (var i = 1; i < entete.length; i++) {
-								htmlIDstring += "<br/>"+entete[i]+" : "+ tab[i]
-							}
-							
-							console.log(htmlIDstring);
-/* 
-							//console.log(tab[0] +tab[1] +tab[2] +tab[3] +tab[4]);
-							ID_MSU7 = tab[1];
-							ID_IRGSP = tab[2];
-							ID_NCBI = tab[3];
-							//Aliases = tab[4]; */
-						}
-					});
-
-					//fichier des orthologues
-					fetch('./data_'+release+'/ids/Nip_Kit_ortho.txt')
-					.then(function(response) {
-						return orthoTab = response.text();
-					})
-					.then(function(ortho) {
-						let orthoLines = ortho.split('\n');
-						orthoLines.forEach(line => {
-							var tab = line.split(/\t/);
-							if(element.id == tab[0].trim()){ //trim pour enlever les eventuels espaces ou retour chariot
-								orthologous = tab[1];
-								
-							}
-						});
-
-						//affiche la gene card
-						document.getElementById("gene_card").style.display = "block";
-						var htmlstring = "<p class='font-weight-bold'>Gene card "+element.id
-						+"</p><a target='_blank' href=\"https://rice-genome-hub.southgreen.fr/oryza_sativa_japonica_nipponbare?loc="+element.chr+":"+element.start+".."+element.stop+"\"><button type=\"button\" class=\"btn btn-sm btn-outline-dark\">View on JBrowse </button></a>"
-						+"</p>Position: "+element.chr+":"+element.start+"-"+element.stop
-						+"<br/>Family: "+element.family 
-						+"<br/>Class: "+element.geneClass
-						+"<br/>Kitaake orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
-						+htmlIDstring;/* +"<br/>ID MSU: <a target='_blank' href=\"http://rice.plantbiology.msu.edu/cgi-bin/ORF_infopage.cgi?orf="+ID_MSU7+"\">"+ID_MSU7+"</a>"
-						+"<br/>ID IRGSP: <a target='_blank' href=\"https://rapdb.dna.affrc.go.jp/viewer/gbrowse_details/irgsp1?name="+ID_IRGSP+"\">"+ID_IRGSP+"</a>"
-						+"<br/>ID NCBI:";
-						if(ID_NCBI.match("None")){
-							htmlstring += "None";
-							
-						}else{
-							//split NCBI
-							var tabNCBI=ID_NCBI.split(",");
-							//pour chaque split regexp, add url to html string
-							tabNCBI.forEach(element => {
-								var regexpNCBI = /LOC(\d*)/;
-								NCBI_num = element.match(regexpNCBI)[1];
-								htmlstring += " <a target='_blank' href=\"https://www.ncbi.nlm.nih.gov/gene/"+NCBI_num+"\">"+element+"</a>"
-							});
-						}
-						htmlstring+= "<br/>Aliases: "+Aliases; */
-						$('#gene_card').html(htmlstring);
-					})
-					.then(function() {
-						//Clic sur l'identifiant affiche la zone
-						var resLinks = document.getElementsByClassName('resLink3');
-						for(var i = 0, len = resLinks.length; i < len; i++) {
-							resLinks[i].onclick = function () {
-				
-								//affiche la vue globale
-								let selectAccession = document.getElementById("selectAccession");
-								selectAccession.value="Kitaake";
-								triggerEvent(selectAccession, 'change');
-				
-								//affiche la vue zoom sur le chromosome de l'id cliqué
-								var regexpChrom = /Chr(\d*)_(\d*)/;
-								var idChrom = this.innerText.match(regexpChrom)[1];
-								var position = this.innerText.match(regexpChrom)[2];
-								position = parseInt(position);
-								var stop = position + 1000000;
-				
-								idChrom = parseInt(idChrom);
-								setTimeout(function(){ drawChromosome(idChrom, position, stop ); }, 1000);
-								
-							}
-						}
-					});
-					
+			}); */
 					
 
-				}else if(acc == "Kitaake"){
+				// }
+				/*else if(acc == "Kitaake"){
 					let idsLines = ids.split('\n');
 					idsLines.forEach(line => {
 						var tab = line.split(/\t/);
@@ -1274,11 +1332,8 @@ canvas.addEventListener('click', function (event) {
 							}
 						}
 					});
-				}
-			});
-		}
-	});
-}, false);
+				} */
+
 
 
 
