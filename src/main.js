@@ -1208,7 +1208,7 @@ canvas.addEventListener('click', function (event) {
 			
 
 			htmlOrthoString = await findOrtho(acc, element.id);
-			console.log(htmlOrthoString);
+			//console.log(htmlOrthoString);
 
 			console.log("affiche la gene card");
 			//affiche la gene card
@@ -1239,102 +1239,32 @@ canvas.addEventListener('click', function (event) {
 			htmlstring+= "<br/>Aliases: "+Aliases; */
 			$('#gene_card').html(htmlstring);
 
-			console.log(htmlstring);
+			//Lien vers la séquence orthologue.
+			var resLinks = document.getElementsByClassName('resLink3');
+			for(var i = 0, len = resLinks.length; i < len; i++) {
+				let orthoAcc = document.getElementsByClassName('resLink3')[0].previousSibling.textContent.split(' ')[0];
+				//console.log("*"+orthoAcc+"*");
+				resLinks[i].onclick = function () {
+					
+					//affiche la vue globale
+					let selectAccession = document.getElementById("selectAccession");
+					selectAccession.value= orthoAcc;
+					triggerEvent(selectAccession, 'change');
+			
+					//affiche la vue zoom sur le chromosome de l'id cliqué
+					var regexpChrom = /Chr(\d*)_(\d*)/;
+					var idChrom = this.innerText.match(regexpChrom)[1];
+					var position = this.innerText.match(regexpChrom)[2];
+					position = parseInt(position);
+					var stop = position + 1000000;
+			
+					idChrom = parseInt(idChrom);
+					setTimeout(function(){ drawChromosome(idChrom, position, stop ); }, 1000);
+				}
+			}
 		}
 	});
 });
-
-/* 			.then(function() {
-				//Clic sur l'identifiant affiche la zone
-				var resLinks = document.getElementsByClassName('resLink3');
-				for(var i = 0, len = resLinks.length; i < len; i++) {
-					resLinks[i].onclick = function () {
-				
-						//affiche la vue globale
-						let selectAccession = document.getElementById("selectAccession");
-						selectAccession.value="Kitaake";
-						triggerEvent(selectAccession, 'change');
-				
-						//affiche la vue zoom sur le chromosome de l'id cliqué
-						var regexpChrom = /Chr(\d*)_(\d*)/;
-						var idChrom = this.innerText.match(regexpChrom)[1];
-						var position = this.innerText.match(regexpChrom)[2];
-						position = parseInt(position);
-						var stop = position + 1000000;
-				
-						idChrom = parseInt(idChrom);
-						setTimeout(function(){ drawChromosome(idChrom, position, stop ); }, 1000);
-								
-					}
-				}
-			}); */
-					
-
-				// }
-				/*else if(acc == "Kitaake"){
-					let idsLines = ids.split('\n');
-					idsLines.forEach(line => {
-						var tab = line.split(/\t/);
-						if(element.id == tab[0]){
-							ID_OsKitaake = tab[1];
-						}
-					});
-
-					//fichier des orthologues
-					fetch('./data_'+release+'/ids/Nip_Kit_ortho.txt')
-					.then(function(response) {
-						return orthoTab = response.text();
-					})
-					.then(function(ortho) {
-						let orthoLines = ortho.split('\n');
-						orthoLines.forEach(line => {
-							var tab = line.split(/\t/);
-							if(element.id == tab[1].trim()){ //trim pour enlever les eventuels espaces ou retour chariot
-								orthologous = tab[0];
-							}
-						});
-						//console.log(orthologous);
-
-					//affiche la gene card
-					document.getElementById("gene_card").style.display = "block";
-					$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id
-					+"</p><a target='_blank' href=\" https://rice-genome-hub.southgreen.fr/oryza_sativa_japonica_kitaake?loc="+element.chr+":"+element.start+".."+element.stop+"\"><button type=\"button\" class=\"btn btn-sm btn-outline-dark\">View on JBrowse </button></a>"
-					+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
-					+"<br/>Family: "+element.family 
-					+"<br/>Class: "+element.geneClass
-					//+"<br/>Nipponbare orthologous: "+orthologous
-					+"<br/>Nipponbare orthologous: <a class='resLink4' href='#'>"+orthologous+"</a>"
-					+"<br/>ID Kitaake: "+ID_OsKitaake);
-					
-					})
-					.then(function() {
-						//Clic sur l'identifiant affiche la zone
-						var resLinks = document.getElementsByClassName('resLink4');
-						//console.log(resLinks);
-						for(var i = 0, len = resLinks.length; i < len; i++) {
-							resLinks[i].onclick = function () {
-				
-								//affiche la vue globale
-								let selectAccession = document.getElementById("selectAccession");
-								selectAccession.value="Nipponbare";
-								triggerEvent(selectAccession, 'change');
-				
-								//affiche la vue zoom sur le chromosome de l'id cliqué
-								var regexpChrom = /Chr(\d*)_(\d*)/;
-								var idChrom = this.innerText.match(regexpChrom)[1];
-								var position = this.innerText.match(regexpChrom)[2];
-								position = parseInt(position);
-								var stop = position + 1000000;
-				
-								idChrom = parseInt(idChrom);
-								setTimeout(function(){ drawChromosome(idChrom, position, stop ); }, 1000);
-								
-							}
-						}
-					});
-				} */
-
-
 
 
 //Draw oriented CDS
