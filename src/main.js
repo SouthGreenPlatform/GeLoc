@@ -16,6 +16,8 @@ let gap = 0;
 let totalGap = 0;
 //cds
 var genesElements = [];
+//cds sur la frise des synteny
+var syntElements = [];
 //table des positions stop
 var stopTab = [];
 //table des positions frameshift
@@ -1077,7 +1079,7 @@ var ctxSynt = canvasSynt.getContext('2d');
 canvasSynt.addEventListener('click', function (event) {
 
 	//augmente la taille de la div
-	$('.zoom_global').animate({height:'350px'}, 500);
+	$('.zoom_global').animate({height:'260px'}, 500);
 
 	var versus="";
 	var orthologous="";
@@ -1089,9 +1091,10 @@ canvasSynt.addEventListener('click', function (event) {
 	console.log(x, y);
 
 	// Collision detection between clicked offset and element.
+	//marge de 5px de chaque coté
 	genesElements.forEach(async function (element) {
-		if (y > element.genePosY && y < element.genePosY + element.geneHeigth
-			&& x > element.genePosX && x < element.genePosX + element.geneWidth) {
+		if (y > element.genePosY-5 && y < element.genePosY + element.geneHeigth +5
+			&& x > element.genePosX-5 && x < element.genePosX + element.geneWidth +5) {
 			console.log("Collision");
 
 			//cherche l'orthologue du gènes
@@ -1117,34 +1120,105 @@ canvasSynt.addEventListener('click', function (event) {
 				if(err){
 					console.log(err);
 				}else{
-					console.log(report);
-					//const gffResult = document.getElementById('gffResult');
-					
-					//update to draw in reading sense
-					//gffResult.innerHTML = report;
-					//gffHash = parseGff(report);
+					//console.log(report);
+					let gffHash = parseGff(report);
 					//console.log(gffHash);
-					//drawZoom(from, to, gffHash);
+					drawSynteny(from, to, gffHash);
 				}
 			});
-
-			//efface avant de redessiner
-			//Le dessin commence va de x=0 à x=1000
-			//						   y=70 à y=100
-			//clear before redraw
-			ctxSynt.clearRect(0, 0, canvasSynt.width, canvasSynt.height);
-
-			//draw line
-			ctxSynt.beginPath();
-			ctxSynt.moveTo(40, 70 );
-			ctxSynt.lineTo(800+40, 70);
-			ctxSynt.stroke();
-
-		}else{
-			console.log("Pas collision")
 		}
 	});
 });
+
+// Draw zoom view and CDS view
+function drawSynteny(from, to, gffHash){
+
+	console.log("draw synteny");
+
+	var canvasSynt = document.getElementById('synteny');
+	var ctxSynt = canvasSynt.getContext('2d');
+
+	//efface avant de redessiner
+	//Le dessin commence va de x=0 à x=1000
+	//						   y=70 à y=100
+	//clear before redraw
+	ctxSynt.clearRect(0, 0, canvasSynt.width, canvasSynt.height);
+
+	//
+	let ySyntLine = 200;
+	let firstCDS = true;
+	let countGene = 0;
+	let x = 40;
+	let y = 50;
+	let yInit = 10;
+	let xFirstCDS = 0;
+
+
+	//draw line
+	ctxSynt.beginPath();
+	ctxSynt.moveTo(40, ySyntLine);
+	ctxSynt.lineTo(800+40, ySyntLine);
+	ctxSynt.stroke();
+
+	//reset CDS elements tab
+	syntElements = [];
+	
+	//nb de bases dans le canvas
+	const seqLength = to - from;
+
+	//pour chaque gènes
+	for (var key in gffHash) {
+		var currentGene = gffHash[key];
+		var tab = currentGene;
+		
+		countGene++;
+		firstCDS = true;
+		gap = 0;
+		totalGap =0;
+
+		//position on canvas
+		startGene = ((tab[3]-from) * 800) / seqLength;
+		widthGene = ((tab[4]-tab[3]) * 800) / seqLength;
+			
+		//draw gene rect
+		ctxSynt.fillStyle="black";    // color of fill
+		// x y width height	
+		ctxSynt.fillRect(startGene+x, ySyntLine-10, widthGene, 20); // create rectangle  
+
+		var regexpClass = /Class=([^\s]*)/;
+		var geneClass = tab[8].match(regexpClass)[1];
+		var regexpId = /ID=(\w*)/;
+		var id = tab[8].match(regexpId)[1];
+
+		var regexpFamily = /Fam=(.*);/;
+		var family = tab[8].match(regexpFamily)[1];
+
+		//Save gene infos
+		element = {
+			chr: tab[0], 
+			start: tab[3],
+			stop: tab[4],
+			orientation: tab[6],
+			infos: tab[8],
+			geneClass: geneClass,
+			id: id,
+			family: family,
+
+			//global gene view infos
+			genePosX: startGene+x,
+			genePosY: 40,
+			geneWidth: widthGene,
+			geneHeigth: 20,
+
+			//CDS view infos
+			width: 1200,
+			height: 22,
+			top: countGene * y + yInit -2, //first CDS position top
+			left: xFirstCDS + x -5         //first CDS position left
+		}
+		syntElements.push(element);
+	}
+}
 
 //canvas CDS
 var canvas = document.getElementById('cds');
