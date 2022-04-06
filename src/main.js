@@ -695,7 +695,7 @@ function drawZoom(from, to, gffHash){
 	//nb de bases dans le canvas
 	const seqLength = to - from;
 
-
+	//pour chaque gènes
 	for (var key in gffHash) {
 		var currentGene = gffHash[key];
 		var tab = currentGene;
@@ -1066,6 +1066,81 @@ function parseGff(report){
 	return gffHash;
 }
 
+//canvas frise globale 
+//layer synteny
+var canvasSynt = document.getElementById('synteny');
+var ctxSynt = canvasSynt.getContext('2d');
+
+//fonction clique sur un gene de la frise
+canvasSynt.addEventListener('click', function (event) {
+
+	//augmente la taille de la div
+	$('.zoom_global').animate({height:'350px'}, 500);
+
+	var versus="";
+	var orthologous="";
+
+	//position du clic sur le canvas, tient compte du scroll
+	var canoffset = $(canvasSynt).offset();
+	var x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoffset.left);
+	var y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoffset.top) + 1;
+	console.log(x, y);
+
+	// Collision detection between clicked offset and element.
+	genesElements.forEach(async function (element) {
+		if (y > element.genePosY && y < element.genePosY + element.geneHeigth
+			&& x > element.genePosX && x < element.genePosX + element.geneWidth) {
+			console.log("Collision");
+
+			//cherche l'orthologue du gènes
+			[versus, orthologous] = await findOrtho(acc, element.id);
+			console.log(versus, orthologous);
+
+			//recupère les infos gff de l'orthologue via le serveur node
+			//info ideogram
+			var r = ideogramChr.selectedRegion,
+			from = r.from.toLocaleString(), // Adds thousands-separator
+			to = r.to.toLocaleString(),
+			gffReport = "",
+			extent = r.extent.toLocaleString();
+			chrnum = ideogramChr.config.chromosome;
+			
+			//Appel au serveur
+
+			/////////mettre le paaaath à la place du nom de l'accession et 
+			// de la release !!!!!!!
+			socket.emit('run', release, versus, chrnum, from, to, function(err, report){
+				if(err){
+					console.log(err);
+				}else{
+					console.log(report);
+					//const gffResult = document.getElementById('gffResult');
+					
+					//update to draw in reading sense
+					//gffResult.innerHTML = report;
+					//gffHash = parseGff(report);
+					//console.log(gffHash);
+					//drawZoom(from, to, gffHash);
+				}
+			});
+
+			//efface avant de redessiner
+			//Le dessin commence va de x=0 à x=1000
+			//						   y=70 à y=100
+			//clear before redraw
+			ctxSynt.clearRect(0, 0, canvasSynt.width, canvasSynt.height);
+
+			//draw line
+			ctxSynt.beginPath();
+			ctxSynt.moveTo(40, 70 );
+			ctxSynt.lineTo(800+40, 70);
+			ctxSynt.stroke();
+
+		}else{
+			console.log("Pas collision")
+		}
+	});
+});
 
 //canvas CDS
 var canvas = document.getElementById('cds');
@@ -1109,9 +1184,10 @@ canvas.addEventListener('mousemove', function (event) {
 	
 });
 
+//cherche l'orthologue du gène "id" de l'accession "acc"
 function findOrtho(acc, id ){
 	return new Promise((resolve,reject)=>{
-		let htmlOrthoString = "";
+		
 		//pour tout les fichiers orthologues
 		var orthos = config_accessions[acc]['ortho'];
 		console.log(orthos);
@@ -1134,21 +1210,21 @@ function findOrtho(acc, id ){
 						var tab = line.split(/\t/);
 						if(id == tab[0].trim()){ //trim pour enlever les eventuels espaces ou retour chariot
 							orthologous = tab[1];
-							htmlOrthoString += "<br/>"+versus+" orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
+							//htmlOrthoString += "<br/>"+versus+" orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
 							//console.log(htmlOrthoString);
-							resolve(htmlOrthoString);
+							resolve([versus, orthologous]);
 						}else if(id == tab[1].trim()){
 							orthologous = tab[0];
-							htmlOrthoString += "<br/>"+versus+" orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
+							//htmlOrthoString += "<br/>"+versus+" orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
 							//console.log(htmlOrthoString);
-							resolve(htmlOrthoString);
+							resolve([versus, orthologous]);
 						}
 					});
 				});
 			}
 		}else{
 			console.log("no orthologous");
-			resolve(htmlOrthoString);
+			resolve([versus, orthologous]);
 		}
 			
 	});
@@ -1177,6 +1253,7 @@ canvas.addEventListener('click', function (event) {
 			var urlListe ="";
 			var Aliases ="";
 			var ID_OsKitaake="";
+			var versus="";
 			var orthologous="";
 
 			var htmlIDstring = "";
@@ -1206,8 +1283,8 @@ canvas.addEventListener('click', function (event) {
 				});
 			}
 			
-
-			htmlOrthoString = await findOrtho(acc, element.id);
+			[versus, orthologous] = await findOrtho(acc, element.id);
+			htmlOrthoString = "<br/>"+versus+" orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
 			//console.log(htmlOrthoString);
 
 			console.log("affiche la gene card");

@@ -345,8 +345,11 @@ caracterised by an "X" character.
 		<canvas id="zoom_global" height="300" width="1000">
 			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
 		</canvas>
+		<!-- yellow highlighted genes -->
 		<canvas id="zoom_selected" height="80" width="1000">
-
+		</canvas>
+		<!-- synteny view -->
+		<canvas id="synteny" height="80" width="1000">
 		</canvas>
 
 	</div>
