@@ -465,8 +465,10 @@ function writeSelectedRange() {
 	//console.log(typeof(from));
 	//console.log("region from "+from+" to "+to+ " extent "+extent);
 
+	let gffPath = config_accessions[acc]['gff'];
+
 	//Appel au serveur
-    socket.emit('run', release, acc, chrnum, from, to, function(err, report){
+    socket.emit('run', gffPath, chrnum, from, to, function(err, report){
         if(err){
             console.log(err);
         }else{
@@ -1104,12 +1106,14 @@ canvasSynt.addEventListener('click', function (event) {
 			gffReport = "",
 			extent = r.extent.toLocaleString();
 			chrnum = ideogramChr.config.chromosome;
+
+			//supprime les espaces dans les positions
+			from = from.replace(/\s/g, "");
+			to = to.replace(/\s/g, "");
 			
 			//Appel au serveur
-
-			/////////mettre le paaaath à la place du nom de l'accession et 
-			// de la release !!!!!!!
-			socket.emit('run', release, versus, chrnum, from, to, function(err, report){
+			let gffPath = config_accessions[versus]['gff'];
+			socket.emit('run', gffPath, chrnum, from, to, function(err, report){
 				if(err){
 					console.log(err);
 				}else{
