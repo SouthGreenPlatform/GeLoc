@@ -1093,13 +1093,16 @@ canvasSynt.addEventListener('click', function (event) {
 	// Collision detection between clicked offset and element.
 	//marge de 5px de chaque coté
 	genesElements.forEach(async function (element) {
+		//cherche l'orthologue du gènes
+		[versus, orthologous] = await findOrtho(acc, element.id);
+		//save orthologous in genes info
+		element.versus = versus;
+		element.ortho = orthologous;
+		//console.log(versus, orthologous);
+
 		if (y > element.genePosY-5 && y < element.genePosY + element.geneHeigth +5
 			&& x > element.genePosX-5 && x < element.genePosX + element.geneWidth +5) {
 			console.log("Collision");
-
-			//cherche l'orthologue du gènes
-			[versus, orthologous] = await findOrtho(acc, element.id);
-			console.log(versus, orthologous);
 
 			//recupère les infos gff de l'orthologue via le serveur node
 			//info ideogram
@@ -1152,7 +1155,6 @@ function drawSynteny(from, to, gffHash){
 	let y = 50;
 	let yInit = 10;
 	let xFirstCDS = 0;
-
 
 	//draw line
 	ctxSynt.beginPath();
@@ -1218,7 +1220,34 @@ function drawSynteny(from, to, gffHash){
 		}
 		syntElements.push(element);
 	}
+	
+	console.log(genesElements);
+	console.log(syntElements);
+	//draw link between orthologous genes
+	//pour chaque gene de l'accession du haut
+	genesElements.forEach(function (element) {
+		syntElements.forEach(function (syntElement){
+			
+			if(element.ortho === syntElement.id){
+				console.log('Match '+element.ortho+' '+syntElement.id);
+				//draw link
+				ctxSynt.save();
+				ctxSynt.strokeStyle="green";
+				ctxSynt.lineWidth = 1;
+
+				ctxSynt.beginPath();
+				//bas du gene du haut
+				ctxSynt.moveTo(element.genePosX, element.genePosY+20);
+				//haut du gene du bas
+				ctxSynt.lineTo(syntElement.genePosX, syntElement.genePosY+150);
+				ctxSynt.stroke();
+				ctxSynt.restore();
+
+			}
+		});
+	});
 }
+
 
 //canvas CDS
 var canvas = document.getElementById('cds');
@@ -1287,12 +1316,12 @@ function findOrtho(acc, id ){
 					orthoLines.forEach(line => {
 						var tab = line.split(/\t/);
 						if(id == tab[0].trim()){ //trim pour enlever les eventuels espaces ou retour chariot
-							orthologous = tab[1];
+							orthologous = tab[1].trim();
 							//htmlOrthoString += "<br/>"+versus+" orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
 							//console.log(htmlOrthoString);
 							resolve([versus, orthologous]);
 						}else if(id == tab[1].trim()){
-							orthologous = tab[0];
+							orthologous = tab[0].trim();
 							//htmlOrthoString += "<br/>"+versus+" orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
 							//console.log(htmlOrthoString);
 							resolve([versus, orthologous]);
