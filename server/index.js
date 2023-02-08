@@ -31,16 +31,16 @@ io.on('connection', socket => {
 	});
 	
 	//run pipeline
-	socket.on('run', (release, acc, chrnum, from, to, callback) => {
+	socket.on('run', (gffPath, chrnum, from, to, callback) => {
 		console.log("RUN");
 		from = from.replace(/ /g, "");
 		to = to.replace(/ /g, "");
 
-		const gffPath = './data_'+release+'/gff';
+		//const gffPath = './data_'+release+'/gff';
 
 		const { exec } = require("child_process");
-		console.log(`tabix ${gffPath}/LRR_${acc}.gff.gz Chr${chrnum}:${from}-${to}`);
-		exec(`tabix ${gffPath}/LRR_${acc}.gff.gz Chr${chrnum}:${from}-${to}`, (error, stdout, stderr) => {
+		console.log(`tabix ${gffPath} Chr${chrnum}:${from}-${to}`);
+		exec(`tabix ${gffPath} Chr${chrnum}:${from}-${to}`, (error, stdout, stderr) => {
 			if (error) {
 				console.error(`exec error: ${error}`);
 				return;
@@ -50,7 +50,7 @@ io.on('connection', socket => {
 
 			//si pas de resultat on essaye sans "chr"
 			if(!stdout){
-				exec(`tabix ${gffPath}/LRR_${acc}.gff.gz ${chrnum}:${from}-${to}`, (error, stdout, stderr) => {
+				exec(`tabix ${gffPath} ${chrnum}:${from}-${to}`, (error, stdout, stderr) => {
 					if (error) {
 						console.error(`exec error: ${error}`);
 						return;

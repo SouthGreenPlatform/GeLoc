@@ -563,7 +563,8 @@ margin-left: 2em;
     position: relative;
 }
 
-
+#synteny { position: absolute;
+  z-index: 3 }
 #zoom_selected { position: absolute;
 z-index: 2 }
 #zoom_global { position: absolute;

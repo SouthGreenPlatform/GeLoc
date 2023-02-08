@@ -16,12 +16,16 @@ let gap = 0;
 let totalGap = 0;
 //cds
 var genesElements = [];
+//cds sur la frise des synteny
+var syntElements = [];
 //table des positions stop
 var stopTab = [];
 //table des positions frameshift
 var fsTab = [];
 //json des positions des domaines
 var domains = {};
+//table des identifiants de séquences + synonymes
+var idsTab = [];
 
 //
 console.log(release);
@@ -77,80 +81,6 @@ function initConfig(){
 	};
 	return conf;
 }
-
-
-////////////////////////////////////////////////////////////////
-//LOAD ACCESSION
-////////////////////////////////////////////////////////////////
-let selectAccession = document.getElementById("selectAccession");
-
-selectAccession.addEventListener("change", async function(){
-	//console.log(this.value);
-
-	acc = this.value;
-	clear();
-	//affiche le loader
-	document.getElementById("loader").style.display = "block";
-
-	//hide div to refresh
-	$('#selected_region').hide();
-	$('.ideo_container_chr').hide();
-	$('#gene_card').hide();
-	$('.zoom_global').hide();
-	$('.cds').hide();
-	
-	//affiche la div si elle est cachée
-	$(".ideo_container_global").collapse('show');
-	$('#floating_legend').show();
-
-	config = initConfig();
-	config.annotationsPath='./data_'+release+'/annotations/annot_'+acc+'.json';
-	
-	//charge le fichier densité de l'accession choisie
-	let response = await fetch('./data_'+release+'/density/density_'+acc+'.txt');
-	annotData = await response.text();
-	//Parse les données de densité
-	config.rangeSet = annotationParser(annotData, config);
-    
-	//charge les données de chromosomes de l'accession choisie
-	//fichier tsv
- 	response = await fetch('./data_'+release+'/chromosomes/'+acc+'.tsv');
-	chr_tsv = await response.text();
-	//parse les données et config les chrBands
-	chromosomeTsvParser(chr_tsv, config); 
-	//config.dataDir = "./data_'+release+'/bands/native/"+acc+"/";
-	
-	//supprimer la div de l'image "choose accession"
-	document.getElementById("home").style.display = "none";
-
-	//Charge ideogram
-	ideogram = new Ideogram(config);
-
-	//apparition du bouton download
-	$('#download').fadeIn()
-
-	
-
-	//affiche la selection de chromosome
-	//createSelectChrom();
-
-	//LEGEND
-
-	//affiche la div
-	$('#legend_button').show();
-	$("#DataViz").show();
-	$("#show-hide").show();
-
-	/////// à virer si je remet les tooltips
-	loadingoff();
-
-	//cache le lettres
-	setTimeout(removeLetters, 100);
-	setTimeout(removeLetters, 100);
-
-	//ajoute listener click chromosome
-	setTimeout(onClickChr, 100);
-});
 
 ////////////////////////////////////////////////////////////////
 //parsing fichier chromosome TSV
@@ -537,21 +467,21 @@ function writeSelectedRange() {
 	//console.log(typeof(from));
 	//console.log("region from "+from+" to "+to+ " extent "+extent);
 
+	let gffPath = config_accessions[acc]['gff'];
+
 	//Appel au serveur
-    socket.emit('run', release, acc, chrnum, from, to, function(err, report){
+    socket.emit('run', gffPath, chrnum, from, to, function(err, report){
         if(err){
             console.log(err);
         }else{
 			//console.log(report);
 			const gffResult = document.getElementById('gffResult');
 			
-			//drawZoom(from, to, report);
-			
 			//update to draw in reading sense
 			gffResult.innerHTML = report;
 			gffHash = parseGff(report);
 			//console.log(gffHash);
-			drawZoom2(from, to, gffHash);
+			drawZoom(from, to, gffHash);
 		}
 	});
 
@@ -560,6 +490,9 @@ function writeSelectedRange() {
 }
 
 
+////////////////////////////////////////////////////////
+// Menu select accession
+////////////////////////////////////////////////////////
 var config_accessions = {};
 fetch('./data_'+release+'/config_accessions.json')
 .then(function(response) {
@@ -578,134 +511,155 @@ fetch('./data_'+release+'/config_accessions.json')
 		//value = json content
         //Fill the dropdown with accessions names
         $('#selectAccession').append('<option value="' + index + '">' + index + '</option>');
-        
     });
 });
 
+////////////////////////////////////////////////////////////////
+//LOAD ACCESSION
+////////////////////////////////////////////////////////////////
+let selectAccession = document.getElementById("selectAccession");
+selectAccession.addEventListener("change", async function(){
+	//console.log(this.value);
 
-//recupère les coordonnées des codons stop
-fetch('./data_'+release+'/annotations/Nip_stop_genomic_pos.txt')
-.then(function(response) {
-	return response.text();
-})
-.then(function(text) {
-	let lines = text.split('\n');
-	lines.forEach(line => {
-		stopTab.push(line);
-		//console.log(stopTab);
-	});
-});
-fetch('./data_'+release+'/annotations/Kit_stop_genomic_pos.txt')
-.then(function(response) {
-	return response.text();
-})
-.then(function(text) {
-	let lines = text.split('\n');
-	lines.forEach(line => {
-		stopTab.push(line);
-		//console.log(stopTab);
-	});
-});
-fetch('./data_'+release+'/annotations/Ruf_stop_genomic_pos.txt')
-.then(function(response) {
-	return response.text();
-})
-.then(function(text) {
-	let lines = text.split('\n');
-	lines.forEach(line => {
-		stopTab.push(line);
-		//console.log(stopTab);
-	});
-});
+	acc = this.value;
+	clear();
+	//affiche le loader
+	document.getElementById("loader").style.display = "block";
 
-//recupère les coordonnées des frameshift
-fetch('./data_'+release+'/annotations/frameshift_NIP.txt')
-.then(function(response) {
-	if(response.ok){
+	//hide div to refresh
+	$('#selected_region').hide();
+	$('.ideo_container_chr').hide();
+	$('#gene_card').hide();
+	$('.zoom_global').hide();
+	$('.cds').hide();
+	
+	//affiche la div si elle est cachée
+	$(".ideo_container_global").collapse('show');
+	$('#floating_legend').show();
+
+	config = initConfig();
+	//config le fichier annot de l'accession choisie
+	config.annotationsPath=config_accessions[acc]['annot_file'];
+	
+	//charge le fichier densité de l'accession choisie
+	let response = await fetch(config_accessions[acc]['density']);
+	annotData = await response.text();
+	//Parse les données de densité
+	config.rangeSet = annotationParser(annotData, config);
+    
+	//charge les données de chromosomes de l'accession choisie
+	//fichier tsv
+	response = await fetch(config_accessions[acc]['chrom_tsv']);
+	chr_tsv = await response.text();
+	//parse les données et config les chrBands
+	chromosomeTsvParser(chr_tsv, config); 
+	//config.dataDir = "./data_'+release+'/bands/native/"+acc+"/";
+
+	//recupère les coordonnées des codons stop
+	stopTab = [];
+	fetch(config_accessions[acc]['stop'])
+	.then(function(response) {
 		return response.text();
-	}
-})
-.then(function(text) {
-	let lines = text.split('\n');
-	lines.forEach(line => {
-		fsTab.push(line);
-		//console.log(fsTab);
+		
+	})
+	.then(function(text) {
+		let lines = text.split('\n');
+		lines.forEach(line => {			
+			stopTab.push(line);
+		});
 	});
-});
-fetch('./data_'+release+'/annotations/frameshift_KIT.txt')
-.then(function(response) {
-	if(response.ok){
-		return response.text();
-	}
-})
-.then(function(text) {
-	let lines = text.split('\n');
-	lines.forEach(line => {
-		fsTab.push(line);
+
+	//recupère les coordonnées des frameshift
+	fetch(config_accessions[acc]['frameshift'])
+	.then(function(response) {
+		if(response.ok){
+			return response.text();
+		}
+	})
+	.then(function(text) {
+		fsTab = [];
+		let lines = text.split('\n');
+		lines.forEach(line => {
+			fsTab.push(line);
+		});
 	});
-});
-fetch('./data_'+release+'/annotations/frameshift_RUF.txt')
-.then(function(response) {
-	if(response.ok){
-		return response.text();
-	}
-})
-.then(function(text) {
-	let lines = text.split('\n');
-	lines.forEach(line => {
-		fsTab.push(line);
+
+	//recupère les coordonnées des domaines
+	domains = {};
+	fetch(config_accessions[acc]['domains'])
+	.then(function(response) {
+		if(response.ok){
+			return response.json();
+		}
+	})
+	.then((data) => {
+		// Work with JSON data here
+		//domains = data;
+		domains = $.extend(domains, data);
 	});
+
+	//récupère le fichier des ids s'il existe
+	console.log(config_accessions[acc]['ids']);
+	if(config_accessions[acc]['ids']){
+		fetch(config_accessions[acc]['ids'])
+		.then(function(response) {
+			if(response.ok){
+				return response.text();
+			}
+		})
+		.then(function(text) {
+			idsTab = [];
+			let lines = text.split('\n');
+			lines.forEach(line => {
+				idsTab.push(line);
+			});
+		});
+	}
+		
+	
+
+
+	
+	//supprimer la div de l'image "choose accession"
+	document.getElementById("home").style.display = "none";
+
+	//Charge ideogram
+	ideogram = new Ideogram(config);
+
+	//apparition du bouton download
+	$('#download').fadeIn()
+
+	
+
+	//affiche la selection de chromosome
+	//createSelectChrom();
+
+	//LEGEND
+
+	//affiche la div
+	$('#legend_button').show();
+	$("#DataViz").show();
+	$("#show-hide").show();
+
+	/////// à virer si je remet les tooltips
+	loadingoff();
+
+	//cache le lettres
+	setTimeout(removeLetters, 100);
+	setTimeout(removeLetters, 100);
+
+	//ajoute listener click chromosome
+	setTimeout(onClickChr, 100);
 });
 
-//recupère les coordonnées des domaines
-fetch('./data_'+release+'/annotations/domains_NIP.json')
-.then(function(response) {
-	if(response.ok){
-		return response.json();
-	}
-})
-.then((data) => {
-    // Work with JSON data here
-    //domains = data;
-	domains = $.extend(domains, data);
-});
-
-//recupère les coordonnées des domaines
-fetch('./data_'+release+'/annotations/domains_KIT.json')
-.then(function(response) {
-	if(response.ok){
-		return response.json();
-	}
-})
-.then((data) => {
-    // Work with JSON data here
-    //domains = data;
-	domains = $.extend(domains, data);
-});
-
-//recupère les coordonnées des domaines
-fetch('./data_'+release+'/annotations/domains_RUF.json')
-.then(function(response) {
-	if(response.ok){
-		return response.json();
-	}
-})
-.then((data) => {
-    // Work with JSON data here
-    //domains = data;
-	domains = $.extend(domains, data);
-});
 
 $('#readingSense').change(function() {
 	//console.log($('#readingSense').is(':checked')+" redraw");
-	//drawZoom2(from, to, gffHash);
 	writeSelectedRange();
 }); 
 
 // Draw zoom view and CDS view
-function drawZoom2(from, to, gffHash){
-
-	//console.log("drawZoom "+ from +" "+ to);
+function drawZoom(from, to, gffHash){
 
 	//display div
 	$('.zoom_global').show();
@@ -745,7 +699,7 @@ function drawZoom2(from, to, gffHash){
 	//nb de bases dans le canvas
 	const seqLength = to - from;
 
-
+	//pour chaque gènes
 	for (var key in gffHash) {
 		var currentGene = gffHash[key];
 		var tab = currentGene;
@@ -953,13 +907,14 @@ function drawReadingSense(tab, countGene, element){
 				var regexpFS = /(.*)\t(.*)/; //nouveau format
 				var idFS = line.match(regexpFS)[1];
 				var posFS = line.match(regexpFS)[2];
-
-				if(idFS == element.id && posFS <= stopCDS && posFS >= startCDS){
-						
+				
+				//ajoute une marge de 10 aux positions CDS
+				if(idFS == element.id && posFS <= stopCDS+10 && posFS >= startCDS-10){
+					
 					//stop position
 					var xFsPos = (Math.abs(posFS - element.stop) / 10) + x ;
 					drawFrameshift(ctx, xFsPos - totalGap, countGene * y + yInit )	
-				} 
+				}
 			}
 		});
 	});
@@ -1075,9 +1030,11 @@ function drawPlusMinus(tab, countGene, element){
 				var regexpFS = /(.*)\t(.*)/; //nouveau format
 				var idFS = line.match(regexpFS)[1];
 				var posFS = line.match(regexpFS)[2];
-
-				if(idFS == element.id && posFS <= stopCDS && posFS >= startCDS){
+				
+				//ajoute une marge de 10 aux positions CDS
+				if(idFS == element.id && posFS <= stopCDS+10 && posFS >= startCDS-10){
 						
+					console.log("match frameshift");
 					//stop position
 					var xFsPos = ((posFS - element.start) / 10) + x ;
 					drawFrameshift(ctx, xFsPos - totalGap, countGene * y + yInit )	
@@ -1086,250 +1043,6 @@ function drawPlusMinus(tab, countGene, element){
 		});	
 	});
 }
-
-// Draw zoom view and CDS view
-function drawZoom(from, to, report){
-
-	//display div
-	$('.zoom_global').show();
-	$('.cds').show();
-
-	//canvas CDS
-	var canvas = document.getElementById('cds');
-	var ctx = canvas.getContext('2d');
-
-	//canvas zoom
-	var canvasGlobal = document.getElementById('zoom_global');
-	var ctxGlobal = canvasGlobal.getContext('2d');
-
-	//clear before redraw
-	ctxGlobal.clearRect(0, 0, canvasGlobal.width, canvasGlobal.height);
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-	//
-	let firstCDS = true;
-	let countGene = 0;
-	let x = 40;
-	let y = 50;
-	let yInit = 10;
-	let xFirstCDS = 0;
-	let startFirstCDS = 0;
-	let xCDS;
-	let yCDS;
-	let widthCDS;
-	let startLine = 0;
-	let stopLine = 0;
-	let currentDom;
-
-	//reset CDS elements tab
-	genesElements = [];
-	
-	//nb de bases dans le canvas
-	const seqLength = to - from;
-	//console.log("seq length "+seqLength);
-	let gffLines = report.split('\n');
-
-	//parsing GFF file
-	gffLines.forEach(line => {
-		var tab = line.split(/\t/);
-		var geneGenomicCoord = tab[3];
-
-		//Ligne gene
-		if(tab[2] == "gene"){
-
-			countGene++;
-			firstCDS = true;
-			gap = 0;
-			totalGap =0;
-			//console.log("gap : "+gap+" totalgap : "+totalGap );
-
-			//position on canvas
-			startGene = ((tab[3]-from) * 800) / seqLength;
-			widthGene = ((tab[4]-tab[3]) * 800) / seqLength;
-
-			//draw line
-			ctxGlobal.beginPath();
-			ctxGlobal.moveTo(x, y );
-			ctxGlobal.lineTo(800+x, y);
-			ctxGlobal.stroke();
-			
-			//draw gene rect
-			ctxGlobal.fillStyle="black";    // color of fill
-			// x y width height	
-			ctxGlobal.fillRect(startGene+x, 40, widthGene, 20); // create rectangle  
-			//console.log(startGene + wigthGene );
-
-			//draw background = element clickable
-			ctx.fillStyle="white";
-			ctx.fillRect(xFirstCDS + x -5, countGene * y + yInit -2, 1200, 22);
-
-			var regexpClass = /Class=([^\s]*)/;
-			var geneClass = tab[8].match(regexpClass)[1];
-			var regexpId = /ID=(\w*)/;
-			var id = tab[8].match(regexpId)[1];
-			
-			var regexpFamily = /Fam=(.*);/;
-
-			var family = tab[8].match(regexpFamily)[1];
-
-			//Save gene infos
-			element = {
-				chr: tab[0], 
-				start: tab[3],
-				stop: tab[4],
-				orientation: tab[6],
-				infos: tab[8],
-				geneClass: geneClass,
-				id: id,
-				family: family,
-
-				//global gene view infos
-				genePosX: startGene+x,
-				genePosY: 40,
-				geneWidth: widthGene,
-				geneHeigth: 20,
-
-				//CDS view infos
-				width: 1200,
-				height: 22,
-				top: countGene * y + yInit -2, //first CDS position top
-				left: xFirstCDS + x -5         //first CDS position left
-			}
-			genesElements.push(element);
-
-			//draw gene infos
-			ctx.fillStyle="black";
-			ctx.font = '12px sans-serif';
-			ctx.fillText(element.id+" - "+element.family+" - "+element.geneClass, x, countGene * y + yInit -5);
-
-			startFirstCDS = tab[3];			
-		}
-
-		//Traitement des CDS
-		if(tab[2] == "CDS"){
-
-			//convert bp to pixel
-			startCDS = tab[3];
-			stopCDS = tab[4];
-			widthCDS = (tab[4] - tab[3]) / 10;
-			yCDS = countGene * y + yInit;
-			//position du début du CDS
-			// largeur / 10 + x de départ - le gap si on a coupé dans l'intron
-			xCDS = (tab[3] - startFirstCDS) / 10 + x - totalGap;
-
-			//identifiant cds
-			var regexpCDSID = /.*(cds_\d+);.*/;
-			if (tab[8].match(regexpCDSID)) {
-				cdsid = tab[8].match(regexpCDSID)[1];
-			}else{
-				cdsid = "";
-			}
-
-			//console.log(cdsid);
-
-			//variable pour les plus ou minus
-			if(tab[6] == "+"){
-				plusMinus = "plus";
-			}else{
-				plusMinus = "minus";
-
-				//calcul des positions px pour l'affichage reading sense
-				
-
-			}
-			
-			//draw first CDS
-			if (firstCDS){
-				//Draw plus or minus CDS
-				//drawArrow(ctx, xCDS-20 , yCDS, 3, plusMinus, element.family);
-				drawSign(ctx, xCDS-20 , yCDS, 3, plusMinus, element.family);
-				drawCDS(ctx, xCDS, yCDS, widthCDS);
-				startLine = xCDS + widthCDS;
-				firstCDS = false;
-			
-			//Draw other CDS
-			}else{
-				//line to bloc
-				stopLine = xCDS;
-				
-				//dessine la ligne et update le gap
-				drawLine(ctx, startLine, stopLine, yCDS );
-				
-				//fleche + ou -
-				//enlève l'éventuel gap supplémentaire calculé en dessinant la ligne
-				drawCDS(ctx, xCDS-gap, yCDS, widthCDS);
-				startLine = xCDS-gap + widthCDS;
-			}
-
-			//draw domain if it is inside the current CDS
-			if(cdsid != ""){
-				let currentGene = element.id;
-				
-				if(domains[currentGene] !== undefined){
-					cdsDom = domains[currentGene][cdsid];
-				}
-
-				if(cdsDom !== undefined){
-					//console.log("current Gene  : "+currentGene+ " cdsid " +cdsid+ " dom :  "+ JSON.stringify(cdsDom));
-					
-					//pour chaque type de domain
-					for(key in cdsDom){
-						//console.log(key);
-						let currentDom = cdsDom[key];
-						currentDom.forEach(dom => {
-							var domStart = dom.match(/(.*);(.*)/)[1];
-							var domStop = dom.match(/(.*);(.*)/)[2];
-							var domLength = (domStop - domStart) /10;
-							//console.log(domStart +" "+domStop);
-
-							//domain position in px
-							var xDomStart = ((domStart - startFirstCDS) / 10) + x- totalGap ;
-							//var xDomStop = ((domStop - startFirstCDS) / 10) + x- totalGap ;
-
-							drawDomain(ctx, key, xDomStart , countGene * y + yInit +1, domLength);
-						});
-					}
-				} 
-			}
-			
-			
-			//draw stop if it is inside the current CDS
-			stopTab.forEach(line => {
-				var tab = line.split(/\t/);
-				if(tab[0] == element.id && tab[1] <= stopCDS && tab[1] >= startCDS){
-						
-					//stop position
-					var stopPos = tab[1];
-					var XstopPos = ((stopPos - startFirstCDS) / 10) + x ;
-					drawStop(ctx, XstopPos-totalGap, countGene * y + yInit )	
-					drawStar(ctx, XstopPos-totalGap, countGene * y + yInit +7, 2, 5, 2);		
-				}
-			});
-
-			//draw frameshift if it is inside the current CDS
-			fsTab.forEach(line => {
-				if(line.length >0){
-					//console.log(line);
-				
-					//var regexpFS = /(.*);frameshift;(.*)/;
-					var regexpFS = /(.*)\t(.*)/; //nouveau format
-					var idFS = line.match(regexpFS)[1];
-					var posFS = line.match(regexpFS)[2];
-
-					if(idFS == element.id && posFS <= stopCDS && posFS >= startCDS){
-							
-						//stop position
-						var xFsPos = ((posFS - startFirstCDS) / 10) + x ;
-						drawFrameshift(ctx, xFsPos - totalGap, countGene * y + yInit )	
-						//console.log("frameshift "+ posFS + " gap "+ gap+" totalGap "+totalGap);	
-					} 
-				}
-			});	
-		}
-	});
-}
-
-
 
 //parsing GFF to hash
 function parseGff(report){
@@ -1355,6 +1068,184 @@ function parseGff(report){
 	});
 	//console.log(gffHash);
 	return gffHash;
+}
+
+//canvas frise globale 
+//layer synteny
+var canvasSynt = document.getElementById('synteny');
+var ctxSynt = canvasSynt.getContext('2d');
+
+//fonction clique sur un gene de la frise
+canvasSynt.addEventListener('click', function (event) {
+
+	//augmente la taille de la div
+	$('.zoom_global').animate({height:'260px'}, 500);
+
+	var versus="";
+	var orthologous="";
+
+	//position du clic sur le canvas, tient compte du scroll
+	var canoffset = $(canvasSynt).offset();
+	var x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoffset.left);
+	var y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoffset.top) + 1;
+	console.log(x, y);
+
+	// Collision detection between clicked offset and element.
+	//marge de 5px de chaque coté
+	genesElements.forEach(async function (element) {
+		//cherche l'orthologue du gènes
+		[versus, orthologous] = await findOrtho(acc, element.id);
+		//save orthologous in genes info
+		element.versus = versus;
+		element.ortho = orthologous;
+		//console.log(versus, orthologous);
+
+		if (y > element.genePosY-5 && y < element.genePosY + element.geneHeigth +5
+			&& x > element.genePosX-5 && x < element.genePosX + element.geneWidth +5) {
+			console.log("Collision");
+
+			//recupère les infos gff de l'orthologue via le serveur node
+			//info ideogram
+			var r = ideogramChr.selectedRegion,
+			from = r.from.toLocaleString(), // Adds thousands-separator
+			to = r.to.toLocaleString(),
+			gffReport = "",
+			extent = r.extent.toLocaleString();
+			chrnum = ideogramChr.config.chromosome;
+
+			//supprime les espaces dans les positions
+			from = from.replace(/\s/g, "");
+			to = to.replace(/\s/g, "");
+			
+			//Appel au serveur
+			let gffPath = config_accessions[versus]['gff'];
+			socket.emit('run', gffPath, chrnum, from, to, function(err, report){
+				if(err){
+					console.log(err);
+				}else{
+					//console.log(report);
+					let gffHash = parseGff(report);
+					//console.log(gffHash);
+					drawSynteny(from, to, gffHash);
+				}
+			});
+		}
+	});
+});
+
+// Draw zoom view and CDS view
+function drawSynteny(from, to, gffHash){
+
+	console.log("draw synteny");
+
+	var canvasSynt = document.getElementById('synteny');
+	var ctxSynt = canvasSynt.getContext('2d');
+
+	//efface avant de redessiner
+	//Le dessin commence va de x=0 à x=1000
+	//						   y=70 à y=100
+	//clear before redraw
+	ctxSynt.clearRect(0, 0, canvasSynt.width, canvasSynt.height);
+
+	//
+	let ySyntLine = 200;
+	let firstCDS = true;
+	let countGene = 0;
+	let x = 40;
+	let y = 50;
+	let yInit = 10;
+	let xFirstCDS = 0;
+
+	//draw line
+	ctxSynt.beginPath();
+	ctxSynt.moveTo(40, ySyntLine);
+	ctxSynt.lineTo(800+40, ySyntLine);
+	ctxSynt.stroke();
+
+	//reset CDS elements tab
+	syntElements = [];
+	
+	//nb de bases dans le canvas
+	const seqLength = to - from;
+
+	//pour chaque gènes
+	for (var key in gffHash) {
+		var currentGene = gffHash[key];
+		var tab = currentGene;
+		
+		countGene++;
+		firstCDS = true;
+		gap = 0;
+		totalGap =0;
+
+		//position on canvas
+		startGene = ((tab[3]-from) * 800) / seqLength;
+		widthGene = ((tab[4]-tab[3]) * 800) / seqLength;
+			
+		//draw gene rect
+		ctxSynt.fillStyle="black";    // color of fill
+		// x y width height	
+		ctxSynt.fillRect(startGene+x, ySyntLine-10, widthGene, 20); // create rectangle  
+
+		var regexpClass = /Class=([^\s]*)/;
+		var geneClass = tab[8].match(regexpClass)[1];
+		var regexpId = /ID=(\w*)/;
+		var id = tab[8].match(regexpId)[1];
+
+		var regexpFamily = /Fam=(.*);/;
+		var family = tab[8].match(regexpFamily)[1];
+
+		//Save gene infos
+		element = {
+			chr: tab[0], 
+			start: tab[3],
+			stop: tab[4],
+			orientation: tab[6],
+			infos: tab[8],
+			geneClass: geneClass,
+			id: id,
+			family: family,
+
+			//global gene view infos
+			genePosX: startGene+x,
+			genePosY: 40,
+			geneWidth: widthGene,
+			geneHeigth: 20,
+
+			//CDS view infos
+			width: 1200,
+			height: 22,
+			top: countGene * y + yInit -2, //first CDS position top
+			left: xFirstCDS + x -5         //first CDS position left
+		}
+		syntElements.push(element);
+	}
+	
+	console.log(genesElements);
+	console.log(syntElements);
+	//draw link between orthologous genes
+	//pour chaque gene de l'accession du haut
+	genesElements.forEach(function (element) {
+		syntElements.forEach(function (syntElement){
+			
+			if(element.ortho === syntElement.id){
+				console.log('Match '+element.ortho+' '+syntElement.id);
+				//draw link
+				ctxSynt.save();
+				ctxSynt.strokeStyle="green";
+				ctxSynt.lineWidth = 1;
+
+				ctxSynt.beginPath();
+				//bas du gene du haut
+				ctxSynt.moveTo(element.genePosX, element.genePosY+20);
+				//haut du gene du bas
+				ctxSynt.lineTo(syntElement.genePosX, syntElement.genePosY+150);
+				ctxSynt.stroke();
+				ctxSynt.restore();
+
+			}
+		});
+	});
 }
 
 
@@ -1400,6 +1291,52 @@ canvas.addEventListener('mousemove', function (event) {
 	
 });
 
+//cherche l'orthologue du gène "id" de l'accession "acc"
+function findOrtho(acc, id ){
+	return new Promise((resolve,reject)=>{
+		
+		//pour tout les fichiers orthologues
+		var orthos = config_accessions[acc]['ortho'];
+		console.log(orthos);
+		if(orthos){
+			console.log("ok orthologous");
+			for (var i = 0; i < orthos.length; i++) {
+			
+				let versus = orthos[i]['versus'];
+			
+				//fichier des orthologues
+				fetch(config_accessions[acc]['ortho'][i]['ortho_file'])
+				.then(function(response) {
+					if(response.ok){
+						return response.text();
+					}
+				})
+				.then(function(text) {
+					let orthoLines = text.split('\n');
+					orthoLines.forEach(line => {
+						var tab = line.split(/\t/);
+						if(id == tab[0].trim()){ //trim pour enlever les eventuels espaces ou retour chariot
+							orthologous = tab[1].trim();
+							//htmlOrthoString += "<br/>"+versus+" orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
+							//console.log(htmlOrthoString);
+							resolve([versus, orthologous]);
+						}else if(id == tab[1].trim()){
+							orthologous = tab[0].trim();
+							//htmlOrthoString += "<br/>"+versus+" orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
+							//console.log(htmlOrthoString);
+							resolve([versus, orthologous]);
+						}
+					});
+				});
+			}
+		}else{
+			console.log("no orthologous");
+			resolve([versus, orthologous]);
+		}
+			
+	});
+}
+
 
 //fonction click sur un gene / CDS
 canvas.addEventListener('click', function (event) {
@@ -1410,7 +1347,7 @@ canvas.addEventListener('click', function (event) {
 	var y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoffset.top) + 1;
 
 	// Collision detection between clicked offset and element.
-	genesElements.forEach(function (element) {
+	genesElements.forEach(async function (element) {
 		if (y > element.top && y < element.top + element.height
 			&& x > element.left && x < element.left + element.width) {
 
@@ -1423,176 +1360,95 @@ canvas.addEventListener('click', function (event) {
 			var urlListe ="";
 			var Aliases ="";
 			var ID_OsKitaake="";
+			var versus="";
 			var orthologous="";
-			fetch('./data_'+release+'/ids/'+acc+'_IDs.txt')
-			.then(function(response) {
-				if(response.ok){
-					return response.text();
+
+			var htmlIDstring = "";
+			var htmlOrthoString = "";
+			//récupère les intitulés des champs en-tete
+			if(idsTab.length){
+				let entete = idsTab[0].split(/\t/);
+				console.log(entete);
+
+				//cherche dans la table des ids
+				idsTab.forEach(line => {
+					var tab = line.split(/\t/);
+					if(element.id == tab[0]){
+
+						for (var i = 1; i < entete.length; i++) {
+							htmlIDstring += "<br/>"+entete[i]+" : "+ tab[i]
+						}
+								
+						console.log(htmlIDstring);
+	/* 
+						//console.log(tab[0] +tab[1] +tab[2] +tab[3] +tab[4]);
+						ID_MSU7 = tab[1];
+						ID_IRGSP = tab[2];
+						ID_NCBI = tab[3];
+						//Aliases = tab[4]; */
+					}
+				});
+			}
+			
+			[versus, orthologous] = await findOrtho(acc, element.id);
+			htmlOrthoString = "<br/>"+versus+" orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
+			//console.log(htmlOrthoString);
+
+			console.log("affiche la gene card");
+			//affiche la gene card
+			document.getElementById("gene_card").style.display = "block";
+			var htmlstring = "<p class='font-weight-bold'>Gene card "+element.id
+			+"</p><a target='_blank' href=\"https://rice-genome-hub.southgreen.fr/oryza_sativa_japonica_nipponbare?loc="+element.chr+":"+element.start+".."+element.stop+"\"><button type=\"button\" class=\"btn btn-sm btn-outline-dark\">View on JBrowse </button></a>"
+			+"</p>Position: "+element.chr+":"+element.start+"-"+element.stop
+			+"<br/>Family: "+element.family 
+			+"<br/>Class: "+element.geneClass
+/* 			+"<br/>Kitaake orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
+ */			+htmlOrthoString
+			+htmlIDstring;/* +"<br/>ID MSU: <a target='_blank' href=\"http://rice.plantbiology.msu.edu/cgi-bin/ORF_infopage.cgi?orf="+ID_MSU7+"\">"+ID_MSU7+"</a>"
+			+"<br/>ID IRGSP: <a target='_blank' href=\"https://rapdb.dna.affrc.go.jp/viewer/gbrowse_details/irgsp1?name="+ID_IRGSP+"\">"+ID_IRGSP+"</a>"
+			+"<br/>ID NCBI:";
+			if(ID_NCBI.match("None")){
+				htmlstring += "None";
+						
+			}else{
+				//split NCBI
+				var tabNCBI=ID_NCBI.split(",");
+				//pour chaque split regexp, add url to html string
+				tabNCBI.forEach(element => {
+					var regexpNCBI = /LOC(\d*)/;
+					NCBI_num = element.match(regexpNCBI)[1];
+					htmlstring += " <a target='_blank' href=\"https://www.ncbi.nlm.nih.gov/gene/"+NCBI_num+"\">"+element+"</a>"
+				});
+			}
+			htmlstring+= "<br/>Aliases: "+Aliases; */
+			$('#gene_card').html(htmlstring);
+
+			//Lien vers la séquence orthologue.
+			var resLinks = document.getElementsByClassName('resLink3');
+			for(var i = 0, len = resLinks.length; i < len; i++) {
+				let orthoAcc = document.getElementsByClassName('resLink3')[0].previousSibling.textContent.split(' ')[0];
+				//console.log("*"+orthoAcc+"*");
+				resLinks[i].onclick = function () {
+					
+					//affiche la vue globale
+					let selectAccession = document.getElementById("selectAccession");
+					selectAccession.value= orthoAcc;
+					triggerEvent(selectAccession, 'change');
+			
+					//affiche la vue zoom sur le chromosome de l'id cliqué
+					var regexpChrom = /Chr(\d*)_(\d*)/;
+					var idChrom = this.innerText.match(regexpChrom)[1];
+					var position = this.innerText.match(regexpChrom)[2];
+					position = parseInt(position);
+					var stop = position + 1000000;
+			
+					idChrom = parseInt(idChrom);
+					setTimeout(function(){ drawChromosome(idChrom, position, stop ); }, 1000);
 				}
-			})
-			.then(function(ids) {
-				if(acc == "Nipponbare"){
-					let idsLines = ids.split('\n');
-					var htmlIDstring = "";
-					
-					//récupère les intitulés des champs en-tete
-					let entete = idsLines[0].split(/\t/);
-					console.log(entete);
-
-					idsLines.forEach(line => {
-						var tab = line.split(/\t/);
-						if(element.id == tab[0]){
-
-							for (var i = 1; i < entete.length; i++) {
-								htmlIDstring += "<br/>"+entete[i]+" : "+ tab[i]
-							}
-							
-							console.log(htmlIDstring);
-/* 
-							//console.log(tab[0] +tab[1] +tab[2] +tab[3] +tab[4]);
-							ID_MSU7 = tab[1];
-							ID_IRGSP = tab[2];
-							ID_NCBI = tab[3];
-							//Aliases = tab[4]; */
-						}
-					});
-
-					//fichier des orthologues
-					fetch('./data_'+release+'/ids/Nip_Kit_ortho.txt')
-					.then(function(response) {
-						return orthoTab = response.text();
-					})
-					.then(function(ortho) {
-						let orthoLines = ortho.split('\n');
-						orthoLines.forEach(line => {
-							var tab = line.split(/\t/);
-							if(element.id == tab[0].trim()){ //trim pour enlever les eventuels espaces ou retour chariot
-								orthologous = tab[1];
-								
-							}
-						});
-
-						//affiche la gene card
-						document.getElementById("gene_card").style.display = "block";
-						var htmlstring = "<p class='font-weight-bold'>Gene card "+element.id
-						+"</p><a target='_blank' href=\"https://rice-genome-hub.southgreen.fr/oryza_sativa_japonica_nipponbare?loc="+element.chr+":"+element.start+".."+element.stop+"\"><button type=\"button\" class=\"btn btn-sm btn-outline-dark\">View on JBrowse </button></a>"
-						+"</p>Position: "+element.chr+":"+element.start+"-"+element.stop
-						+"<br/>Family: "+element.family 
-						+"<br/>Class: "+element.geneClass
-						+"<br/>Kitaake orthologous: <a class='resLink3' href='#'>"+orthologous+"</a>"
-						+htmlIDstring;/* +"<br/>ID MSU: <a target='_blank' href=\"http://rice.plantbiology.msu.edu/cgi-bin/ORF_infopage.cgi?orf="+ID_MSU7+"\">"+ID_MSU7+"</a>"
-						+"<br/>ID IRGSP: <a target='_blank' href=\"https://rapdb.dna.affrc.go.jp/viewer/gbrowse_details/irgsp1?name="+ID_IRGSP+"\">"+ID_IRGSP+"</a>"
-						+"<br/>ID NCBI:";
-						if(ID_NCBI.match("None")){
-							htmlstring += "None";
-							
-						}else{
-							//split NCBI
-							var tabNCBI=ID_NCBI.split(",");
-							//pour chaque split regexp, add url to html string
-							tabNCBI.forEach(element => {
-								var regexpNCBI = /LOC(\d*)/;
-								NCBI_num = element.match(regexpNCBI)[1];
-								htmlstring += " <a target='_blank' href=\"https://www.ncbi.nlm.nih.gov/gene/"+NCBI_num+"\">"+element+"</a>"
-							});
-						}
-						htmlstring+= "<br/>Aliases: "+Aliases; */
-						$('#gene_card').html(htmlstring);
-					})
-					.then(function() {
-						//Clic sur l'identifiant affiche la zone
-						var resLinks = document.getElementsByClassName('resLink3');
-						for(var i = 0, len = resLinks.length; i < len; i++) {
-							resLinks[i].onclick = function () {
-				
-								//affiche la vue globale
-								let selectAccession = document.getElementById("selectAccession");
-								selectAccession.value="Kitaake";
-								triggerEvent(selectAccession, 'change');
-				
-								//affiche la vue zoom sur le chromosome de l'id cliqué
-								var regexpChrom = /Chr(\d*)_(\d*)/;
-								var idChrom = this.innerText.match(regexpChrom)[1];
-								var position = this.innerText.match(regexpChrom)[2];
-								position = parseInt(position);
-								var stop = position + 1000000;
-				
-								idChrom = parseInt(idChrom);
-								setTimeout(function(){ drawChromosome(idChrom, position, stop ); }, 1000);
-								
-							}
-						}
-					});
-					
-					
-
-				}else if(acc == "Kitaake"){
-					let idsLines = ids.split('\n');
-					idsLines.forEach(line => {
-						var tab = line.split(/\t/);
-						if(element.id == tab[0]){
-							ID_OsKitaake = tab[1];
-						}
-					});
-
-					//fichier des orthologues
-					fetch('./data_'+release+'/ids/Nip_Kit_ortho.txt')
-					.then(function(response) {
-						return orthoTab = response.text();
-					})
-					.then(function(ortho) {
-						let orthoLines = ortho.split('\n');
-						orthoLines.forEach(line => {
-							var tab = line.split(/\t/);
-							if(element.id == tab[1].trim()){ //trim pour enlever les eventuels espaces ou retour chariot
-								orthologous = tab[0];
-							}
-						});
-						//console.log(orthologous);
-
-					//affiche la gene card
-					document.getElementById("gene_card").style.display = "block";
-					$('#gene_card').html("<p class='font-weight-bold'>Gene card "+element.id
-					+"</p><a target='_blank' href=\" https://rice-genome-hub.southgreen.fr/oryza_sativa_japonica_kitaake?loc="+element.chr+":"+element.start+".."+element.stop+"\"><button type=\"button\" class=\"btn btn-sm btn-outline-dark\">View on JBrowse </button></a>"
-					+" </p>Position: "+element.chr+":"+element.start+"-"+element.stop
-					+"<br/>Family: "+element.family 
-					+"<br/>Class: "+element.geneClass
-					//+"<br/>Nipponbare orthologous: "+orthologous
-					+"<br/>Nipponbare orthologous: <a class='resLink4' href='#'>"+orthologous+"</a>"
-					+"<br/>ID Kitaake: "+ID_OsKitaake);
-					
-					})
-					.then(function() {
-						//Clic sur l'identifiant affiche la zone
-						var resLinks = document.getElementsByClassName('resLink4');
-						//console.log(resLinks);
-						for(var i = 0, len = resLinks.length; i < len; i++) {
-							resLinks[i].onclick = function () {
-				
-								//affiche la vue globale
-								let selectAccession = document.getElementById("selectAccession");
-								selectAccession.value="Nipponbare";
-								triggerEvent(selectAccession, 'change');
-				
-								//affiche la vue zoom sur le chromosome de l'id cliqué
-								var regexpChrom = /Chr(\d*)_(\d*)/;
-								var idChrom = this.innerText.match(regexpChrom)[1];
-								var position = this.innerText.match(regexpChrom)[2];
-								position = parseInt(position);
-								var stop = position + 1000000;
-				
-								idChrom = parseInt(idChrom);
-								setTimeout(function(){ drawChromosome(idChrom, position, stop ); }, 1000);
-								
-							}
-						}
-					});
-				}
-			});
+			}
 		}
 	});
-}, false);
-
+});
 
 
 //Draw oriented CDS
@@ -1727,6 +1583,7 @@ function drawStop(ctx, x, y){
 
 //Draw frameshift
 function drawFrameshift(ctx, x, y){
+	console.log("Frameshift");
 
 	ctx.strokeStyle="orange";
 	ctx.lineWidth = 2;
