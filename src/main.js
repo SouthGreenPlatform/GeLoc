@@ -51,7 +51,9 @@ drawLegend();
 drawLegendDom();
 
 
-
+//layer synteny
+var canvasSynt = document.getElementById('synteny');
+var ctxSynt = canvasSynt.getContext('2d');
 
 //Config de la vue globale
 function initConfig(){
@@ -457,6 +459,7 @@ function writeSelectedRange() {
 		chrnum = ideogramChr.config.chromosome;
 	
 	//affiche les positions
+	document.getElementById('acc').innerHTML = acc;
     document.getElementById('from').innerHTML = from;
     document.getElementById('to').innerHTML = to;
 	document.getElementById('extent').innerHTML = extent;
@@ -482,6 +485,10 @@ function writeSelectedRange() {
 			gffHash = parseGff(report);
 			//console.log(gffHash);
 			drawZoom(from, to, gffHash);
+			//non parceque c'est pas les bonnes positions
+			//drawSynteny(from, to, gffHash);
+			//cache la partie synteny pour l'instant
+			ctxSynt.clearRect(0, 0, canvasSynt.width, canvasSynt.height);
 		}
 	});
 
@@ -528,6 +535,7 @@ selectAccession.addEventListener("change", async function(){
 
 	//hide div to refresh
 	$('#selected_region').hide();
+	$('#selected_synt_region').hide();
 	$('.ideo_container_chr').hide();
 	$('#gene_card').hide();
 	$('.zoom_global').hide();
@@ -1071,11 +1079,10 @@ function parseGff(report){
 }
 
 //canvas frise globale 
-//layer synteny
-var canvasSynt = document.getElementById('synteny');
-var ctxSynt = canvasSynt.getContext('2d');
+
 
 //fonction clique sur un gene de la frise
+//appelle le serveur pour récupérer les données de la portion de gff
 canvasSynt.addEventListener('click', function (event) {
 
 	//augmente la taille de la div
@@ -1088,7 +1095,8 @@ canvasSynt.addEventListener('click', function (event) {
 	var canoffset = $(canvasSynt).offset();
 	var x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoffset.left);
 	var y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoffset.top) + 1;
-	console.log(x, y);
+	console.log("click", x, y);
+	
 
 	// Collision detection between clicked offset and element.
 	//marge de 5px de chaque coté
@@ -1098,7 +1106,8 @@ canvasSynt.addEventListener('click', function (event) {
 		//save orthologous in genes info
 		element.versus = versus;
 		element.ortho = orthologous;
-		//console.log(versus, orthologous);
+		console.log(versus, orthologous);
+		console.log(element.genePosX + element.geneWidth +5, element.genePosY-5);
 
 		if (y > element.genePosY-5 && y < element.genePosY + element.geneHeigth +5
 			&& x > element.genePosX-5 && x < element.genePosX + element.geneWidth +5) {
@@ -1112,6 +1121,12 @@ canvasSynt.addEventListener('click', function (event) {
 			gffReport = "",
 			extent = r.extent.toLocaleString();
 			chrnum = ideogramChr.config.chromosome;
+
+			//affiche les positions
+			document.getElementById('synt_acc').innerHTML = versus;
+			document.getElementById('synt_from').innerHTML = from;
+			document.getElementById('synt_to').innerHTML = to;
+			document.getElementById('synt_extent').innerHTML = extent;
 
 			//supprime les espaces dans les positions
 			from = from.replace(/\s/g, "");
@@ -1140,6 +1155,10 @@ function drawSynteny(from, to, gffHash){
 
 	var canvasSynt = document.getElementById('synteny');
 	var ctxSynt = canvasSynt.getContext('2d');
+
+	//affiche selected region
+	document.getElementById("selected_synt_region").style.display = "block";
+
 
 	//efface avant de redessiner
 	//Le dessin commence va de x=0 à x=1000
@@ -1221,11 +1240,12 @@ function drawSynteny(from, to, gffHash){
 		syntElements.push(element);
 	}
 	
-	console.log(genesElements);
-	console.log(syntElements);
+	console.log("genesElements "+genesElements);
+	console.log("syntElements "+syntElements);
 	//draw link between orthologous genes
 	//pour chaque gene de l'accession du haut
 	genesElements.forEach(function (element) {
+		//cherche un match avec les gènes du bas = orthologues
 		syntElements.forEach(function (syntElement){
 			
 			if(element.ortho === syntElement.id){
@@ -1236,11 +1256,20 @@ function drawSynteny(from, to, gffHash){
 				ctxSynt.lineWidth = 1;
 
 				ctxSynt.beginPath();
-				//bas du gene du haut
+				//bas gauche du gene du haut
 				ctxSynt.moveTo(element.genePosX, element.genePosY+20);
-				//haut du gene du bas
+				//bas droite du gene du haut
+				ctxSynt.lineTo(element.genePosX+element.geneWidth, element.genePosY+20);
+				//haut droit du gene du bas
+				ctxSynt.lineTo(syntElement.genePosX+syntElement.geneWidth, syntElement.genePosY+150);
+				//haut gauche du gene du bas
 				ctxSynt.lineTo(syntElement.genePosX, syntElement.genePosY+150);
 				ctxSynt.stroke();
+				// Fermer le chemin
+				ctxSynt.closePath();
+				// Remplir la forme en vert
+				ctxSynt.fillStyle = "green";
+				ctxSynt.fill();
 				ctxSynt.restore();
 
 			}
@@ -1303,7 +1332,6 @@ function findOrtho(acc, id ){
 			for (var i = 0; i < orthos.length; i++) {
 			
 				let versus = orthos[i]['versus'];
-			
 				//fichier des orthologues
 				fetch(config_accessions[acc]['ortho'][i]['ortho_file'])
 				.then(function(response) {

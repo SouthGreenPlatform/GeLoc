@@ -335,7 +335,7 @@ caracterised by an "X" character.
 
 	<!-- Selected region -->
 	<div id="selected_region" style="display: none;">
-		Selected region:
+		Selected region: <span id="acc"></span>
 		<br/>
 		<span id="from"></span>  -  <span id="to"></span>
 		(extent: <span id="extent"></span> base pairs)
@@ -348,12 +348,22 @@ caracterised by an "X" character.
 		</canvas>
 		<!-- yellow highlighted genes -->
 		<canvas id="zoom_selected" height="80" width="1000">
+			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
 		</canvas>
 		<!-- synteny view -->
 		<canvas id="synteny" height="250" width="1000">
+			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
 		</canvas>
 
+	<!-- Selected synteny region -->
+	<div id="selected_synt_region" style="display: none;">
+		Selected region: <span id="synt_acc"></span>
+		<br/>
+		<span id="synt_from"></span>  -  <span id="synt_to"></span>
+		(extent: <span id="synt_extent"></span> base pairs)
 	</div>
+	</div>
+	
 
 	<div id="cds_div" class="cds" style="display: none; width:100%; max-height:500px;max-width:1200px;overflow: scroll;">
 		<!-- The CDS view goes here. -->
