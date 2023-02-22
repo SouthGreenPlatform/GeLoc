@@ -452,10 +452,13 @@ function drawChromosome(clickedChrom, start, stop){
 function writeSelectedRange() {
 
     var r = ideogramChr.selectedRegion,
-        from = r.from.toLocaleString(), // Adds thousands-separator
-		to = r.to.toLocaleString(),
+        
+		//from = r.from.toLocaleString(), // Adds thousands-separator
+		//to = r.to.toLocaleString(),
+		from = r.from.toString(), // Adds thousands-separator
+		to = r.to.toString(),
 		gffReport = "",
-		extent = r.extent.toLocaleString();
+		extent = r.extent.toString();
 		chrnum = ideogramChr.config.chromosome;
 	
 	//affiche les positions
@@ -467,7 +470,6 @@ function writeSelectedRange() {
 	//supprime les espaces dans les positions
 	from = from.replace(/\s/g, "");
 	to = to.replace(/\s/g, "");
-	//console.log(typeof(from));
 	//console.log("region from "+from+" to "+to+ " extent "+extent);
 
 	let gffPath = config_accessions[acc]['gff'];
@@ -1116,10 +1118,10 @@ canvasSynt.addEventListener('click', function (event) {
 			//recupère les infos gff de l'orthologue via le serveur node
 			//info ideogram
 			var r = ideogramChr.selectedRegion,
-			from = r.from.toLocaleString(), // Adds thousands-separator
-			to = r.to.toLocaleString(),
+			from = r.from.toString(), // Adds thousands-separator
+			to = r.to.toString(),
 			gffReport = "",
-			extent = r.extent.toLocaleString();
+			extent = r.extent.toString();
 			chrnum = ideogramChr.config.chromosome;
 
 			//affiche les positions
