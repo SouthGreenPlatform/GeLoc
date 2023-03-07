@@ -269,7 +269,7 @@ caracterised by an "X" character.
 
 		<p><strong>Nipponbare</strong></p>
 		<a href="./data_current/dl/Nipponbare_IDs.txt.zip" download="Nipponbare_IDs.txt.zip">Nipponbare_IDs.txt.zip</a><br/>
-		<a href="./data_current/dl/Oryza_Kitaake_LRR-CR_cDNA__20210503.fasta.zip" download="Oryza_Kitaake_LRR-CR_cDNA__20210503.fasta.zip">Oryza_Kitaake_LRR-CR_cDNA__20210503.fasta.zip</a><br/>
+		<a href="./data_current/dl/Oryza_Nipponbare_IRGSP-1.0_LRR-CR__20210503.gff.zip" download="Oryza_Nipponbare_IRGSP-1.0_LRR-CR__20210503.gff.zip">Oryza_Nipponbare_IRGSP-1.0_LRR-CR__20210503.gff.zip</a><br/>
 		<a href="./data_current/dl/Oryza_Nipponbare_IRGSP-1.0_LRR-CR_cDNA__20210503.fasta.zip" download="Oryza_Nipponbare_IRGSP-1.0_LRR-CR_cDNA__20210503.fasta.zip">Oryza_Nipponbare_IRGSP-1.0_LRR-CR_cDNA__20210503.fasta.zip</a><br/>
 		<a href="./data_current/dl/Oryza_Nipponbare_IRGSP-1.0_LRR-CR_CDS__20210503.fasta.zip" download="Oryza_Nipponbare_IRGSP-1.0_LRR-CR_CDS__20210503.fasta.zip">Oryza_Nipponbare_IRGSP-1.0_LRR-CR_CDS__20210503.fasta.zip</a><br/>
 		<a href="./data_current/dl/Oryza_Nipponbare_IRGSP-1.0_LRR-CR_PEP__20210503.fasta.zip" download="Oryza_Nipponbare_IRGSP-1.0_LRR-CR_PEP__20210503.fasta.zip">Oryza_Nipponbare_IRGSP-1.0_LRR-CR_PEP__20210503.fasta.zip</a><br/>
@@ -280,6 +280,7 @@ caracterised by an "X" character.
 		<a href="./data_current/dl/ORYSJ_kitaake_LRR-CR__20210503.gff.zip" download="ORYSJ_kitaake_LRR-CR__20210503.gff.zip">ORYSJ_kitaake_LRR-CR__20210503.gff.zip</a><br/>
 		<a href="./data_current/dl/Oryza_Kitaake_LRR-CR_cDNA__20210503.fasta.zip" download="Oryza_Kitaake_LRR-CR_cDNA__20210503.fasta.zip">Oryza_Kitaake_LRR-CR_cDNA__20210503.fasta.zip</a><br/>
 		<a href="./data_current/dl/Oryza_Kitaake_LRR-CR_CDS__20210503.fasta.zip" download="Oryza_Kitaake_LRR-CR_CDS__20210503.fasta.zip">Oryza_Kitaake_LRR-CR_CDS__20210503.fasta.zip</a><br/>
+		<a href="./data_current/dl/Oryza_Kitaake_LRR-CR_PEP__20210503.fasta.zip" download="Oryza_Kitaake_LRR-CR_PEP__20210503.fasta.zip">Oryza_Kitaake_LRR-CR_PEP__20210503.fasta.zipp</a><br/>
 		<a href="./data_current/dl/Oryza_Kitaake_LRR-CR_cDNA_wFrameshift__20210503.fasta.zip" download="Oryza_Kitaake_LRR-CR_cDNA_wFrameshift__20210503.fasta.zip">Oryza_Kitaake_LRR-CR_cDNA_wFrameshift__20210503.fasta.zip</a><br/>
 		<br/>
 		<p><strong>Orthologous</strong></p>
