@@ -12,29 +12,15 @@ Geloc provides convenient tools to visualised and download these annotation data
 Overview
 ~~~~~~~~~~~~~
 
--  Dynamic chromosome painting visualisation
-
--  Online Data curation of mosaic prediction
-
--  Markers or Genes Plots on mosaic karyotypes
-
--  Data and high quality image export
-
-
-Input formats
-~~~~~~~~~~~~~
-
-GeMo requires two types of datasets to generate the ideogram visualization
+.. image:: _images/select.gif
+   :target: _images/select.gif
+   :width: 250
+   :alt: select
 
 .. image:: _images/click_chr.gif
    :target: _images/click_chr.gif
    :width: 250
    :alt: click
-
-.. image:: _images/select.gif
-   :target: _images/select.gif
-   :width: 250
-   :alt: select
 
 .. image:: _images/move_range.gif
    :target: _images/move_range.gif
